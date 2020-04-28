@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+	<persistence-unit name="Projekt_JPATes" transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<class>org.h2.Driver</class>
+		<class>JPAEntities.Client</class>
+		<class>JPAEntities.Employee</class>
+		<class>JPAEntities.Project</class>
+		<class>JPAEntities.Comment</class>
+		<class>JPAEntities.ProjectActivity</class>
+		<class>JPAEntities.Costs</class>
+		<class>JPAEntities.Team</class>
+		<class>JPAEntities.Role</class>
+		<class>JPAEntities.RoleEmployee</class>
+		<class>JPAEntities.RoleProjectManager</class>
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:F:\Programme\h2-2019-03-13 Datenbank\databases\Projekt_JPATest"/>
+			<property name="javax.persistence.jdbc.user" value="admin"/>
+			<property name="javax.persistence.jdbc.password" value=""/>
+			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+			<property name="javax.persistence.schema-generation.database.action" value="create"/>
+		</properties>
+	</persistence-unit>
+</persistence>
