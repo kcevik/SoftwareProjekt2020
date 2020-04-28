@@ -22,7 +22,7 @@ public class MainView extends VerticalLayout {
 
     public MainView() {
         // Use TextField for standard text input
-        TextField textField = new TextField("Your nameeee");
+        TextField textField = new TextField("HALLOOO");
 
         // Button click listeners can be defined as lambda expressions
         GreetService greetService = new GreetService();
