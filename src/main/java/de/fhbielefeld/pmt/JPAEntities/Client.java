@@ -1,4 +1,4 @@
-package JPAEntities;
+package de.fhbielefeld.pmt.JPAEntities;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -56,7 +56,7 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode um die ClientId zurückzugeben
+	 * Public Methode um die ClientId zurï¿½ckzugeben
 	 * 
 	 * @return Integer clientId
 	 * @param None
@@ -67,7 +67,7 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode die ein Projekt der ProjectList hinzuzufügen
+	 * Public Methode die ein Projekt der ProjectList hinzuzufï¿½gen
 	 * 
 	 * @return None
 	 * @param Project
@@ -87,7 +87,7 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode um gesamte ProjectList zurückzugeben
+	 * Public Methode um gesamte ProjectList zurï¿½ckzugeben
 	 * 
 	 * @return Set<Project>
 	 * @param
@@ -98,7 +98,7 @@ public class Client implements Serializable {
 	// SetProjektListe gibts nich weil man die nich aus der Hand geben soll
 
 	/**
-	 * Public Methode um den Client Namen zurückzugeben
+	 * Public Methode um den Client Namen zurï¿½ckzugeben
 	 * 
 	 * @return String name
 	 * @param None
@@ -118,7 +118,7 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode um das street Attribut zurückzugeben
+	 * Public Methode um das street Attribut zurï¿½ckzugeben
 	 * 
 	 * @return String street
 	 * @param None
@@ -138,7 +138,7 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode um das housenumber Attribut zurückzugeben
+	 * Public Methode um das housenumber Attribut zurï¿½ckzugeben
 	 * 
 	 * @return String housenumber
 	 * @param None
@@ -158,7 +158,7 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode um das town Attribut zurückzugeben
+	 * Public Methode um das town Attribut zurï¿½ckzugeben
 	 * 
 	 * @return String town
 	 * @param None
@@ -178,7 +178,7 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode um das zipCode Attribut zurückzugeben
+	 * Public Methode um das zipCode Attribut zurï¿½ckzugeben
 	 * 
 	 * @return Integer zipCode
 	 * @param None
@@ -198,7 +198,7 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode um das telephoneNumber Attribut zurückzugeben
+	 * Public Methode um das telephoneNumber Attribut zurï¿½ckzugeben
 	 * 
 	 * @return Integer telephoneNumber
 	 * @param None
@@ -218,7 +218,7 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode um das isActive Attribut zurückzugeben
+	 * Public Methode um das isActive Attribut zurï¿½ckzugeben
 	 * 
 	 * @return boolean isActive
 	 * @param None
@@ -238,7 +238,7 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode um das serialVersionUID Attribut zurückzugeben
+	 * Public Methode um das serialVersionUID Attribut zurï¿½ckzugeben
 	 * 
 	 * @return long serialVersionUID
 	 * @param None

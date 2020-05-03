@@ -1,6 +1,6 @@
-package JPAEntities;
+package de.fhbielefeld.pmt.JPAEntities;
 
-import JPAEntities.Role;
+import de.fhbielefeld.pmt.JPAEntities.Role;
 import java.io.Serializable;
 import javax.persistence.*;
 

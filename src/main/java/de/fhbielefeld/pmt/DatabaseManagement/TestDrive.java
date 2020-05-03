@@ -1,12 +1,12 @@
-package DatabaseManagement;
+package de.fhbielefeld.pmt.DatabaseManagement;
 
-import JPAEntities.Client;
-import JPAEntities.Remark;
-import JPAEntities.Costs;
-import JPAEntities.Employee;
-import JPAEntities.Project;
-import JPAEntities.ProjectActivity;
-import JPAEntities.Team;
+import de.fhbielefeld.pmt.JPAEntities.Client;
+import de.fhbielefeld.pmt.JPAEntities.Remark;
+import de.fhbielefeld.pmt.JPAEntities.Costs;
+import de.fhbielefeld.pmt.JPAEntities.Employee;
+import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
+import de.fhbielefeld.pmt.JPAEntities.Team;
 
 public class TestDrive {
 
