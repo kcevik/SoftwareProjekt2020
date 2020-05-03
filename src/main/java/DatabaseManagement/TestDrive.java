@@ -1,7 +1,7 @@
 package DatabaseManagement;
 
 import JPAEntities.Client;
-import JPAEntities.Comment;
+import JPAEntities.Remark;
 import JPAEntities.Costs;
 import JPAEntities.Employee;
 import JPAEntities.Project;
@@ -10,8 +10,8 @@ import JPAEntities.Team;
 
 public class TestDrive {
 
-	public static void main(String[] args) {
-
+	public static void buildTestDB() {
+		
 		DatabaseService databaseService = DatabaseService.DatabaseServiceGetInstance();
 
 		/*
@@ -23,9 +23,10 @@ public class TestDrive {
 		Employee emp1 = new Employee("password", "Andi", "Fresse", "Entwickler", true, "A202", 651616168,
 				"Hauptstrasse", 2, 32649, "Hauptstadt");
 		// TODO: Problem bei der Hausnummer: Zusatz wie 2a kann nicht gespeichert werden
-		// TODO: Macht es nicht sinn isActive nicht als Parameter mit zu übergeben
+		// TODO: Macht es nicht sinn isActive nicht als Parameter mit zu ï¿½bergeben
 		// sondern direkt als true zu initialisieren?
-		Employee emp2 = new Employee("password", "Axel", "Schweiss", "Rechnungswesen dude", false, "B302", 18919698, "Nebenstraße", 420, 65859, "Nebenstadt");
+		Employee emp2 = new Employee("password", "Axel", "Schweiss", "Rechnungswesen dude", false, "B302", 18919698,
+				"Nebenstraï¿½e", 420, 65859, "Nebenstadt");
 
 		// public Client(String name, String street, int housenumber, String town, int
 		// zipCode, int telephoneNumber)
@@ -42,7 +43,7 @@ public class TestDrive {
 		Project proj2 = new Project("Hammer UnterProjekt", emp2, cl1, "22.04.2020", "06.06.2020", 5000);
 
 		// public Comment(Project project, String commentText, String date)
-		Comment com1 = new Comment(proj1, "Das hier ist der Kommentar Text", "22.04.2020");
+		Remark com1 = new Remark(proj1, "Das hier ist der Kommentar Text", "22.04.2020");
 
 		// public Costs(String costType, String description, double incurredCosts,
 		// Project project)
@@ -54,22 +55,23 @@ public class TestDrive {
 		 * public ProjectActivity(String category, String description, int
 		 * hoursAvailable, int hoursExpended, boolean isActive, Project project)
 		 */
-		//TODO: Stanni isActive = true direk?
+		// TODO: Stanni isActive = true direk?
 		ProjectActivity projAct1 = new ProjectActivity("Reinigung", "Beschreibung: ich mache sauber", 8, 2, proj1);
 
-		//public Team(String teamName, boolean isActive, Employee employee)
-		//TODO: Stanni isActive?
+		// public Team(String teamName, boolean isActive, Employee employee)
+		// TODO: Stanni isActive?
 		Team team1 = new Team("Team1Name", emp1);
 		emp1.addTeam(team1);
-		
+
 		team1.addProject(proj1);
 		proj1.addTeam(team1);
-		
-		//Kann man sowas schöner machen? Bidirektional automatisch das gegenstück mappen?
+
+		// Kann man sowas schï¿½ner machen? Bidirektional automatisch das gegenstï¿½ck
+		// mappen?
 		emp2.addProject(proj1);
 		proj1.addEmployee(emp2);
 		proj2.setSupProject(proj1);
-		
+
 		databaseService.persistProject(proj1);
 		databaseService.persistProject(proj2);
 		databaseService.persistCosts(cost1);
@@ -79,5 +81,9 @@ public class TestDrive {
 
 		proj1.setBudget(69);
 		databaseService.persistProject(proj1);
+	}
+
+	public static void main(String[] args) {
+		buildTestDB();
 	}
 }
