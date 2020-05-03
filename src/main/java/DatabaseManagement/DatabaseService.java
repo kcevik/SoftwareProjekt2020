@@ -6,7 +6,7 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import JPAEntities.Client;
-import JPAEntities.Comment;
+import JPAEntities.Remark;
 import JPAEntities.Costs;
 import JPAEntities.Employee;
 import JPAEntities.Project;
@@ -32,7 +32,7 @@ public class DatabaseService {
 	 */
 	private DatabaseService() {
 
-		emf = Persistence.createEntityManagerFactory("Projekt_JPATes");
+		emf = Persistence.createEntityManagerFactory("SoftwareProjekt2020");
 		em = emf.createEntityManager();
 
 	}
@@ -246,7 +246,7 @@ public class DatabaseService {
 	 * @param An instance of the class Client that will be persisted
 	 * @return none
 	 */
-	public synchronized void persistComment(Comment comment) {
+	public synchronized void persistComment(Remark comment) {
 		
 		if(comment == null) {
 			//TODO: Fehlermelddung is empty			
@@ -264,10 +264,10 @@ public class DatabaseService {
 	 * @param none
 	 * @return List<Comment> List of comment
 	 */
-	public List<Comment> readComment() {
+	public List<Remark> readComment() {
 		
-		TypedQuery<Comment> query = em.createQuery("SELECT mm FROM Comment mm", Comment.class);
-		List<Comment> resultListEmployee = query.getResultList();
+		TypedQuery<Remark> query = em.createQuery("SELECT mm FROM Comment mm", Remark.class);
+		List<Remark> resultListEmployee = query.getResultList();
 		return resultListEmployee;
 		
 	}

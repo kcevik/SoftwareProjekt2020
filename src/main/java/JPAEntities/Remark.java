@@ -12,23 +12,23 @@ import javax.persistence.*;
  */
 @Entity
 
-public class Comment implements Serializable {
+public class Remark implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long commentID;
+	private long remarkID;
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "project")
 	private Project project;
-	private String commentText;
-	private String date;
+	private String remarkText;
+	private String postedDate;
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Public non-private zero-argument constructor for JPAentity class Comment
 	 * @return none
 	 */
-	public Comment() {
+	public Remark() {
 		super();
 	}
 	
@@ -36,11 +36,11 @@ public class Comment implements Serializable {
 	 * Public constructor of Comment JPAentity class
 	 * @return none
 	 */
-	public Comment(Project project, String commentText, String date) {
+	public Remark(Project project, String commentText, String date) {
 		super();
 		this.project = project;
-		this.commentText = commentText;
-		this.date = date;
+		this.remarkText = commentText;
+		this.postedDate = date;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class Comment implements Serializable {
 	 * @param 
 	 */
 	public String getCommentText() {
-		return commentText;
+		return remarkText;
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class Comment implements Serializable {
 	 * @param 
 	 */
 	public void setCommentText(String commentText) {
-		this.commentText = commentText;
+		this.remarkText = commentText;
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class Comment implements Serializable {
 	 * @param 
 	 */
 	public String getDate() {
-		return date;
+		return postedDate;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Comment implements Serializable {
 	 * @param 
 	 */
 	public void setDate(String date) {
-		this.date = date;
+		this.postedDate = date;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class Comment implements Serializable {
 	 */
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden 
 	public long getCommentID() {
-		return commentID;
+		return remarkID;
 	}
 
 	/**
