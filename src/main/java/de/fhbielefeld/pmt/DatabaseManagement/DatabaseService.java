@@ -6,11 +6,11 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import de.fhbielefeld.pmt.JPAEntities.Client;
+import de.fhbielefeld.pmt.JPAEntities.Remark;
 import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
-import de.fhbielefeld.pmt.JPAEntities.Remark;
 import de.fhbielefeld.pmt.JPAEntities.Role;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 
