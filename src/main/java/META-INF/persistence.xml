@@ -2,16 +2,16 @@
 <persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 	<persistence-unit name="SoftwareProjekt2020" transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<class>JPAEntities.Client</class>
-		<class>JPAEntities.Costs</class>
-		<class>JPAEntities.Employee</class>
-		<class>JPAEntities.Project</class>
-		<class>JPAEntities.ProjectActivity</class>
-		<class>JPAEntities.Remark</class>
-		<class>JPAEntities.Role</class>
-		<class>JPAEntities.RoleEmployee</class>
-		<class>JPAEntities.RoleProjectManager</class>
-		<class>JPAEntities.Team</class>
+		<class>de.fhbielefeld.pmt.JPAEntities.Client</class>
+		<class>de.fhbielefeld.pmt.JPAEntities.Costs</class>
+		<class>de.fhbielefeld.pmt.JPAEntities.Employee</class>
+		<class>de.fhbielefeld.pmt.JPAEntities.Project</class>
+		<class>de.fhbielefeld.pmt.JPAEntities.ProjectActivity</class>
+		<class>de.fhbielefeld.pmt.JPAEntities.Remark</class>
+		<class>de.fhbielefeld.pmt.JPAEntities.Role</class>
+		<class>de.fhbielefeld.pmt.JPAEntities.RoleEmployee</class>
+		<class>de.fhbielefeld.pmt.JPAEntities.RoleProjectManager</class>
+		<class>de.fhbielefeld.pmt.JPAEntities.Team</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@aix1.fh-bielefeld.de:1521:d1"/>
 			<property name="javax.persistence.jdbc.user" value="dvi275"/>

@@ -1,18 +1,18 @@
-package DatabaseManagement;
+package de.fhbielefeld.pmt.DatabaseManagement;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
-import JPAEntities.Client;
-import JPAEntities.Remark;
-import JPAEntities.Costs;
-import JPAEntities.Employee;
-import JPAEntities.Project;
-import JPAEntities.ProjectActivity;
-import JPAEntities.Role;
-import JPAEntities.Team;
+import de.fhbielefeld.pmt.JPAEntities.Client;
+import de.fhbielefeld.pmt.JPAEntities.Costs;
+import de.fhbielefeld.pmt.JPAEntities.Employee;
+import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
+import de.fhbielefeld.pmt.JPAEntities.Remark;
+import de.fhbielefeld.pmt.JPAEntities.Role;
+import de.fhbielefeld.pmt.JPAEntities.Team;
 
 /**
  * Implementation of the Service that handels database interactions
@@ -178,6 +178,24 @@ public class DatabaseService {
 		return resultListEmployee;
 		
 	}
+	
+	
+	/**
+     * Public method for retrieving a list of employee
+     * 
+     * @param none
+     * @return List<Employee> List of employee
+     */
+    public Employee readSingleEmployee(Long employeeID) {
+
+        TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e WHERE e.employeeID = :employeeID",
+                Employee.class);
+        query.setParameter("employeeID", employeeID);
+        Employee e = query.getSingleResult();
+        return e;
+
+    }
+    
 	
 	/**
 	 * Public method for persisting a costs

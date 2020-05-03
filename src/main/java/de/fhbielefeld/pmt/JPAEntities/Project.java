@@ -1,4 +1,4 @@
-package JPAEntities;
+package de.fhbielefeld.pmt.JPAEntities;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -77,7 +77,7 @@ public class Project implements Serializable {
 		this.employeeList = new HashSet<Employee>();
 		this.teamList = new HashSet<Team>();
 	}
-	//DegreesOfFullfilment ggf später hinzufügen wenn wir das Ampelsystem haben, oder mit Default Values initialisieren wie isActive
+	//DegreesOfFullfilment ggf spï¿½ter hinzufï¿½gen wenn wir das Ampelsystem haben, oder mit Default Values initialisieren wie isActive
 
 
 	/**

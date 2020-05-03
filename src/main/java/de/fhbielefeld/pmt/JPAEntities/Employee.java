@@ -1,4 +1,4 @@
-package JPAEntities;
+package de.fhbielefeld.pmt.JPAEntities;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +17,7 @@ public class Employee implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	//TODO: Rollen attribut hinzufügen
+	//TODO: Rollen attribut hinzufï¿½gen
 	private int employeeID;
 	private String password;
 	private String firstName;
@@ -76,7 +76,7 @@ public class Employee implements Serializable {
 
 	
 	/**
-	 * Public Methode um die EmployeeId zurückzugeben 
+	 * Public Methode um die EmployeeId zurï¿½ckzugeben 
 	 * @return Integer employeeId
 	 * @param None
 	 */
@@ -269,7 +269,7 @@ public class Employee implements Serializable {
 
 
 	/**
-	 * Public Methode um den Vornamen zurückzugeben 
+	 * Public Methode um den Vornamen zurï¿½ckzugeben 
 	 * @return String firstName
 	 * @param None
 	 */
@@ -289,7 +289,7 @@ public class Employee implements Serializable {
 
 	
 	/**
-	 * Public Methode um den Nachnamen zurückzugeben 
+	 * Public Methode um den Nachnamen zurï¿½ckzugeben 
 	 * @return String lastName
 	 * @param None
 	 */
@@ -309,7 +309,7 @@ public class Employee implements Serializable {
 
 	
 	/**
-	 * Public Methode um die gesamte Projektliste zurückzugeben 
+	 * Public Methode um die gesamte Projektliste zurï¿½ckzugeben 
 	 * @return Set<Project> projectList
 	 * @param None
 	 */
@@ -319,7 +319,7 @@ public class Employee implements Serializable {
 	
 	
 	/**
-	 * Public Methode um ein Projekt der projectList hinzuzufügen
+	 * Public Methode um ein Projekt der projectList hinzuzufï¿½gen
 	 * @return None
 	 * @param Project project
 	 */
@@ -336,11 +336,11 @@ public class Employee implements Serializable {
 	public void removeProject(Project project) {
 		this.projectList.remove(project);
 	}
-	//Mehtode für addProjectList nicht vorhanden, es soll keine ganze Liste übergeben werden können
+	//Mehtode fï¿½r addProjectList nicht vorhanden, es soll keine ganze Liste ï¿½bergeben werden kï¿½nnen
 	
 	
 	/**
-	 * Public Methode um die gesamte Projektliste zurückzugeben 
+	 * Public Methode um die gesamte Projektliste zurï¿½ckzugeben 
 	 * @return Set<Project> projectList
 	 * @param None
 	 */
@@ -350,7 +350,7 @@ public class Employee implements Serializable {
 	
 	
 	/**
-	 * Public Methode um ein Team der teamtList hinzuzufügen
+	 * Public Methode um ein Team der teamtList hinzuzufï¿½gen
 	 * @return None
 	 * @param Team team
 	 */
@@ -367,11 +367,11 @@ public class Employee implements Serializable {
 	public void removeTeam(Team team) {
 		this.teamList.remove(team);
 	}
-	//Mehtode für addTeamList nicht vorhanden, es soll keine ganze Liste übergeben werden können
+	//Mehtode fï¿½r addTeamList nicht vorhanden, es soll keine ganze Liste ï¿½bergeben werden kï¿½nnen
 	
 	
 	/**
-	 * Public Methode um das room Attribut zurückzugeben 
+	 * Public Methode um das room Attribut zurï¿½ckzugeben 
 	 * @return String room
 	 * @param None
 	 */
@@ -391,7 +391,7 @@ public class Employee implements Serializable {
 
 	
 	/**
-	 * Public Methode um das Attribut telephoneNumber zurückzugeben 
+	 * Public Methode um das Attribut telephoneNumber zurï¿½ckzugeben 
 	 * @return Integer telephoneNumber
 	 * @param None
 	 */
@@ -411,7 +411,7 @@ public class Employee implements Serializable {
 
 	
 	/**
-	 * Public Methode um isSuitabilityProjectManager Attribut zurückzugeben 
+	 * Public Methode um isSuitabilityProjectManager Attribut zurï¿½ckzugeben 
 	 * @return Boolean isSuitabilityProjectManager
 	 * @param None
 	 */
@@ -431,7 +431,7 @@ public class Employee implements Serializable {
 
 	
 	/**
-	 * Public Methode um das serialVersionUID Attribut zurückzugeben
+	 * Public Methode um das serialVersionUID Attribut zurï¿½ckzugeben
 	 * @return long serialVersionUID
 	 * @param None
 	 */

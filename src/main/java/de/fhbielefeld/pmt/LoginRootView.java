@@ -22,6 +22,7 @@ import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinSession;
 
+import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.domain.Employee;
 import de.fhbielefeld.pmt.domain.EmployeeService;
 import de.fhbielefeld.pmt.login.ILoginComponent;
@@ -62,7 +63,7 @@ public class LoginRootView extends VerticalLayout{
 	}
 
     private ILoginComponent createLoginComponent() {
-		ILoginComponent loginComponent = new LoginComponent(new LoginModel(EmployeeService.getInstance()), new VaadinLoginViewLogic(new VaadinLoginView(), this.eventBus), this.eventBus);
+		ILoginComponent loginComponent = new LoginComponent(new LoginModel(DatabaseService.DatabaseServiceGetInstance()), new VaadinLoginViewLogic(new VaadinLoginView(), this.eventBus), this.eventBus);
 		return loginComponent;
 	}
     
