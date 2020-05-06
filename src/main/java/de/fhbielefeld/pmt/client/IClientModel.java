@@ -11,4 +11,5 @@ public interface IClientModel {
 	
 	List<Client> getClientListFromDatabase();
 	boolean isReadSuccessfull();
+	public void persistClient(Client client);
 }

@@ -23,19 +23,20 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 public class VaadinClientViewForm extends FormLayout {
 
 	private static final long serialVersionUID = 1L;
-	TextField tfClientID = new TextField("Kundenummer:");
-	TextField tfName = new TextField("Name:");
-	TextField tfTelephonenumber = new TextField("Telefonnummer:");
-	TextField tfStreet = new TextField("Strasse:");
-	TextField tfHouseNumber = new TextField("Hausnummer:");
-	TextField tfZipCode = new TextField("PLZ:");
-	TextField tfTown = new TextField("Ort:");
-	Checkbox ckIsActive = new Checkbox("Aktiv");
-	ComboBox<String> cbProjects = new ComboBox<String>("Projekte:");
+	private Client client = null;
+	private final TextField tfClientID = new TextField("Kundenummer:");
+	private final TextField tfName = new TextField("Name:");
+	private final TextField tfTelephonenumber = new TextField("Telefonnummer:");
+	private final TextField tfStreet = new TextField("Strasse:");
+	private final TextField tfHouseNumber = new TextField("Hausnummer:");
+	private final TextField tfZipCode = new TextField("PLZ:");
+	private final TextField tfTown = new TextField("Ort:");
+	private final Checkbox ckIsActive = new Checkbox("Aktiv");
+	private final ComboBox<String> cbProjects = new ComboBox<String>("Projekte:");
 
-	Button btnSave = new Button("Speichern");
-	Button btnDelete = new Button("Löschen");
-	Button btnClose = new Button("Abbrechen");
+	private final Button btnSave = new Button("Speichern");
+	private final Button btnDelete = new Button("Löschen");
+	private final Button btnClose = new Button("Abbrechen");
 
 	public VaadinClientViewForm() {
 		addClassName("client-form");
@@ -61,48 +62,27 @@ public class VaadinClientViewForm extends FormLayout {
 
 		btnSave.addClickShortcut(Key.ENTER);
 		btnClose.addClickShortcut(Key.ESCAPE);
-		
+
 		btnClose.addClickListener(event -> this.clearClientForm());
+		// btnSave.addClickListener(event -> );
 		return new HorizontalLayout(btnSave, btnDelete, btnClose);
 	}
 
 	/**
-	 * Stellt den übergebenen Client in dem Formular dar, falls dieser nicht null ist.
-	 * Falls der übergene Wert null ist, wird das Formular versteckt.
+	 * Stellt den übergebenen Client in dem Formular dar, falls dieser nicht null
+	 * ist. Falls der übergene Wert null ist, wird das Formular versteckt.
+	 * 
 	 * @param client
 	 */
 	public void displayClient(Client client) {
-		if (client != null) {
-			try {
-				this.tfClientID.setValue(String.valueOf(client.getClientID()));
-				this.tfName.setValue(client.getName());
-				this.tfTelephonenumber.setValue(String.valueOf(client.getTelephoneNumber()));
-				this.tfStreet.setValue(client.getStreet());
-				this.tfHouseNumber.setValue(String.valueOf(client.getHouseNumber()));
-				this.tfZipCode.setValue(String.valueOf(client.getZipCode()));
-				this.tfTown.setValue(client.getTown());
-				this.ckIsActive.setValue(client.isActive());
-				//TODO: Wie zur Hölle machen wir daraus ne Auswahl?!
-				ArrayList<String> projectStrings = new ArrayList<String>();
-				for(Project p : client.getProjectList()) {
-					projectStrings.add(String.valueOf(p.getProjectID()));
-				}
-				this.cbProjects.setItems(projectStrings);
-				this.cbProjects.setPlaceholder("Nach IDs suchen...");
-				this.setVisible(true);
-			} catch (NumberFormatException e) {
-				clearClientForm();
-				Notification.show("NumberFormatException");
-			}
-		} else {
-			this.setVisible(false);
-		}
+		this.client = client;
+
 	}
 
 	/**
 	 * Setzt das Formular zurück
 	 */
-	private void clearClientForm() {
+	public void clearClientForm() {
 		this.tfClientID.clear();
 		this.tfName.clear();
 		this.tfTelephonenumber.clear();
@@ -114,4 +94,53 @@ public class VaadinClientViewForm extends FormLayout {
 		this.cbProjects.clear();
 		this.setVisible(false);
 	}
+
+	public TextField getTfClientID() {
+		return tfClientID;
+	}
+
+	public TextField getTfName() {
+		return tfName;
+	}
+
+	public TextField getTfTelephonenumber() {
+		return tfTelephonenumber;
+	}
+
+	public TextField getTfStreet() {
+		return tfStreet;
+	}
+
+	public TextField getTfHouseNumber() {
+		return tfHouseNumber;
+	}
+
+	public TextField getTfZipCode() {
+		return tfZipCode;
+	}
+
+	public TextField getTfTown() {
+		return tfTown;
+	}
+
+	public Checkbox getCkIsActive() {
+		return ckIsActive;
+	}
+
+	public ComboBox<String> getCbProjects() {
+		return cbProjects;
+	}
+
+	public Button getBtnSave() {
+		return btnSave;
+	}
+
+	public Button getBtnDelete() {
+		return btnDelete;
+	}
+
+	public Button getBtnClose() {
+		return btnClose;
+	}
+
 }

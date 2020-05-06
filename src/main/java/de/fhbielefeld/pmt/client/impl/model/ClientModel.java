@@ -28,6 +28,11 @@ public class ClientModel implements IClientModel {
 	public List<Client> getClientListFromDatabase() {
 		return dbService.readClient();
 	}
+	
+	@Override
+	public void persistClient(Client client) {
+		this.dbService.persistClient(client);
+	}
 
 	/**
 	 * Bestätigt on ausgelesene Daten null sind oder Werte enthalten.

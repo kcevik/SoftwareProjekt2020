@@ -82,7 +82,18 @@ public class VaadinClientView extends VerticalLayout {
 				filtered.add(c);
 			} else if(c.getStreet().contains(filter)) {
 				filtered.add(c);
-			} //TODO: Vergleichen von int Werten? Wieso kann ich keine Methoden darauf aufrufen?
+			} else if(String.valueOf(c.getClientID()).contains(filter)) {
+				filtered.add(c);
+			} else if(String.valueOf(c.getHouseNumber()).contains(filter)) {
+				filtered.add(c);
+			} else if(String.valueOf(c.getTelephoneNumber()).contains(filter)) {
+				filtered.add(c);
+			} else if(String.valueOf(c.getZipCode()).contains(filter)) {
+				filtered.add(c);
+				//TODO: Würde es helfen wenn wir ne Methode im Client haben der nur die IDs der Projekte wiedergibt?! 
+			} else if(String.valueOf(c.getProjectList().contains(filtered)) != null) { //is voll der Bullshit Projekte filtern anders
+				
+			}
 		}
 		this.clientGrid.setItems(filtered);
 	}
@@ -103,12 +114,16 @@ public class VaadinClientView extends VerticalLayout {
 			return projectString;
 		}).setHeader("Projekte");
 		this.clientGrid.getColumns().forEach(col -> col.setAutoWidth(true));
-		this.clientGrid.asSingleSelect().addValueChangeListener(event -> this.CLIENTFORM.displayClient(event.getValue()));
 	}
 
 
 	public Grid<Client> getClientGrid() {
 		return clientGrid;
+	}
+	
+
+	public VaadinClientViewForm getCLIENTFORM() {
+		return CLIENTFORM;
 	}
 
 	public void addClient(Client c) {
