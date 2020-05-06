@@ -4,6 +4,10 @@ import java.awt.Panel;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
@@ -11,13 +15,19 @@ public class VaadinModuleChooserView extends VerticalLayout{
 
 	private static final long serialVersionUID = 1L;
 	
-	private final Label lblChooseOption = new Label("Bitte treffen Sie Ihre Auswahl");
+	private final Label lblChooseOption = new Label("Bitte treffen Sie Ihre Auswahl:");
+	
 	private final Button btnSuperviseProjects = new Button("Projekte verwalten");
 	private final Button btnSuperviseEmployees = new Button("Mitarbeiter verwalten");
 	private final Button btnSuperviseClients = new Button("Kunden verwalten");
 	private final Button btnSuperviseTeams = new Button("Teams verwalten");
 	TextField tfPersonalNr = new TextField("Personalnummer");
 	
+	private final Icon icon = new Icon(VaadinIcon.BAR_CHART);
+	// TODO: back-Button mit routing verbinden, damit wir 1. tatsächlich zurück kommen, 2. ein korrekter Logout stattfindet
+	private Button back = new Button(new Icon(VaadinIcon.BACKWARDS));
+	// TODO: User mit echtem User verknüpfen
+	private Label welcome = new Label("Willkommen zurück, User!");
 	
 	public VaadinModuleChooserView() {
 	
@@ -28,6 +38,14 @@ public class VaadinModuleChooserView extends VerticalLayout{
 
 	private void builtUI() {
 		
+		HorizontalLayout header = new HorizontalLayout(icon, welcome, back);
+		header.setAlignItems(FlexComponent.Alignment.CENTER);
+		header.setFlexGrow(1, icon);
+		header.setPadding(true);
+		header.setSpacing(true);
+		
+		this.add(header);
+		
 		VerticalLayout buttonLayout = new VerticalLayout();
 				
 		buttonLayout.add(this.lblChooseOption);
@@ -35,6 +53,8 @@ public class VaadinModuleChooserView extends VerticalLayout{
 		buttonLayout.add(this.btnSuperviseEmployees);
 		buttonLayout.add(this.btnSuperviseClients);
 		buttonLayout.add(this.btnSuperviseTeams);
+		buttonLayout.setPadding(true);
+		// buttonLayout.setSpacing(true);
 		
 		this.add(buttonLayout);
 		this.setWidth(null);
@@ -42,6 +62,9 @@ public class VaadinModuleChooserView extends VerticalLayout{
 
 	private void initUI() {
 		btnSuperviseProjects.setSizeFull();
+		btnSuperviseEmployees.setSizeFull();
+		btnSuperviseCustomers.setSizeFull();
+		btnSuperviseTeams.setSizeFull();
 	}
 	
 

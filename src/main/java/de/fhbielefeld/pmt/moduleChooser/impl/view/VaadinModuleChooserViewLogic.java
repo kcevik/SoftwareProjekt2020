@@ -13,7 +13,6 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 	private final VaadinModuleChooserView view;
 	private final EventBus eventBus;
 	
-	
 	public VaadinModuleChooserViewLogic(VaadinModuleChooserView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View!");
