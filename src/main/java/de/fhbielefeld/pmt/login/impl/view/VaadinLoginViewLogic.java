@@ -7,8 +7,8 @@ import com.vaadin.flow.component.polymertemplate.EventHandler;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.login.ILoginView;
+import de.fhbielefeld.pmt.login.event.LoginAttemptEvent;
 import de.fhbielefeld.pmt.login.event.LoginFailedEvent;
-import de.fhbielefeld.pmt.login.impl.event.LoginAttemptEvent;
 
 /**
  * @author LucasEickmann

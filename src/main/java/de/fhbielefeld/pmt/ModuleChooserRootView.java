@@ -16,6 +16,7 @@ import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.moduleChooser.IModuleChooserComponent;
+import de.fhbielefeld.pmt.moduleChooser.event.ClientModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.EmployeesModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.impl.ModuleChooserComponent;
 import de.fhbielefeld.pmt.moduleChooser.impl.model.ModuleChooserModel;
@@ -46,8 +47,8 @@ public class ModuleChooserRootView extends VerticalLayout {
 	}
 
 	private IModuleChooserComponent createModuleChooserComponent() {
-		IModuleChooserComponent loginComponent = new ModuleChooserComponent(new ModuleChooserModel(), new VaadinModuleChooserViewLogic(new VaadinModuleChooserView(), this.eventBus), this.eventBus);
-		return loginComponent;
+		IModuleChooserComponent ModuleChooserComponent = new ModuleChooserComponent(new ModuleChooserModel(), new VaadinModuleChooserViewLogic(new VaadinModuleChooserView(), this.eventBus), this.eventBus);
+		return ModuleChooserComponent;
 	}
 
 
@@ -55,5 +56,10 @@ public class ModuleChooserRootView extends VerticalLayout {
 	@Subscribe
 	public void onEmloyeeModuleChosen(EmployeesModuleChosenEvent event) {
 		this.getUI().ifPresent(ui -> ui.navigate("employeemgmt"));
+	}
+	
+	@Subscribe
+	public void onClientModuleChosen(ClientModuleChosenEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("clientmanagement"));
 	}
 }

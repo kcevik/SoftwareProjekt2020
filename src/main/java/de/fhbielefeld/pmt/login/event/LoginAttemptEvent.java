@@ -1,4 +1,4 @@
-package de.fhbielefeld.pmt.login.impl.event;
+package de.fhbielefeld.pmt.login.event;
 
 import java.util.EventObject;
 

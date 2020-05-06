@@ -4,7 +4,7 @@ import com.google.common.eventbus.EventBus;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.moduleChooser.IModuleChooserView;
-import de.fhbielefeld.pmt.moduleChooser.event.CustomersModuleChosenEvent;
+import de.fhbielefeld.pmt.moduleChooser.event.ClientModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.EmployeesModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ProjectsModuleChosenEvent;
 
@@ -28,7 +28,7 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 
 	
 	private void registerViewListener() {
-		this.view.getBtnSuperviseCustomers().addClickListener(e -> this.eventBus.post(new CustomersModuleChosenEvent(this)));
+		this.view.getBtnSuperviseClients().addClickListener(e -> this.eventBus.post(new ClientModuleChosenEvent(this)));
 		this.view.getBtnSuperviseEmployees().addClickListener(e -> this.eventBus.post(new EmployeesModuleChosenEvent(this)));
 		this.view.getBtnSuperviseProjects().addClickListener(e -> this.eventBus.post(new ProjectsModuleChosenEvent(this)));
 		this.view.getBtnSuperviseTeams().addClickListener(e -> this.eventBus.post(new TeamsModuleChosenEvent(this)));

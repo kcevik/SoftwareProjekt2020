@@ -7,7 +7,7 @@ import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.domain.Employee;
 import de.fhbielefeld.pmt.domain.EmployeeService;
 import de.fhbielefeld.pmt.employeeEditor.IEmployeeEditorView;
-import de.fhbielefeld.pmt.login.impl.event.LoginAttemptEvent;
+import de.fhbielefeld.pmt.login.event.LoginAttemptEvent;
 
 public class VaadinEmployeeEditorViewLogic implements IEmployeeEditorView {
 	

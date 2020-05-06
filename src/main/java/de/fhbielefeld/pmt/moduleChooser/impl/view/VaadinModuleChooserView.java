@@ -14,7 +14,7 @@ public class VaadinModuleChooserView extends VerticalLayout{
 	private final Label lblChooseOption = new Label("Bitte treffen Sie Ihre Auswahl");
 	private final Button btnSuperviseProjects = new Button("Projekte verwalten");
 	private final Button btnSuperviseEmployees = new Button("Mitarbeiter verwalten");
-	private final Button btnSuperviseCustomers = new Button("Kunden verwalten");
+	private final Button btnSuperviseClients = new Button("Kunden verwalten");
 	private final Button btnSuperviseTeams = new Button("Teams verwalten");
 	TextField tfPersonalNr = new TextField("Personalnummer");
 	
@@ -33,7 +33,7 @@ public class VaadinModuleChooserView extends VerticalLayout{
 		buttonLayout.add(this.lblChooseOption);
 		buttonLayout.add(this.btnSuperviseProjects);
 		buttonLayout.add(this.btnSuperviseEmployees);
-		buttonLayout.add(this.btnSuperviseCustomers);
+		buttonLayout.add(this.btnSuperviseClients);
 		buttonLayout.add(this.btnSuperviseTeams);
 		
 		this.add(buttonLayout);
@@ -53,13 +53,12 @@ public class VaadinModuleChooserView extends VerticalLayout{
 		return this.btnSuperviseEmployees;
 	}
 
-	public Button getBtnSuperviseCustomers() {
-		return this.btnSuperviseCustomers;
+	public Button getBtnSuperviseClients() {
+		return this.btnSuperviseClients;
 	}
 
 	public Button getBtnSuperviseTeams() {
 		return this.btnSuperviseTeams;
 	}
 
-	
 }	

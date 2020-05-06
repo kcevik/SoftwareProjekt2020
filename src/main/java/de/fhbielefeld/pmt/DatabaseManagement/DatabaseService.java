@@ -1,4 +1,5 @@
 package de.fhbielefeld.pmt.DatabaseManagement;
+
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -16,6 +17,7 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 
 /**
  * Implementation of the Service that handels database interactions
+ * 
  * @author Sebastian Siegmann
  * @version 1.0
  */
@@ -28,6 +30,7 @@ public class DatabaseService {
 
 	/**
 	 * Private constructor of DatabaseService
+	 * 
 	 * @return none
 	 */
 	private DatabaseService() {
@@ -37,9 +40,9 @@ public class DatabaseService {
 
 	}
 
-	
 	/**
 	 * Public method for getting a new DatabaseService
+	 * 
 	 * @return instance of DatabaseService
 	 */
 	public static DatabaseService DatabaseServiceGetInstance() {
@@ -50,274 +53,384 @@ public class DatabaseService {
 		return databaseService;
 
 	}
-	
-	
+
 	/**
 	 * Public method for persisting a client
+	 * 
 	 * @param An instance of the class Client that will be persisted
 	 * @return none
 	 */
 	public synchronized void persistClient(Client client) {
-		
-		if(client == null) {
-			//TODO: Fehlermelddung is empty			
+
+		if (client == null) {
+			// TODO: Fehlermelddung is empty
 		} else {
 			em.getTransaction().begin();
 			em.persist(client);
 			em.getTransaction().commit();
 		}
-	
+
 	}
-	
-	
+
 	/**
 	 * Public method for retrieving a list of clients
+	 * 
 	 * @param none
 	 * @return List<Client> List of clients
 	 */
 	public List<Client> readClient() {
-		
-		TypedQuery<Client> query = em.createQuery("SELECT mm FROM Client mm", Client.class);
+
+		TypedQuery<Client> query = em.createQuery("SELECT c FROM Client c", Client.class);
 		List<Client> resultListClient = query.getResultList();
 		return resultListClient;
-		
+
 	}
-	
-	
+
+	/**
+	 * Public method for retrieving a list of employee
+	 * 
+	 * @param none
+	 * @return List<Client> List of employee
+	 */
+	public Client readSingleClient(Long clientID) {
+
+		TypedQuery<Client> query = em.createQuery("SELECT c FROM Client c WHERE c.clientID = :clientID", Client.class);
+		query.setParameter("clientID", clientID);
+		Client result = query.getSingleResult();
+		return result;
+
+	}
+
 	/**
 	 * Public method for persisting a project
+	 * 
 	 * @param An instance of the class Project that will be persisted
 	 * @return none
 	 */
 	public synchronized void persistProject(Project project) {
-		
-		if(project == null) {
-			//TODO: Fehlermelddung is empty			
+
+		if (project == null) {
+			// TODO: Fehlermelddung is empty
 		} else {
 			em.getTransaction().begin();
 			em.persist(project);
 			em.getTransaction().commit();
 		}
-	
+
 	}
-	
-	
+
 	/**
 	 * Public method for retrieving a list of projects
+	 * 
 	 * @param none
 	 * @return List<Project> List of clients
 	 */
 	public List<Project> readproject() {
-		
-		TypedQuery<Project> query = em.createQuery("SELECT mm FROM Project mm", Project.class);
+
+		TypedQuery<Project> query = em.createQuery("SELECT p FROM Project p", Project.class);
 		List<Project> resultListProject = query.getResultList();
 		return resultListProject;
-		
+
 	}
-	
-	
+
+	/**
+	 * Public method for retrieving a list of employee
+	 * 
+	 * @param none
+	 * @return List<Project> List of employee
+	 */
+	public Project readSingleProject(Long projectID) {
+
+		TypedQuery<Project> query = em.createQuery("SELECT p FROM Project p WHERE p.projectID = :projectID",
+				Project.class);
+		query.setParameter("projectID", projectID);
+		Project result = query.getSingleResult();
+		return result;
+
+	}
+
 	/**
 	 * Public method for persisting a team
+	 * 
 	 * @param An instance of the class Team that will be persisted
 	 * @return none
 	 */
 	public synchronized void persistTeam(Team team) {
-		
-		if(team == null) {
-			//TODO: Fehlermelddung is empty			
+
+		if (team == null) {
+			// TODO: Fehlermelddung is empty
 		} else {
 			em.getTransaction().begin();
 			em.persist(team);
 			em.getTransaction().commit();
 		}
-	
+
 	}
-	
-	
+
 	/**
 	 * Public method for retrieving a list of team
+	 * 
 	 * @param none
 	 * @return List<Team> List of team
 	 */
 	public List<Team> readTeam() {
-		
-		TypedQuery<Team> query = em.createQuery("SELECT mm FROM Team mm", Team.class);
+
+		TypedQuery<Team> query = em.createQuery("SELECT t FROM Team t", Team.class);
 		List<Team> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-		
+
 	}
-	
-	
+
+	/**
+	 * Public method for retrieving a list of employee
+	 * 
+	 * @param none
+	 * @return List<Team> List of employee
+	 */
+	public Team readSingleTeam(Long teamID) {
+
+		TypedQuery<Team> query = em.createQuery("SELECT t FROM Team t WHERE t.teamID = :teamID", Team.class);
+		query.setParameter("teamID", teamID);
+		Team result = query.getSingleResult();
+		return result;
+
+	}
+
 	/**
 	 * Public method for persisting a employee
+	 * 
 	 * @param An instance of the class Client that will be persisted
 	 * @return none
 	 */
 	public synchronized void persistEmployee(Employee employee) {
-		
-		if(employee == null) {
-			//TODO: Fehlermelddung is empty			
+
+		if (employee == null) {
+			// TODO: Fehlermelddung is empty
 		} else {
 			em.getTransaction().begin();
 			em.persist(employee);
 			em.getTransaction().commit();
 		}
-	
+
 	}
-	
-	
+
 	/**
 	 * Public method for retrieving a list of employee
+	 * 
 	 * @param none
 	 * @return List<Employee> List of employee
 	 */
 	public List<Employee> readEmployee() {
-		
-		TypedQuery<Employee> query = em.createQuery("SELECT mm FROM Employee mm", Employee.class);
+
+		TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e", Employee.class);
 		List<Employee> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-		
+
 	}
-	
-	
+
 	/**
-     * Public method for retrieving a list of employee
-     * 
-     * @param none
-     * @return List<Employee> List of employee
-     */
-    public Employee readSingleEmployee(Long employeeID) {
+	 * Public method for retrieving a list of employee
+	 * 
+	 * @param none
+	 * @return List<Employee> List of employee
+	 */
+	public Employee readSingleEmployee(Long employeeID) {
 
-        TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e WHERE e.employeeID = :employeeID",
-                Employee.class);
-        query.setParameter("employeeID", employeeID);
-        Employee e = query.getSingleResult();
-        return e;
+		TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e WHERE e.employeeID = :employeeID",
+				Employee.class);
+		query.setParameter("employeeID", employeeID);
+		Employee result = query.getSingleResult();
+		return result;
 
-    }
-    
-	
+	}
+
 	/**
 	 * Public method for persisting a costs
+	 * 
 	 * @param An instance of the class Costs that will be persisted
 	 * @return none
 	 */
 	public synchronized void persistCosts(Costs costs) {
-		
-		if(costs == null) {
-			//TODO: Fehlermelddung is empty			
+
+		if (costs == null) {
+			// TODO: Fehlermelddung is empty
 		} else {
 			em.getTransaction().begin();
 			em.persist(costs);
 			em.getTransaction().commit();
 		}
-	
+
 	}
-	
-	
+
 	/**
 	 * Public method for retrieving a list of costs
+	 * 
 	 * @param none
 	 * @return List<Costs> List of employee
 	 */
 	public List<Costs> readCosts() {
-		
-		TypedQuery<Costs> query = em.createQuery("SELECT mm FROM Costs mm", Costs.class);
+
+		TypedQuery<Costs> query = em.createQuery("SELECT c FROM Costs c", Costs.class);
 		List<Costs> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-		
+
 	}
-	
+
+	/**
+	 * Public method for retrieving a list of employee
+	 * 
+	 * @param none
+	 * @return List<Costs> List of employee
+	 */
+	public Costs readSingleCosts(Long costsID) {
+
+		TypedQuery<Costs> query = em.createQuery("SELECT c FROM Costs c WHERE c.costsID = :costsID", Costs.class);
+		query.setParameter("costsID", costsID);
+		Costs result = query.getSingleResult();
+		return result;
+
+	}
+
 	/**
 	 * Public method for persisting a projectActivity
+	 * 
 	 * @param An instance of the class Client that will be persisted
 	 * @return none
 	 */
 	public synchronized void persistProjectActivity(ProjectActivity projectActivity) {
-		
-		if(projectActivity == null) {
-			//TODO: Fehlermelddung is empty			
+
+		if (projectActivity == null) {
+			// TODO: Fehlermelddung is empty
 		} else {
 			em.getTransaction().begin();
 			em.persist(projectActivity);
 			em.getTransaction().commit();
 		}
-	
+
 	}
-	
-	
+
 	/**
 	 * Public method for retrieving a list of projectActivity
+	 * 
 	 * @param none
 	 * @return List<ProjectActivity> List of projectActivity
 	 */
 	public List<ProjectActivity> readProjectActivity() {
-		
-		TypedQuery<ProjectActivity> query = em.createQuery("SELECT mm FROM ProjectActivity mm", ProjectActivity.class);
+
+		TypedQuery<ProjectActivity> query = em.createQuery("SELECT pa FROM ProjectActivity pa", ProjectActivity.class);
 		List<ProjectActivity> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-		
+
 	}
-	
+
 	/**
-	 * Public method for persisting a comment
+	 * Public method for retrieving a list of employee
+	 * 
+	 * @param none
+	 * @return List<ProjectActivity> List of employee
+	 */
+	public ProjectActivity readSingleProjectActivity(Long projectActivityID) {
+
+		TypedQuery<ProjectActivity> query = em.createQuery(
+				"SELECT pa FROM ProjectActivity pa WHERE pa.projectActivityID = :projectActivityID",
+				ProjectActivity.class);
+		query.setParameter("projectActivityID", projectActivityID);
+		ProjectActivity result = query.getSingleResult();
+		return result;
+
+	}
+
+	/**
+	 * Public method for persisting a Remark
+	 * 
 	 * @param An instance of the class Client that will be persisted
 	 * @return none
 	 */
-	public synchronized void persistComment(Remark comment) {
-		
-		if(comment == null) {
-			//TODO: Fehlermelddung is empty			
+	public synchronized void persistRemark(Remark Remark) {
+
+		if (Remark == null) {
+			// TODO: Fehlermelddung is empty
 		} else {
 			em.getTransaction().begin();
-			em.persist(comment);
+			em.persist(Remark);
 			em.getTransaction().commit();
 		}
-	
+
 	}
-	
-	
+
 	/**
-	 * Public method for retrieving a list of comment
+	 * Public method for retrieving a list of Remark
+	 * 
 	 * @param none
-	 * @return List<Comment> List of comment
+	 * @return List<Remark> List of Remark
 	 */
-	public List<Remark> readComment() {
-		
-		TypedQuery<Remark> query = em.createQuery("SELECT mm FROM Comment mm", Remark.class);
+	public List<Remark> readRemark() {
+
+		TypedQuery<Remark> query = em.createQuery("SELECT r FROM Remark r", Remark.class);
 		List<Remark> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-		
+
 	}
-	
+
 	/**
-	 * Public method for persisting a comment
+	 * Public method for retrieving a list of employee
+	 * 
+	 * @param none
+	 * @return List<Remark> List of employee
+	 */
+	public Remark readSingleRemark(Long remarkID) {
+
+		TypedQuery<Remark> query = em.createQuery("SELECT r FROM Remark r WHERE r.remarkID = :remarkID", Remark.class);
+		query.setParameter("remarkID", remarkID);
+		Remark result = query.getSingleResult();
+		return result;
+
+	}
+
+	/**
+	 * Public method for persisting a Remark
+	 * 
 	 * @param An instance of the class Role that will be persisted
 	 * @return none
 	 */
 	public synchronized void persistRole(Role role) {
-		
-		if(role == null) {
-			//TODO: Fehlermelddung is empty			
+
+		if (role == null) {
+			// TODO: Fehlermelddung is empty
 		} else {
 			em.getTransaction().begin();
 			em.persist(role);
 			em.getTransaction().commit();
 		}
-	
+
 	}
-	
-	
+
 	/**
-	 * Public method for retrieving a list of comment
+	 * Public method for retrieving a list of Remark
+	 * 
 	 * @param none
-	 * @return List<Role> List of comment
+	 * @return List<Role> List of Remark
 	 */
 	public List<Role> readRole() {
-		
-		TypedQuery<Role> query = em.createQuery("SELECT mm FROM Role mm", Role.class);
+
+		TypedQuery<Role> query = em.createQuery("SELECT r FROM Role r", Role.class);
 		List<Role> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-		
+
+	}
+
+	/**
+	 * Public method for retrieving a list of employee
+	 * 
+	 * @param none
+	 * @return List<Role> List of employee
+	 */
+	public Role readSinglerRole(Long roleID) {
+
+		TypedQuery<Role> query = em.createQuery("SELECT r FROM Role r WHERE r.roleID = :roleID", Role.class);
+		query.setParameter("roleID", roleID);
+		Role result = query.getSingleResult();
+		return result;
+
 	}
 }

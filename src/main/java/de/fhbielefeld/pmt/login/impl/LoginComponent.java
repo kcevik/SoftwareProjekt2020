@@ -13,9 +13,9 @@ import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.login.ILoginComponent;
 import de.fhbielefeld.pmt.login.ILoginModel;
 import de.fhbielefeld.pmt.login.ILoginView;
+import de.fhbielefeld.pmt.login.event.LoginAttemptEvent;
 import de.fhbielefeld.pmt.login.event.LoginFailedEvent;
 import de.fhbielefeld.pmt.login.event.LoginSuccessEvent;
-import de.fhbielefeld.pmt.login.impl.event.LoginAttemptEvent;
 
 
 /**

@@ -75,7 +75,7 @@ public class TestDrive {
 		databaseService.persistProject(proj1);
 		databaseService.persistProject(proj2);
 		databaseService.persistCosts(cost1);
-		databaseService.persistComment(com1);
+		databaseService.persistRemark(com1);
 		databaseService.persistTeam(team1);
 		databaseService.persistProjectActivity(projAct1);
 
@@ -84,6 +84,6 @@ public class TestDrive {
 	}
 
 	public static void main(String[] args) {
-		buildTestDB();
+		//buildTestDB();
 	}
 }
