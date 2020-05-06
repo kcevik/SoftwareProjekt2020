@@ -85,12 +85,13 @@ public class DatabaseService {
 		return resultListClient;
 
 	}
+	
 
 	/**
 	 * Public method for retrieving a list of employee
 	 * 
 	 * @param none
-	 * @return List<Client> List of employee
+	 * @return List<Client> List of client
 	 */
 	public Client readSingleClient(Long clientID) {
 
@@ -184,8 +185,8 @@ public class DatabaseService {
 	/**
 	 * Public method for retrieving a list of employee
 	 * 
-	 * @param none
-	 * @return List<Team> List of employee
+	 * @param Long teamID
+	 * @return List<Team> List of team
 	 */
 	public Team readSingleTeam(Long teamID) {
 
@@ -227,7 +228,23 @@ public class DatabaseService {
 		return resultListEmployee;
 
 	}
+	
+	
+	/**
+	 * Public method for retrieving a list of employee
+	 * 
+	 * @param none
+	 * @return List<Employee> List of employee
+	 */
+	public List<Employee> readEmployee(Long employeeID) {
 
+		TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e WHERE e.employeeID = :employeeID", Employee.class);
+		List<Employee> resultListEmployee = query.getResultList();
+		return resultListEmployee;
+	}
+
+	
+	
 	/**
 	 * Public method for retrieving a list of employee
 	 * 

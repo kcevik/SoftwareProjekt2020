@@ -1,5 +1,7 @@
 package de.fhbielefeld.pmt.login.impl.model;
 
+import javax.persistence.NoResultException;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
@@ -26,8 +28,14 @@ public class LoginModel implements ILoginModel{
 		
 		Employee employee = null;
 		
-		if (NumberUtils.isNumber(userId)) {
-		employee = dbService.readSingleEmployee(Long.parseLong(userId));
+		try {
+			
+			if (NumberUtils.isNumber(userId)) {
+			employee = dbService.readSingleEmployee(Long.parseLong(userId));
+			}
+		}catch(NoResultException e) {
+			System.out.println("Es existiert kein Benutzer mit dieser ID");
+			return false;
 		}
 		
 		if (employee != null && password.equals(employee.getPassword())) {
@@ -35,8 +43,6 @@ public class LoginModel implements ILoginModel{
 		}else {
 			return false;
 		}
-
-		
 	}
 
 }
