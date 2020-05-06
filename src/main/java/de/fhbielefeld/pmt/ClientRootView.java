@@ -13,10 +13,9 @@ import de.fhbielefeld.pmt.client.impl.ClientComponent;
 import de.fhbielefeld.pmt.client.impl.model.ClientModel;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientView;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientViewLogic;
-import de.fhbielefeld.pmt.login.impl.LoginComponent;
 
-/*
- * 
+/**
+ * Grundaufbau der Vaadin Seite. Startpunkt für das Erstellen einer neuen Browserseite.
  * @author Sebastian Siegmann
  * 
  */
@@ -48,11 +47,16 @@ public class ClientRootView extends VerticalLayout {
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 	}
 
+	/**
+	 * Erstellt die Klasse ClientComponent inclusive aller Untergeordneten Klasse.
+	 * Wird in Konstruktor weiter verarbeitet
+	 * @return clientComponent
+	 */
 	private IClientComponent createClientComponent() {
 		VaadinClientViewLogic vaadinClientViewLogic;
 		vaadinClientViewLogic = new VaadinClientViewLogic(new VaadinClientView(), this.eventBus);
 		IClientComponent clientComponent = new ClientComponent(new ClientModel(DatabaseService.DatabaseServiceGetInstance()), vaadinClientViewLogic, this.eventBus);
-		vaadinClientViewLogic.freddyKommBusBauen();
+		vaadinClientViewLogic.initReadAllClientsEvent();
 		return clientComponent;
 	}
 }

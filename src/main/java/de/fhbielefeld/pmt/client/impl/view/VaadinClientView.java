@@ -13,7 +13,7 @@ import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
- * 
+ * VaadinView Klasse die den Inhalt des RootViews darstellt
  * @author Sebastian Siegmann
  *
  */
@@ -52,11 +52,15 @@ public class VaadinClientView extends VerticalLayout {
 	private void initUI() {
 		addClassName("list-view");
 		setSizeFull();
+		this.CLIENTFORM.setVisible(false);
 		configureGrid();
 		configureFilter();
 
 	}
 
+	/**
+	 * Setzt Eigenschaften für den Filter fest
+	 */
 	private void configureFilter() {
 		this.filterText.setPlaceholder("Filter nach Namen");
 		this.filterText.setClearButtonVisible(true);
@@ -65,16 +69,27 @@ public class VaadinClientView extends VerticalLayout {
 		this.filterText.addValueChangeListener(e -> filterList(filterText.getValue()));
 	}
 
+	/**
+	 * Filterfunktion für das Textfeld. Fügt einen Datensatz der Liste hinzu, falls der String parameter enthalten ist.
+	 * @param filter
+	 */
 	private void filterList(String filter) {
 		ArrayList<Client> filtered = new ArrayList<Client>();
 		for (Client c : this.clientList) {
 			if (c.getName().contains(filter)) {
 				filtered.add(c);
-			} 
+			} else if(c.getTown().contains(filter)) {
+				filtered.add(c);
+			} else if(c.getStreet().contains(filter)) {
+				filtered.add(c);
+			} //TODO: Vergleichen von int Werten? Wieso kann ich keine Methoden darauf aufrufen?
 		}
 		this.clientGrid.setItems(filtered);
 	}
 
+	/**
+	 * Setzt Eigenschaften für das Grid fest.
+	 */
 	private void configureGrid() {
 		this.clientGrid.addClassName("client-grid");
 		this.clientGrid.removeColumnByKey("projectList");
@@ -83,13 +98,14 @@ public class VaadinClientView extends VerticalLayout {
 			String projectString = "";
 			for (Project p : client.getProjectList()) {
 				projectString += p.getProjectID() + ", ";
-
 			}
 			projectString = projectString.substring(0, projectString.length() - 2);
 			return projectString;
 		}).setHeader("Projekte");
 		this.clientGrid.getColumns().forEach(col -> col.setAutoWidth(true));
+		this.clientGrid.asSingleSelect().addValueChangeListener(event -> this.CLIENTFORM.displayClient(event.getValue()));
 	}
+
 
 	public Grid<Client> getClientGrid() {
 		return clientGrid;
@@ -99,9 +115,10 @@ public class VaadinClientView extends VerticalLayout {
 		this.clientList.add(c);
 	}
 
-	
+	/**
+	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
+	 */
 	public void updateGrid() {
-		System.out.println("ich update das Grid in der View klasse");
 		this.clientGrid.setItems(this.clientList);
 	}
 }

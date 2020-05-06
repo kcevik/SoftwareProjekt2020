@@ -13,23 +13,25 @@ import de.fhbielefeld.pmt.client.impl.event.TransportAllClientsEvent;
 
 
 /**
+ * Hauptsteuerungsklasse für den RootView des Clients.
  * @author Sebastian Siegmann
  */
 public class ClientComponent extends AbstractPresenter<IClientModel, IClientView> implements IClientComponent {
 
 	public ClientComponent(IClientModel model, IClientView view, EventBus eventBus) {
 		super(model, view, eventBus);
-		System.out.println("ich lebe");
 		this.eventBus.register(this);
 	}
 
+	/**
+	 * Nimmt ReadAllClientsEvent entgegen und stößt anschließend über das Model die DB Anfrage an.
+	 * Verpackt die vom Model erhalteten Daten in ein neues Event zum Datentransport
+	 * @param event
+	 */
 	@Subscribe
 	public void onReadAllClientsEvent(ReadAllClientsEvent event) {
-		System.out.println("Das Read All Clients event ist angekommen in der Achtarmigenführerbunkerkrake ");
 		if (event.getSource() == this.view) {
-			System.out.println("Der Verantwortliche View is richtig");
 			if (this.model.isReadSuccessfull()) {
-				System.out.println("Der Read hat auch geklappt");
 				TransportAllClientsEvent containsData = new TransportAllClientsEvent(this.view);
 				containsData.setClientList(this.model.getClientListFromDatabase());
 				this.eventBus.post(containsData);	

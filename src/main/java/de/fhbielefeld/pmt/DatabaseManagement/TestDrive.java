@@ -8,6 +8,11 @@ import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 import de.fhbielefeld.pmt.JPAEntities.Remark;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 
+/**
+ * Testdurchlauf zum Erstellen der DB und eintragen von Testdatensätzen.
+ * @author Siggi
+ *
+ */
 public class TestDrive {
 
 	public static void buildTestDB() {
@@ -26,7 +31,7 @@ public class TestDrive {
 		// TODO: Macht es nicht sinn isActive nicht als Parameter mit zu �bergeben
 		// sondern direkt als true zu initialisieren?
 		Employee emp2 = new Employee("password", "Axel", "Schweiss", "Rechnungswesen dude", false, "B302", 18919698,
-				"Nebenstra�e", 420, 65859, "Nebenstadt");
+				"Nebenstraße", 420, 65859, "Nebenstadt");
 
 		// public Client(String name, String street, int housenumber, String town, int
 		// zipCode, int telephoneNumber)

@@ -6,7 +6,8 @@ import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.client.IClientModel;
 
-/*
+/**
+ * Model Klasse regelt DB Zugriffe und gibt Daten von der DB an Controller Klassen weiter
  * @author Sebastian Siegmann
  */
 public class ClientModel implements IClientModel {
@@ -20,11 +21,17 @@ public class ClientModel implements IClientModel {
 		this.dbService = dbService;
 	}
 
+	/**
+	 * Ließt über DatabaseService alle Clients aus
+	 */
 	@Override
 	public List<Client> getClientListFromDatabase() {
 		return dbService.readClient();
 	}
 
+	/**
+	 * Bestätigt on ausgelesene Daten null sind oder Werte enthalten.
+	 */
 	@Override
 	public boolean isReadSuccessfull() {
 		if(this.getClientListFromDatabase()!=null) {
