@@ -4,6 +4,7 @@ import java.awt.Panel;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.charts.model.Label;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.login.LoginForm;
@@ -36,7 +37,6 @@ public class VaadinLoginView extends VerticalLayout{
 	private static final long serialVersionUID = 1L;
 	
 	private final LoginForm loginForm = new LoginForm();
-
 	
 	public VaadinLoginView() {
 		this.initUI();
@@ -49,7 +49,8 @@ public class VaadinLoginView extends VerticalLayout{
 	 * 
 	 */
 	private void builtUI() {
-
+		
+		this.add("Projektmanagement-Tool");
 		this.add(loginForm);
 		this.setAlignItems(Alignment.CENTER);
 	}
@@ -65,4 +66,5 @@ public class VaadinLoginView extends VerticalLayout{
 	public LoginForm getLoginForm() {
 		return this.loginForm;
 	}
+	
 }

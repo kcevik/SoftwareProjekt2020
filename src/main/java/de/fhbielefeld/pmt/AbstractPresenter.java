@@ -17,7 +17,7 @@ public abstract class AbstractPresenter<M, V> {
 	protected final EventBus eventBus;
 
 	/**
-	 * Initialisiert diese Presenterinstanz.
+	 * Initialisiert diese Presentierinstanz.
 	 * 
 	 * @param model
 	 *            das Model des Presenters.
