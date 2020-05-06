@@ -63,7 +63,7 @@ public class VaadinModuleChooserView extends VerticalLayout{
 	private void initUI() {
 		btnSuperviseProjects.setSizeFull();
 		btnSuperviseEmployees.setSizeFull();
-		btnSuperviseCustomers.setSizeFull();
+		btnSuperviseClients.setSizeFull();
 		btnSuperviseTeams.setSizeFull();
 	}
 	
