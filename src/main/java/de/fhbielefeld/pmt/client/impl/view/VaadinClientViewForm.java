@@ -1,6 +1,5 @@
 package de.fhbielefeld.pmt.client.impl.view;
 
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -14,6 +13,8 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 
 public class VaadinClientViewForm extends FormLayout {
 
+	private static final long serialVersionUID = 1L;
+	
 	TextField clientID = new TextField("Kundenummer:");
 	TextField name = new TextField("Name:");
 	TextField telephonenumber = new TextField("Telefonnummer:");
