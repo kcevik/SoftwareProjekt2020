@@ -7,8 +7,10 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
 /**
  * VaadinView Klasse, welche das Formular erstellt
  * 
@@ -18,6 +20,7 @@ import com.vaadin.flow.component.textfield.TextField;
 public class VaadinClientViewForm extends FormLayout {
 
 	private static final long serialVersionUID = 1L;
+	private final Label lblBeschreibung = new Label();
 	private final TextField tfClientID = new TextField("Kundenummer:");
 	private final TextField tfName = new TextField("Name:");
 	private final TextField tfTelephonenumber = new TextField("Telefonnummer:");
@@ -29,19 +32,29 @@ public class VaadinClientViewForm extends FormLayout {
 	private final ComboBox<String> cbProjects = new ComboBox<String>("Projekte:");
 
 	private final Button btnSave = new Button("Speichern");
-	private final Button btnDelete = new Button("Löschen");
+	private final Button btnEdit = new Button("Bearbeiten");
 	private final Button btnClose = new Button("Abbrechen");
 
 	public VaadinClientViewForm() {
 		addClassName("client-form");
 		configureTextFields();
-		cbProjects.setEnabled(false);
-		add(tfClientID, tfName, tfTelephonenumber, tfStreet, tfHouseNumber, tfZipCode, tfTown, ckIsActive, cbProjects,
-				configureButtons());
+		cbProjects.isReadOnly();
+		lblBeschreibung.add("Anlegen/Bearbeiten");
+		lblBeschreibung.addClassName("lbl-heading-form");
+		add(lblBeschreibung, tfClientID, tfName, tfTelephonenumber, tfStreet, tfHouseNumber, tfZipCode, tfTown,
+				ckIsActive, cbProjects, configureButtons());
 	}
 
 	private void configureTextFields() {
 		this.tfClientID.setEnabled(false);
+		this.tfName.setEnabled(false);
+		this.tfTelephonenumber.setEnabled(false);
+		this.tfStreet.setEnabled(false);
+		this.tfHouseNumber.setEnabled(false);
+		this.tfZipCode.setEnabled(false);
+		this.tfTown.setEnabled(false);
+		this.ckIsActive.setEnabled(false);
+		this.cbProjects.setEnabled(false);
 	}
 
 	/**
@@ -52,21 +65,21 @@ public class VaadinClientViewForm extends FormLayout {
 	 */
 	public Component configureButtons() {
 		btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-		btnDelete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-		btnClose.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		btnSave.setVisible(false);
+		btnEdit.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		btnClose.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
 		btnSave.addClickShortcut(Key.ENTER);
 		btnClose.addClickShortcut(Key.ESCAPE);
 
-		btnClose.addClickListener(event -> this.clearClientForm());
-		return new HorizontalLayout(btnSave, btnDelete, btnClose);
+		return new HorizontalLayout(btnSave, btnEdit, btnClose);
 	}
-
 
 	/**
 	 * Setzt das Formular zurück
 	 */
 	public void clearClientForm() {
+		this.setVisible(false);
 		this.tfClientID.clear();
 		this.tfName.clear();
 		this.tfTelephonenumber.clear();
@@ -76,8 +89,35 @@ public class VaadinClientViewForm extends FormLayout {
 		this.tfTown.clear();
 		this.ckIsActive.clear();
 		this.cbProjects.clear();
-		this.setVisible(false);
+		this.closeEdit();
 	}
+	
+	public void prepareEdit() {
+		this.tfName.setEnabled(true);
+		this.tfTelephonenumber.setEnabled(true);
+		this.tfStreet.setEnabled(true);
+		this.tfHouseNumber.setEnabled(true);
+		this.tfZipCode.setEnabled(true);
+		this.tfTown.setEnabled(true);
+		this.ckIsActive.setEnabled(true);
+		this.cbProjects.setEnabled(true);
+		this.btnSave.setVisible(true);
+		this.btnEdit.setVisible(false);
+	}
+	
+	public void closeEdit() {
+		this.tfName.setEnabled(false);
+		this.tfTelephonenumber.setEnabled(false);
+		this.tfStreet.setEnabled(false);
+		this.tfHouseNumber.setEnabled(false);
+		this.tfZipCode.setEnabled(false);
+		this.tfTown.setEnabled(false);
+		this.ckIsActive.setEnabled(false);
+		this.cbProjects.setEnabled(false);
+		this.btnSave.setVisible(false);
+		this.btnEdit.setVisible(true);
+	}
+	
 
 	public TextField getTfClientID() {
 		return tfClientID;
@@ -119,8 +159,8 @@ public class VaadinClientViewForm extends FormLayout {
 		return btnSave;
 	}
 
-	public Button getBtnDelete() {
-		return btnDelete;
+	public Button getBtnEdit() {
+		return btnEdit;
 	}
 
 	public Button getBtnClose() {

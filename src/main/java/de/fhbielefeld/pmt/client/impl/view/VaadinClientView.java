@@ -2,10 +2,10 @@ package de.fhbielefeld.pmt.client.impl.view;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -66,6 +66,14 @@ public class VaadinClientView extends VerticalLayout {
 		configureFilter();
 
 	}
+	
+	/**
+	 * Setzt die Tabelle und das Forular zurück
+	 */
+	public void clearGridAndForm() {
+		this.clientGrid.deselectAll();
+		this.CLIENTFORM.clearClientForm();
+	}
 
 	/**
 	 * Setzt Eigenschaften für den Filter fest
@@ -74,7 +82,6 @@ public class VaadinClientView extends VerticalLayout {
 		this.filterText.setPlaceholder("Filter nach Namen");
 		this.filterText.setClearButtonVisible(true);
 		this.filterText.setValueChangeMode(ValueChangeMode.LAZY);
-		// TODO: Filter suche implementieren
 		this.filterText.addValueChangeListener(e -> filterList(filterText.getValue()));
 	}
 
@@ -101,11 +108,8 @@ public class VaadinClientView extends VerticalLayout {
 				filtered.add(c);
 			} else if (String.valueOf(c.getZipCode()).contains(filter)) {
 				filtered.add(c);
-				// TODO: Würde es helfen wenn wir ne Methode im Client haben der nur die IDs der
-				// Projekte wiedergibt?!
-			} else if (String.valueOf(c.getProjectList().contains(filtered)) != null) { // is voll der Bullshit Projekte
-																						// filtern anders
-
+			} else if (c.getProjectIDsAsString().contains(filter)) { 
+				filtered.add(c);															
 			}
 		}
 		this.clientGrid.setItems(filtered);
@@ -130,6 +134,7 @@ public class VaadinClientView extends VerticalLayout {
 		}).setHeader("Projekte");
 		this.clientGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.clientGrid.setHeightFull();
+		this.clientGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 	}
 
 	public Grid<Client> getClientGrid() {

@@ -237,6 +237,14 @@ public class Client implements Serializable {
 		this.isActive = isActive;
 	}
 
+	public String getProjectIDsAsString() {
+		String projectIDs = "";
+		for (Project p : this.getProjectList()) {
+			projectIDs += p.getProjectId() + " ";
+		}
+		return projectIDs;
+	}
+
 	/**
 	 * Public Methode um das serialVersionUID Attribut zur�ckzugeben
 	 * 

@@ -11,24 +11,27 @@
   max-width: 250px;
 }
 
+/*@author Sebastian Siegmann*/
 /* List view */
 .list-view .content {
     display: flex; 
 }
-
 .list-view .client-grid {
     flex: 3; 
 }
-
 .list-view .client-form {
     flex: 1;
     padding: var(--lumo-space-m);  
 }
-
 @media all and (max-width: 1100px) {  
     .list-view.editing .toolbar,
     .list-view.editing .contact-grid {
         display: none;
    }
 }
+.lbl-heading-form {
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
 

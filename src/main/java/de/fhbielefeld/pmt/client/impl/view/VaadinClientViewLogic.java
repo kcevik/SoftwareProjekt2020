@@ -48,14 +48,29 @@ public class VaadinClientViewLogic implements IClientView {
 	private void registerViewListeners() {
 		this.view.getClientGrid().asSingleSelect()
 				.addValueChangeListener(event -> this.displayClient(event.getValue()));
-		this.view.getCLIENTFORM().getBtnSave().addClickListener(event -> this.saveClient());
 		this.view.getBtnBackToMainMenu()
 				.addClickListener(event -> this.eventBus.post(new ModuleChooserChosenEvent(this)));
-		this.view.getBtnCreateClient().addClickListener(event -> dunnoyet());
+		this.view.getBtnCreateClient().addClickListener(event -> displayEmptyForm());
+		this.view.getCLIENTFORM().getBtnSave().addClickListener(event -> this.saveClient());
+		this.view.getCLIENTFORM().getBtnEdit().addClickListener(event -> this.view.getCLIENTFORM().prepareEdit());
+		this.view.getCLIENTFORM().getBtnClose().addClickListener(event -> cancelForm());
 	}
 
-	private void dunnoyet() {
+	private void cancelForm() {
+		this.selectedClient = null;
+		System.out.println("Client is null weil form zurückgesetzt");
+		this.view.clearGridAndForm();
+	}
+
+	/**
+	 * Stellt die CLIENTFORM leer dar
+	 */
+	private void displayEmptyForm() {
+		this.selectedClient = null;
+		System.out.println("Client is null");
+		this.view.getClientGrid().deselectAll();
 		this.view.getCLIENTFORM().clearClientForm();
+		this.view.getCLIENTFORM().prepareEdit();
 		this.view.getCLIENTFORM().setVisible(true);
 	}
 
@@ -66,31 +81,39 @@ public class VaadinClientViewLogic implements IClientView {
 	private void saveClient() {
 		if (this.selectedClient == null) {
 			this.selectedClient = new Client();
+			System.out.println("new Client erzeugt in saveClient");
 		}
 		try {
 			this.selectedClient.setName(this.view.getCLIENTFORM().getTfName().getValue());
-			this.selectedClient
-					.setTelephoneNumber(this.view.getCLIENTFORM().getTfTelephonenumber().getValue());
+			this.selectedClient.setTelephoneNumber(this.view.getCLIENTFORM().getTfTelephonenumber().getValue());
 			this.selectedClient.setStreet(this.view.getCLIENTFORM().getTfStreet().getValue());
 			this.selectedClient
 					.setHouseNumber(Integer.valueOf(this.view.getCLIENTFORM().getTfHouseNumber().getValue()));
 			this.selectedClient.setZipCode(Integer.valueOf(this.view.getCLIENTFORM().getTfZipCode().getValue()));
 			this.selectedClient.setTown(this.view.getCLIENTFORM().getTfTown().getValue());
 			this.selectedClient.setActive(this.view.getCLIENTFORM().getCkIsActive().getValue());
+			this.eventBus.post(new SendClientToDBEvent(this.selectedClient));
+			this.view.getCLIENTFORM().setVisible(false);
+			this.view.addClient(selectedClient);
+			this.view.updateGrid();
+			Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
+					.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 		} catch (NumberFormatException e) {
 			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 					Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+			this.view.getCLIENTFORM().setVisible(true);
 			this.view.getCLIENTFORM().clearClientForm();
 			this.view.getClientGrid().deselectAll();
+		} catch (NullPointerException e2) {
+			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
+					Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+			this.view.getCLIENTFORM().setVisible(true);
+			this.view.getCLIENTFORM().clearClientForm();
+			this.view.getClientGrid().deselectAll();
+		} finally {
+			this.selectedClient = null;
+			System.out.println("Client wegen exception auf null gesetzt");
 		}
-		this.eventBus.post(new SendClientToDBEvent(this.selectedClient));
-		this.view.getCLIENTFORM().setVisible(false);
-		//TODO: Manchmal werden die Dargestllt mir update Grid manchmal nicht
-		//Diesen Client hinzufügen geht nicht weil dass denn nicht der gleich ist wie der in der DB
-		this.view.addClient(selectedClient);
-		this.view.updateGrid();
-		Notification.show("Gespeichert", 5000,
-				Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 	}
 
 	/**
@@ -103,6 +126,7 @@ public class VaadinClientViewLogic implements IClientView {
 		this.selectedClient = client;
 		if (client != null) {
 			try {
+				System.out.println("Jetzt is der client der der ausgeählt ist in dem grid");
 				this.view.getCLIENTFORM().getTfClientID().setValue(String.valueOf(this.selectedClient.getClientID()));
 				this.view.getCLIENTFORM().getTfName().setValue(this.selectedClient.getName());
 				this.view.getCLIENTFORM().getTfTelephonenumber()
@@ -120,6 +144,7 @@ public class VaadinClientViewLogic implements IClientView {
 				}
 				this.view.getCLIENTFORM().getCbProjects().setItems(projectStrings);
 				this.view.getCLIENTFORM().getCbProjects().setPlaceholder("Nach IDs suchen...");
+				this.view.getCLIENTFORM().closeEdit();
 				this.view.getCLIENTFORM().setVisible(true);
 			} catch (NumberFormatException e) {
 				this.view.getCLIENTFORM().clearClientForm();
