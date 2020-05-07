@@ -122,6 +122,13 @@ public class VaadinClientView extends VerticalLayout {
 		this.clientGrid.addClassName("client-grid");
 		this.clientGrid.removeColumnByKey("projectList");
 		this.clientGrid.setColumns("clientID", "name", "telephoneNumber", "street", "houseNumber", "zipCode", "town");
+		this.clientGrid.getColumnByKey("clientID").setHeader("Kundenummer");
+		this.clientGrid.getColumnByKey("name").setHeader("Firma");
+		this.clientGrid.getColumnByKey("telephoneNumber").setHeader("Telefonnummer");
+		this.clientGrid.getColumnByKey("street").setHeader("Straße");
+		this.clientGrid.getColumnByKey("houseNumber").setHeader("Hausnummer");
+		this.clientGrid.getColumnByKey("zipCode").setHeader("Postleitzahl");
+		this.clientGrid.getColumnByKey("town").setHeader("Ort");
 		this.clientGrid.addColumn(client -> {
 			String projectString = "";
 			for (Project p : client.getProjectList()) {

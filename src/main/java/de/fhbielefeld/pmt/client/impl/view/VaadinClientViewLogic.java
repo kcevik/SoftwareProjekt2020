@@ -48,8 +48,10 @@ public class VaadinClientViewLogic implements IClientView {
 	private void registerViewListeners() {
 		this.view.getClientGrid().asSingleSelect()
 				.addValueChangeListener(event -> this.displayClient(event.getValue()));
-		this.view.getBtnBackToMainMenu()
-				.addClickListener(event -> this.eventBus.post(new ModuleChooserChosenEvent(this)));
+		this.view.getBtnBackToMainMenu().addClickListener(event -> {
+			this.eventBus.post(new ModuleChooserChosenEvent(this));
+			resetSelectedClient();
+		});
 		this.view.getBtnCreateClient().addClickListener(event -> displayEmptyForm());
 		this.view.getCLIENTFORM().getBtnSave().addClickListener(event -> this.saveClient());
 		this.view.getCLIENTFORM().getBtnEdit().addClickListener(event -> this.view.getCLIENTFORM().prepareEdit());
@@ -57,7 +59,7 @@ public class VaadinClientViewLogic implements IClientView {
 	}
 
 	private void cancelForm() {
-		this.selectedClient = null;
+		resetSelectedClient();
 		System.out.println("Client is null weil form zurückgesetzt");
 		this.view.clearGridAndForm();
 	}
@@ -66,7 +68,7 @@ public class VaadinClientViewLogic implements IClientView {
 	 * Stellt die CLIENTFORM leer dar
 	 */
 	private void displayEmptyForm() {
-		this.selectedClient = null;
+		resetSelectedClient();
 		System.out.println("Client is null");
 		this.view.getClientGrid().deselectAll();
 		this.view.getCLIENTFORM().clearClientForm();
@@ -111,9 +113,13 @@ public class VaadinClientViewLogic implements IClientView {
 			this.view.getCLIENTFORM().clearClientForm();
 			this.view.getClientGrid().deselectAll();
 		} finally {
-			this.selectedClient = null;
+			resetSelectedClient();
 			System.out.println("Client wegen exception auf null gesetzt");
 		}
+	}
+
+	private void resetSelectedClient() {
+		this.selectedClient = null;
 	}
 
 	/**
