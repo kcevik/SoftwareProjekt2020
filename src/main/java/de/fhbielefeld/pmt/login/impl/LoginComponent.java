@@ -17,7 +17,6 @@ import de.fhbielefeld.pmt.login.event.LoginAttemptEvent;
 import de.fhbielefeld.pmt.login.event.LoginFailedEvent;
 import de.fhbielefeld.pmt.login.event.LoginSuccessEvent;
 
-
 /**
  * @author LucasEickmann
  *

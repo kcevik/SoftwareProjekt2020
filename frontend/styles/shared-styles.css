@@ -13,13 +13,13 @@
 
 /*@author Sebastian Siegmann*/
 /* List view */
-.list-view .content {
+.list-view, .content {
     display: flex; 
 }
-.list-view .client-grid {
+.list-view, .client-grid, .team-grid {
     flex: 3; 
 }
-.list-view .client-form {
+.list-view, .client-form, .team-form {
     flex: 1;
     padding: var(--lumo-space-m);  
 }
