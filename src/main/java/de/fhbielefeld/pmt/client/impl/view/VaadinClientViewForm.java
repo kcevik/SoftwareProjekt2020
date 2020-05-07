@@ -1,6 +1,5 @@
 package de.fhbielefeld.pmt.client.impl.view;
 
-import java.util.ArrayList;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -8,12 +7,8 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import de.fhbielefeld.pmt.JPAEntities.Client;
-import de.fhbielefeld.pmt.JPAEntities.Project;
-
 /**
  * VaadinView Klasse, welche das Formular erstellt
  * 
@@ -23,7 +18,6 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 public class VaadinClientViewForm extends FormLayout {
 
 	private static final long serialVersionUID = 1L;
-	private Client client = null;
 	private final TextField tfClientID = new TextField("Kundenummer:");
 	private final TextField tfName = new TextField("Name:");
 	private final TextField tfTelephonenumber = new TextField("Telefonnummer:");
@@ -41,6 +35,7 @@ public class VaadinClientViewForm extends FormLayout {
 	public VaadinClientViewForm() {
 		addClassName("client-form");
 		configureTextFields();
+		cbProjects.setEnabled(false);
 		add(tfClientID, tfName, tfTelephonenumber, tfStreet, tfHouseNumber, tfZipCode, tfTown, ckIsActive, cbProjects,
 				configureButtons());
 	}
@@ -64,20 +59,9 @@ public class VaadinClientViewForm extends FormLayout {
 		btnClose.addClickShortcut(Key.ESCAPE);
 
 		btnClose.addClickListener(event -> this.clearClientForm());
-		// btnSave.addClickListener(event -> );
 		return new HorizontalLayout(btnSave, btnDelete, btnClose);
 	}
 
-	/**
-	 * Stellt den übergebenen Client in dem Formular dar, falls dieser nicht null
-	 * ist. Falls der übergene Wert null ist, wird das Formular versteckt.
-	 * 
-	 * @param client
-	 */
-	public void displayClient(Client client) {
-		this.client = client;
-
-	}
 
 	/**
 	 * Setzt das Formular zurück

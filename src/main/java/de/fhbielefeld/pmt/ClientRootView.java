@@ -1,6 +1,7 @@
 package de.fhbielefeld.pmt;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -13,6 +14,7 @@ import de.fhbielefeld.pmt.client.impl.ClientComponent;
 import de.fhbielefeld.pmt.client.impl.model.ClientModel;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientView;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientViewLogic;
+import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 
 /**
  * Grundaufbau der Vaadin Seite. Startpunkt für das Erstellen einer neuen Browserseite.
@@ -58,5 +60,11 @@ public class ClientRootView extends VerticalLayout {
 		IClientComponent clientComponent = new ClientComponent(new ClientModel(DatabaseService.DatabaseServiceGetInstance()), vaadinClientViewLogic, this.eventBus);
 		vaadinClientViewLogic.initReadAllClientsEvent();
 		return clientComponent;
+	}
+	
+	@Subscribe
+	public void onModuleChooserChosenEvent(ModuleChooserChosenEvent event) {
+		System.out.println("Der bus is da");
+		this.getUI().ifPresent(ui -> ui.navigate("modulechooser"));
 	}
 }

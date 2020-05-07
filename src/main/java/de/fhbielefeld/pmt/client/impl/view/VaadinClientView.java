@@ -2,9 +2,12 @@ package de.fhbielefeld.pmt.client.impl.view;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -14,6 +17,7 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
  * VaadinView Klasse die den Inhalt des RootViews darstellt
+ * 
  * @author Sebastian Siegmann
  *
  */
@@ -22,9 +26,12 @@ public class VaadinClientView extends VerticalLayout {
 
 	private static final long serialVersionUID = 1L;
 
-	private Grid<Client> clientGrid = new Grid<>(Client.class);
-	private List<Client> clientList = new ArrayList<Client>();
-	private TextField filterText = new TextField();
+	private final Grid<Client> clientGrid = new Grid<>(Client.class);
+	private final List<Client> clientList = new ArrayList<Client>();
+	private final TextField filterText = new TextField();
+	private final Button btnBackToMainMenu = new Button();
+	private final Button btnCreateClient = new Button();
+
 	private final VaadinClientViewForm CLIENTFORM = new VaadinClientViewForm();
 
 	public VaadinClientView() {
@@ -41,7 +48,7 @@ public class VaadinClientView extends VerticalLayout {
 		Div content = new Div(clientGrid, CLIENTFORM);
 		content.addClassName("content");
 		content.setSizeFull();
-		this.add(filterText, content);
+		this.add(new HorizontalLayout(filterText, btnCreateClient), content, btnBackToMainMenu);
 
 	}
 
@@ -52,7 +59,9 @@ public class VaadinClientView extends VerticalLayout {
 	private void initUI() {
 		addClassName("list-view");
 		setSizeFull();
+		this.btnCreateClient.setText("Neuen Kunden anlegen");
 		this.CLIENTFORM.setVisible(false);
+		this.btnBackToMainMenu.setText("Zurück zur Aufgabenauswahl");
 		configureGrid();
 		configureFilter();
 
@@ -70,7 +79,9 @@ public class VaadinClientView extends VerticalLayout {
 	}
 
 	/**
-	 * Filterfunktion für das Textfeld. Fügt einen Datensatz der Liste hinzu, falls der String parameter enthalten ist.
+	 * Filterfunktion für das Textfeld. Fügt einen Datensatz der Liste hinzu, falls
+	 * der String parameter enthalten ist.
+	 * 
 	 * @param filter
 	 */
 	private void filterList(String filter) {
@@ -78,21 +89,23 @@ public class VaadinClientView extends VerticalLayout {
 		for (Client c : this.clientList) {
 			if (c.getName().contains(filter)) {
 				filtered.add(c);
-			} else if(c.getTown().contains(filter)) {
+			} else if (c.getTown().contains(filter)) {
 				filtered.add(c);
-			} else if(c.getStreet().contains(filter)) {
+			} else if (c.getStreet().contains(filter)) {
 				filtered.add(c);
-			} else if(String.valueOf(c.getClientID()).contains(filter)) {
+			} else if (String.valueOf(c.getClientID()).contains(filter)) {
 				filtered.add(c);
-			} else if(String.valueOf(c.getHouseNumber()).contains(filter)) {
+			} else if (String.valueOf(c.getHouseNumber()).contains(filter)) {
 				filtered.add(c);
-			} else if(String.valueOf(c.getTelephoneNumber()).contains(filter)) {
+			} else if (String.valueOf(c.getTelephoneNumber()).contains(filter)) {
 				filtered.add(c);
-			} else if(String.valueOf(c.getZipCode()).contains(filter)) {
+			} else if (String.valueOf(c.getZipCode()).contains(filter)) {
 				filtered.add(c);
-				//TODO: Würde es helfen wenn wir ne Methode im Client haben der nur die IDs der Projekte wiedergibt?! 
-			} else if(String.valueOf(c.getProjectList().contains(filtered)) != null) { //is voll der Bullshit Projekte filtern anders
-				
+				// TODO: Würde es helfen wenn wir ne Methode im Client haben der nur die IDs der
+				// Projekte wiedergibt?!
+			} else if (String.valueOf(c.getProjectList().contains(filtered)) != null) { // is voll der Bullshit Projekte
+																						// filtern anders
+
 			}
 		}
 		this.clientGrid.setItems(filtered);
@@ -110,24 +123,35 @@ public class VaadinClientView extends VerticalLayout {
 			for (Project p : client.getProjectList()) {
 				projectString += p.getProjectID() + ", ";
 			}
-			projectString = projectString.substring(0, projectString.length() - 2);
+			if (projectString.length() > 2) {
+				projectString = projectString.substring(0, projectString.length() - 2);
+			}
 			return projectString;
 		}).setHeader("Projekte");
 		this.clientGrid.getColumns().forEach(col -> col.setAutoWidth(true));
+		this.clientGrid.setHeightFull();
 	}
-
 
 	public Grid<Client> getClientGrid() {
 		return clientGrid;
 	}
-	
 
 	public VaadinClientViewForm getCLIENTFORM() {
 		return CLIENTFORM;
 	}
 
+	public Button getBtnBackToMainMenu() {
+		return btnBackToMainMenu;
+	}
+
 	public void addClient(Client c) {
-		this.clientList.add(c);
+		if (!this.clientList.contains(c)) {
+			this.clientList.add(c);
+		}
+	}
+
+	public Button getBtnCreateClient() {
+		return btnCreateClient;
 	}
 
 	/**

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Project;
@@ -13,6 +13,7 @@ import de.fhbielefeld.pmt.client.IClientView;
 import de.fhbielefeld.pmt.client.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.client.impl.event.SendClientToDBEvent;
 import de.fhbielefeld.pmt.client.impl.event.TransportAllClientsEvent;
+import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 
 /**
  * Vaadin Logik Klasse. Steuert den zugehörigen VaadinView und alle
@@ -26,7 +27,6 @@ public class VaadinClientViewLogic implements IClientView {
 	private final VaadinClientView view;
 	private final EventBus eventBus;
 	private Client selectedClient;
-	private Binder<Client> binder = new Binder<>(Client.class);
 
 	public VaadinClientViewLogic(VaadinClientView view, EventBus eventBus) {
 		if (view == null) {
@@ -39,56 +39,81 @@ public class VaadinClientViewLogic implements IClientView {
 		this.eventBus = eventBus;
 		this.eventBus.register(this);
 		this.registerViewListeners();
-		// this.initBinder();
 	}
-
-//	private void initBinder() {
-//		// TODO Auto-generated method stub
-//		binder.forField(this.view.getCLIENTFORM().tfName).bind(Client::getName, Client::setName);
-//		binder.forField(this.view.getCLIENTFORM().tfTelephonenumber).withConverter(new StringToIntegerConverter("Must enter a number"))
-//		.bind(Client::getTelephoneNumber, Client::setTelephoneNumber);
-//	}
 
 	/**
 	 * Fügt den Komponenten der View die entsprechenden Listener hinzu. Noch unklar
 	 * welche Listener gebraucht werden
 	 */
 	private void registerViewListeners() {
-		this.view.getClientGrid().asSingleSelect().addValueChangeListener(e -> this.displayClient(e.getValue()));
+		this.view.getClientGrid().asSingleSelect()
+				.addValueChangeListener(event -> this.displayClient(event.getValue()));
 		this.view.getCLIENTFORM().getBtnSave().addClickListener(event -> this.saveClient());
+		this.view.getBtnBackToMainMenu()
+				.addClickListener(event -> this.eventBus.post(new ModuleChooserChosenEvent(this)));
+		this.view.getBtnCreateClient().addClickListener(event -> dunnoyet());
 	}
 
+	private void dunnoyet() {
+		this.view.getCLIENTFORM().clearClientForm();
+		this.view.getCLIENTFORM().setVisible(true);
+	}
+
+	/**
+	 * Aktualisiert die Client Instanzvariable mit den aktuellen werten aus den
+	 * Formularfeldern und verschickt den das Client Objekt mit einem Bus
+	 */
 	private void saveClient() {
-		//TODO: Exception handling
+		if (this.selectedClient == null) {
+			this.selectedClient = new Client();
+		}
 		try {
 			this.selectedClient.setName(this.view.getCLIENTFORM().getTfName().getValue());
-			this.selectedClient.setTelephoneNumber(Integer.valueOf(this.view.getCLIENTFORM().getTfTelephonenumber().getValue()));
+			this.selectedClient
+					.setTelephoneNumber(this.view.getCLIENTFORM().getTfTelephonenumber().getValue());
 			this.selectedClient.setStreet(this.view.getCLIENTFORM().getTfStreet().getValue());
-			this.selectedClient.setHouseNumber(Integer.valueOf(this.view.getCLIENTFORM().getTfHouseNumber().getValue()));
+			this.selectedClient
+					.setHouseNumber(Integer.valueOf(this.view.getCLIENTFORM().getTfHouseNumber().getValue()));
 			this.selectedClient.setZipCode(Integer.valueOf(this.view.getCLIENTFORM().getTfZipCode().getValue()));
 			this.selectedClient.setTown(this.view.getCLIENTFORM().getTfTown().getValue());
 			this.selectedClient.setActive(this.view.getCLIENTFORM().getCkIsActive().getValue());
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
+					Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+			this.view.getCLIENTFORM().clearClientForm();
+			this.view.getClientGrid().deselectAll();
 		}
 		this.eventBus.post(new SendClientToDBEvent(this.selectedClient));
+		this.view.getCLIENTFORM().setVisible(false);
+		//TODO: Manchmal werden die Dargestllt mir update Grid manchmal nicht
+		//Diesen Client hinzufügen geht nicht weil dass denn nicht der gleich ist wie der in der DB
+		this.view.addClient(selectedClient);
 		this.view.updateGrid();
+		Notification.show("Gespeichert", 5000,
+				Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 	}
 
+	/**
+	 * Setzt den ausgewählen Client aus dem Grid in eine Instanzvariable ein und
+	 * setzt die Attribute des Clients in die Formularfelder
+	 * 
+	 * @param client
+	 */
 	private void displayClient(Client client) {
 		this.selectedClient = client;
 		if (client != null) {
 			try {
 				this.view.getCLIENTFORM().getTfClientID().setValue(String.valueOf(this.selectedClient.getClientID()));
 				this.view.getCLIENTFORM().getTfName().setValue(this.selectedClient.getName());
-				this.view.getCLIENTFORM().getTfTelephonenumber().setValue(String.valueOf(this.selectedClient.getTelephoneNumber()));
+				this.view.getCLIENTFORM().getTfTelephonenumber()
+						.setValue(String.valueOf(this.selectedClient.getTelephoneNumber()));
 				this.view.getCLIENTFORM().getTfStreet().setValue(this.selectedClient.getStreet());
-				this.view.getCLIENTFORM().getTfHouseNumber().setValue(String.valueOf(this.selectedClient.getHouseNumber()));
+				this.view.getCLIENTFORM().getTfHouseNumber()
+						.setValue(String.valueOf(this.selectedClient.getHouseNumber()));
 				this.view.getCLIENTFORM().getTfZipCode().setValue(String.valueOf(this.selectedClient.getZipCode()));
 				this.view.getCLIENTFORM().getTfTown().setValue(this.selectedClient.getTown());
-				this.view.getCLIENTFORM().getCkIsActive().setValue(this.selectedClient.isActive()); // TODO: Wie zur Hölle machen wir
-																						// daraus ne Auswahl?!
+				this.view.getCLIENTFORM().getCkIsActive().setValue(this.selectedClient.isActive());
+				// TODO: Auswahl von Projekten oder nur Anzeigen?
 				ArrayList<String> projectStrings = new ArrayList<String>();
 				for (Project p : this.selectedClient.getProjectList()) {
 					projectStrings.add(String.valueOf(p.getProjectID()));
@@ -125,13 +150,6 @@ public class VaadinClientViewLogic implements IClientView {
 		}
 		this.view.updateGrid();
 	}
-
-//	public void bindClient(Client client) {
-//		this.selectedClient = client;
-//		// VaadinClientViewForm vaadinClientViewForm = this.view.getCLIENTFORM();
-//		binder.setBean(selectedClient);
-//		this.view.getCLIENTFORM().setVisible(true);
-//	}
 
 	@SuppressWarnings("unchecked")
 	@Override

@@ -18,9 +18,9 @@ public class Client implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int clientID;
+	private long clientID;
 	private String name;
-	private int telephoneNumber;
+	private String telephoneNumber;
 	private String street;
 	private int houseNumber;
 	private int zipCode;
@@ -43,7 +43,7 @@ public class Client implements Serializable {
 	 * 
 	 * @return none
 	 */
-	public Client(String name, String street, int housenumber, String town, int zipCode, int telephoneNumber) {
+	public Client(String name, String street, int housenumber, String town, int zipCode, String telephoneNumber) {
 		super();
 		this.name = name;
 		this.street = street;
@@ -62,7 +62,7 @@ public class Client implements Serializable {
 	 * @param None
 	 */
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden
-	public int getClientID() {
+	public long getClientID() {
 		return clientID;
 	}
 
@@ -203,7 +203,7 @@ public class Client implements Serializable {
 	 * @return Integer telephoneNumber
 	 * @param None
 	 */
-	public int getTelephoneNumber() {
+	public String getTelephoneNumber() {
 		return telephoneNumber;
 	}
 
@@ -213,7 +213,7 @@ public class Client implements Serializable {
 	 * @return None
 	 * @param String telephoneNumber
 	 */
-	public void setTelephoneNumber(int telephoneNumber) {
+	public void setTelephoneNumber(String telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
 

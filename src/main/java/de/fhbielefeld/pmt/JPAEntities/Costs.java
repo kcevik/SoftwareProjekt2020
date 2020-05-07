@@ -17,7 +17,7 @@ public class Costs implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int costsID;
+	private long costsID;
 	private String costType;
 	private String description;
 	private double incurredCosts;
@@ -51,7 +51,7 @@ public class Costs implements Serializable {
 	 * @param 
 	 */
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden 
-	public int getCostsID() {
+	public long getCostsID() {
 		return costsID;
 	}
 
