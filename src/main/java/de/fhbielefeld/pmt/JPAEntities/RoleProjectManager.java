@@ -4,10 +4,10 @@ import de.fhbielefeld.pmt.JPAEntities.Role;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import de.fhbielefeld.pmt.JPAEntities.Role;
 
 /**
  * Entity implementation class for Entity: RoleProjectManager
+ * @author Sebastian Siegmann
  *
  */
 @Entity

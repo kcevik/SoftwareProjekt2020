@@ -25,18 +25,18 @@ public class TestDrive {
 		 * telephoneNumber, boolean isActive, String street, int houseNumber, int
 		 * zipCode, String town)
 		 */
-		Employee emp1 = new Employee("password", "Andi", "Fresse", "Entwickler", true, "A202", 651616168,
+		Employee emp1 = new Employee("password", "Andi", "Fresse", "Entwickler", true, "A202", "651616168",
 				"Hauptstrasse", 2, 32649, "Hauptstadt");
 		// TODO: Problem bei der Hausnummer: Zusatz wie 2a kann nicht gespeichert werden
 		// TODO: Macht es nicht sinn isActive nicht als Parameter mit zu �bergeben
 		// sondern direkt als true zu initialisieren?
-		Employee emp2 = new Employee("password", "Axel", "Schweiss", "Rechnungswesen dude", false, "B302", 18919698,
+		Employee emp2 = new Employee("password", "Axel", "Schweiss", "Rechnungswesen dude", false, "B302", "18919698",
 				"Nebenstraße", 420, 65859, "Nebenstadt");
 
 		// public Client(String name, String street, int housenumber, String town, int
 		// zipCode, int telephoneNumber)
 		// TODO:Fehler bei legit Telefonnummern
-		Client cl1 = new Client("Bullshit GMBH", "Strasse", 3, "Dorf", 69696, 16816981);
+		Client cl1 = new Client("Bullshit GMBH", "Strasse", 3, "Dorf", 69696, "16816981");
 
 		/*
 		 * public Project(String projectName, Employee projectManager, Client client,

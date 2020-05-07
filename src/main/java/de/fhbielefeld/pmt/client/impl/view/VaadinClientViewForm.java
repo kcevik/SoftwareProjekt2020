@@ -1,6 +1,5 @@
 package de.fhbielefeld.pmt.client.impl.view;
 
-import java.util.ArrayList;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -8,11 +7,9 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import de.fhbielefeld.pmt.JPAEntities.Client;
-import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
  * VaadinView Klasse, welche das Formular erstellt
@@ -23,29 +20,41 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 public class VaadinClientViewForm extends FormLayout {
 
 	private static final long serialVersionUID = 1L;
-	TextField tfClientID = new TextField("Kundenummer:");
-	TextField tfName = new TextField("Name:");
-	TextField tfTelephonenumber = new TextField("Telefonnummer:");
-	TextField tfStreet = new TextField("Strasse:");
-	TextField tfHouseNumber = new TextField("Hausnummer:");
-	TextField tfZipCode = new TextField("PLZ:");
-	TextField tfTown = new TextField("Ort:");
-	Checkbox ckIsActive = new Checkbox("Aktiv");
-	ComboBox<String> cbProjects = new ComboBox<String>("Projekte:");
+	private final Label lblBeschreibung = new Label();
+	private final TextField tfClientID = new TextField("Kundenummer:");
+	private final TextField tfName = new TextField("Name:");
+	private final TextField tfTelephonenumber = new TextField("Telefonnummer:");
+	private final TextField tfStreet = new TextField("Strasse:");
+	private final TextField tfHouseNumber = new TextField("Hausnummer:");
+	private final TextField tfZipCode = new TextField("PLZ:");
+	private final TextField tfTown = new TextField("Ort:");
+	private final Checkbox ckIsActive = new Checkbox("Aktiv");
+	private final ComboBox<String> cbProjects = new ComboBox<String>("Projekte:");
 
-	Button btnSave = new Button("Speichern");
-	Button btnDelete = new Button("Löschen");
-	Button btnClose = new Button("Abbrechen");
+	private final Button btnSave = new Button("Speichern");
+	private final Button btnEdit = new Button("Bearbeiten");
+	private final Button btnClose = new Button("Abbrechen");
 
 	public VaadinClientViewForm() {
 		addClassName("client-form");
 		configureTextFields();
-		add(tfClientID, tfName, tfTelephonenumber, tfStreet, tfHouseNumber, tfZipCode, tfTown, ckIsActive, cbProjects,
-				configureButtons());
+		cbProjects.isReadOnly();
+		lblBeschreibung.add("Anlegen/Bearbeiten");
+		lblBeschreibung.addClassName("lbl-heading-form");
+		add(lblBeschreibung, tfClientID, tfName, tfTelephonenumber, tfStreet, tfHouseNumber, tfZipCode, tfTown,
+				ckIsActive, cbProjects, configureButtons());
 	}
 
 	private void configureTextFields() {
 		this.tfClientID.setEnabled(false);
+		this.tfName.setEnabled(false);
+		this.tfTelephonenumber.setEnabled(false);
+		this.tfStreet.setEnabled(false);
+		this.tfHouseNumber.setEnabled(false);
+		this.tfZipCode.setEnabled(false);
+		this.tfTown.setEnabled(false);
+		this.ckIsActive.setEnabled(false);
+		this.cbProjects.setEnabled(false);
 	}
 
 	/**
@@ -56,53 +65,21 @@ public class VaadinClientViewForm extends FormLayout {
 	 */
 	public Component configureButtons() {
 		btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-		btnDelete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-		btnClose.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		btnSave.setVisible(false);
+		btnEdit.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		btnClose.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
 		btnSave.addClickShortcut(Key.ENTER);
 		btnClose.addClickShortcut(Key.ESCAPE);
-		
-		btnClose.addClickListener(event -> this.clearClientForm());
-		return new HorizontalLayout(btnSave, btnDelete, btnClose);
-	}
 
-	/**
-	 * Stellt den übergebenen Client in dem Formular dar, falls dieser nicht null ist.
-	 * Falls der übergene Wert null ist, wird das Formular versteckt.
-	 * @param client
-	 */
-	public void displayClient(Client client) {
-		if (client != null) {
-			try {
-				this.tfClientID.setValue(String.valueOf(client.getClientID()));
-				this.tfName.setValue(client.getName());
-				this.tfTelephonenumber.setValue(String.valueOf(client.getTelephoneNumber()));
-				this.tfStreet.setValue(client.getStreet());
-				this.tfHouseNumber.setValue(String.valueOf(client.getHouseNumber()));
-				this.tfZipCode.setValue(String.valueOf(client.getZipCode()));
-				this.tfTown.setValue(client.getTown());
-				this.ckIsActive.setValue(client.isActive());
-				//TODO: Wie zur Hölle machen wir daraus ne Auswahl?!
-				ArrayList<String> projectStrings = new ArrayList<String>();
-				for(Project p : client.getProjectList()) {
-					projectStrings.add(String.valueOf(p.getProjectID()));
-				}
-				this.cbProjects.setItems(projectStrings);
-				this.cbProjects.setPlaceholder("Nach IDs suchen...");
-				this.setVisible(true);
-			} catch (NumberFormatException e) {
-				clearClientForm();
-				Notification.show("NumberFormatException");
-			}
-		} else {
-			this.setVisible(false);
-		}
+		return new HorizontalLayout(btnSave, btnEdit, btnClose);
 	}
 
 	/**
 	 * Setzt das Formular zurück
 	 */
-	private void clearClientForm() {
+	public void clearClientForm() {
+		this.setVisible(false);
 		this.tfClientID.clear();
 		this.tfName.clear();
 		this.tfTelephonenumber.clear();
@@ -112,6 +89,82 @@ public class VaadinClientViewForm extends FormLayout {
 		this.tfTown.clear();
 		this.ckIsActive.clear();
 		this.cbProjects.clear();
-		this.setVisible(false);
+		this.closeEdit();
 	}
+	
+	public void prepareEdit() {
+		this.tfName.setEnabled(true);
+		this.tfTelephonenumber.setEnabled(true);
+		this.tfStreet.setEnabled(true);
+		this.tfHouseNumber.setEnabled(true);
+		this.tfZipCode.setEnabled(true);
+		this.tfTown.setEnabled(true);
+		this.ckIsActive.setEnabled(true);
+		this.cbProjects.setEnabled(true);
+		this.btnSave.setVisible(true);
+		this.btnEdit.setVisible(false);
+	}
+	
+	public void closeEdit() {
+		this.tfName.setEnabled(false);
+		this.tfTelephonenumber.setEnabled(false);
+		this.tfStreet.setEnabled(false);
+		this.tfHouseNumber.setEnabled(false);
+		this.tfZipCode.setEnabled(false);
+		this.tfTown.setEnabled(false);
+		this.ckIsActive.setEnabled(false);
+		this.cbProjects.setEnabled(false);
+		this.btnSave.setVisible(false);
+		this.btnEdit.setVisible(true);
+	}
+	
+
+	public TextField getTfClientID() {
+		return tfClientID;
+	}
+
+	public TextField getTfName() {
+		return tfName;
+	}
+
+	public TextField getTfTelephonenumber() {
+		return tfTelephonenumber;
+	}
+
+	public TextField getTfStreet() {
+		return tfStreet;
+	}
+
+	public TextField getTfHouseNumber() {
+		return tfHouseNumber;
+	}
+
+	public TextField getTfZipCode() {
+		return tfZipCode;
+	}
+
+	public TextField getTfTown() {
+		return tfTown;
+	}
+
+	public Checkbox getCkIsActive() {
+		return ckIsActive;
+	}
+
+	public ComboBox<String> getCbProjects() {
+		return cbProjects;
+	}
+
+	public Button getBtnSave() {
+		return btnSave;
+	}
+
+	public Button getBtnEdit() {
+		return btnEdit;
+	}
+
+	public Button getBtnClose() {
+		return btnClose;
+	}
+
 }

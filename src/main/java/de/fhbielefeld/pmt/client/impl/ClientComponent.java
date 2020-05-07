@@ -9,6 +9,7 @@ import de.fhbielefeld.pmt.client.IClientComponent;
 import de.fhbielefeld.pmt.client.IClientModel;
 import de.fhbielefeld.pmt.client.IClientView;
 import de.fhbielefeld.pmt.client.impl.event.ReadAllClientsEvent;
+import de.fhbielefeld.pmt.client.impl.event.SendClientToDBEvent;
 import de.fhbielefeld.pmt.client.impl.event.TransportAllClientsEvent;
 
 
@@ -37,6 +38,11 @@ public class ClientComponent extends AbstractPresenter<IClientModel, IClientView
 				this.eventBus.post(containsData);	
 			}
 		}
+	}
+	
+	@Subscribe
+	public void onSendClientToDBEvent(SendClientToDBEvent event) {
+		this.model.persistClient(event.getSelectedClient());
 	}
 
 	/**

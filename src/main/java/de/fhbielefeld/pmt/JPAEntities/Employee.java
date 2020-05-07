@@ -18,7 +18,7 @@ public class Employee implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	//TODO: Rollen attribut hinzuf�gen
-	private int employeeID;
+	private long employeeID;
 	private String password;
 	private String firstName;
 	private String lastName;
@@ -27,7 +27,7 @@ public class Employee implements Serializable {
 	private Role role;
 	private boolean isSuitabilityProjectManager;
 	private String room;
-	private int telephoneNumber;
+	private String telephoneNumber;
 	private boolean isActive;
 	private String street;
 	private int houseNumber;
@@ -54,7 +54,7 @@ public class Employee implements Serializable {
 	 * @return none
 	 */
 	public Employee(String password, String firstName, String lastName, String occupation,
-			boolean isSuitabilityProjectManager, String room, int telephoneNumber, String street,
+			boolean isSuitabilityProjectManager, String room, String telephoneNumber, String street,
 			int houseNumber, int zipCode, String town) {
 		super();
 		this.password = password;
@@ -81,7 +81,7 @@ public class Employee implements Serializable {
 	 * @param None
 	 */
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden 
-	public int getEmployeeId() {
+	public long getEmployeeID() {
 		return employeeID;
 	}
 
@@ -140,14 +140,6 @@ public class Employee implements Serializable {
 		this.role = role;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
-	public int getEmployeeID() {
-		return employeeID;
-	}
 
 	/**
 	 * Public Methode um  
@@ -395,7 +387,7 @@ public class Employee implements Serializable {
 	 * @return Integer telephoneNumber
 	 * @param None
 	 */
-	public int getTelephoneNumber() {
+	public String getTelephoneNumber() {
 		return telephoneNumber;
 	}
 
@@ -405,7 +397,7 @@ public class Employee implements Serializable {
 	 * @return None
 	 * @param Integer telephoneNumber
 	 */
-	public void setTelephoneNumber(int telephoneNumber) {
+	public void setTelephoneNumber(String telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
 

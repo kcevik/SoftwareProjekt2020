@@ -19,7 +19,7 @@ public class Team implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int teamID;
+	private long teamID;
 	private String teamName;
 	private boolean isActive;
 	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "teamList")
@@ -85,7 +85,7 @@ public class Team implements Serializable {
 	 * @param 
 	 */
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden 
-	public int getTeamID() {
+	public long getTeamID() {
 		return teamID;
 	}
 
