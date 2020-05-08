@@ -80,5 +80,5 @@ html {
 @-moz-document url-prefix() {
   .list-view {
   	padding-top: 75px;
-  }
+}
 }
