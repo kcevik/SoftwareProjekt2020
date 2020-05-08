@@ -28,9 +28,12 @@ public class VaadinTopBarView extends HorizontalLayout {
 	}
 
 	private void buildUI() {
-		this.setClassName("testingborder");
+		//this.setClassName("testingborder");
+		this.setClassName("topBar");
 		this.setAlignItems(Alignment.CENTER);
 		this.setWidthFull();
+		this.setMaxHeight("120px");
+		this.setMinHeight("120px");
 		VerticalLayout left = new VerticalLayout(iconLogo,lblSlogan);
 		left.setAlignSelf(Alignment.START);
 		VerticalLayout middle = new VerticalLayout(lblHeading);
