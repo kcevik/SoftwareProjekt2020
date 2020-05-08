@@ -8,7 +8,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.client.IClientComponent;
 import de.fhbielefeld.pmt.client.impl.ClientComponent;
@@ -16,6 +15,10 @@ import de.fhbielefeld.pmt.client.impl.model.ClientModel;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientView;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientViewLogic;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.topBar.ITopBarComponent;
+import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
+import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
+import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
 
 /**
  * Grundaufbau der Vaadin Seite. Startpunkt für das Erstellen einer neuen Browserseite.
@@ -39,19 +42,35 @@ public class ClientRootView extends VerticalLayout {
 	public ClientRootView() {
 
 		this.eventBus.register(this);
-		
+		ITopBarComponent topBarComponent = this.createTopBarComponent();
 		IClientComponent clientComponent = this.createClientComponent();
-
+		
+		Component topBarView = topBarComponent.getViewAs(Component.class);
 		Component clientView = clientComponent.getViewAs(Component.class);
-
+	
+		this.add(topBarView);
 		this.add(clientView);
 		this.setHeightFull();
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 	}
 
+	
 	/**
-	 * Erstellt die Klasse ClientComponent inclusive aller Untergeordneten Klasse.
+	 * Erstellt die Klasse TopBarComponent mit allen Unterklassen und dem Model des Views zu dem die TopBar gehört
+	 * Setzt den Text entsprechend dieser RootView Klasse
+	 * @return
+	 */
+	private ITopBarComponent createTopBarComponent() {
+		VaadinTopBarView vaadinTopBarView;
+		vaadinTopBarView = new VaadinTopBarView();
+		vaadinTopBarView.setLblHeadingText("Kundenübersicht");
+		ITopBarComponent topBarComponent = new TopBarComponent(new ClientModel(DatabaseService.DatabaseServiceGetInstance()), new VaadinTopBarViewLogic(vaadinTopBarView, this.eventBus), this.eventBus);
+		return topBarComponent;
+	}
+
+	/**
+	 * Erstellt die Klasse ClientComponent inklusive aller Untergeordneten Klasse.
 	 * Wird in Konstruktor weiter verarbeitet
 	 * @return clientComponent
 	 */
@@ -65,7 +84,6 @@ public class ClientRootView extends VerticalLayout {
 	
 	@Subscribe
 	public void onModuleChooserChosenEvent(ModuleChooserChosenEvent event) {
-		System.out.println("Der bus is da");
 		this.getUI().ifPresent(ui -> ui.navigate("modulechooser"));
 	}
 }
