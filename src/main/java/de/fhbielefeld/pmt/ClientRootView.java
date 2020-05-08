@@ -6,6 +6,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
@@ -36,24 +37,26 @@ public class ClientRootView extends VerticalLayout {
 	private static final long serialVersionUID = 1L;
 	private final EventBus eventBus = new EventBus();
 	VaadinSession session = VaadinSession.getCurrent();
-	
-	
 
+	
 	public ClientRootView() {
-
+		
 		this.eventBus.register(this);
 		ITopBarComponent topBarComponent = this.createTopBarComponent();
 		IClientComponent clientComponent = this.createClientComponent();
 		
 		Component topBarView = topBarComponent.getViewAs(Component.class);
 		Component clientView = clientComponent.getViewAs(Component.class);
-	
 		this.add(topBarView);
 		this.add(clientView);
 		this.setHeightFull();
 		this.addClassName("root-view");
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+//		if(this.getUI().get().getPage()!=null) {
+//			this.getUI().get().getPage().executeJs("document.body.scrollTop = document.documentElement.scrollTop = 0");
+//		}
+	
 	}
 
 	

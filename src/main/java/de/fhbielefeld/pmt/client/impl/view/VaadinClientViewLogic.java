@@ -51,6 +51,7 @@ public class VaadinClientViewLogic implements IClientView {
 		this.view.getBtnBackToMainMenu().addClickListener(event -> {
 			this.eventBus.post(new ModuleChooserChosenEvent(this));
 			resetSelectedClient();
+			
 		});
 		this.view.getBtnCreateClient().addClickListener(event -> displayEmptyForm());
 		this.view.getCLIENTFORM().getBtnSave().addClickListener(event -> this.saveClient());

@@ -49,7 +49,6 @@ public class VaadinClientView extends VerticalLayout {
 		content.addClassName("content");
 		content.setSizeFull();
 		this.add(new HorizontalLayout(filterText, btnCreateClient), content, btnBackToMainMenu);
-
 	}
 
 	/**
@@ -82,6 +81,7 @@ public class VaadinClientView extends VerticalLayout {
 		this.filterText.setPlaceholder("Filter nach Namen");
 		this.filterText.setClearButtonVisible(true);
 		this.filterText.setValueChangeMode(ValueChangeMode.LAZY);
+		//TODO: Mach den in die Logic
 		this.filterText.addValueChangeListener(e -> filterList(filterText.getValue()));
 	}
 
