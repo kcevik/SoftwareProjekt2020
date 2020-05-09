@@ -14,4 +14,7 @@ public interface ILoginModel {
 	 *         Andernfalls <code>false</code>.
 	 */
 	boolean loginUser(String userId, String password);
+	String getUserRole(String userID);
+	String getUserFirstName(String userID);
+	String getUserLastName(String userID);
 }

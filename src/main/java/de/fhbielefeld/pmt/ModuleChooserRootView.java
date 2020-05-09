@@ -32,6 +32,11 @@ public class ModuleChooserRootView extends VerticalLayout {
 
 	public ModuleChooserRootView() {
 		
+		System.out.println(session.getAttribute("LOGIN_USER_ID"));
+		System.out.println(session.getAttribute("LOGIN_USER_FIRSTNAME"));
+		System.out.println(session.getAttribute("LOGIN_USER_LASTNAME"));
+		System.out.println(session.getAttribute("LOGIN_USER_ROLE"));
+		
 		this.eventBus.register(this);
 		
 		IModuleChooserComponent moduleChooserComponent = this.createModuleChooserComponent();

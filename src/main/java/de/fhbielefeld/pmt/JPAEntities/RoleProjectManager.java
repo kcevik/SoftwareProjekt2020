@@ -22,15 +22,20 @@ public class RoleProjectManager extends Role implements Serializable {
 	}
 	
 	public boolean hasType(String type) {
-		if (type.equalsIgnoreCase("Projektleiter")){
+		if (type.equalsIgnoreCase("manager")){
 			return true;
 		} else {
 			return super.hasType(type);
 		}
 	}
 	
+	@Override
 	public String toString() {
 		return "Rolle: Projektleiter";
 	}
    
+	@Override
+	public String getRoleDesignation() {
+		return "manager";
+	}
 }

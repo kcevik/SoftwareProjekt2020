@@ -1,14 +1,9 @@
 package de.fhbielefeld.pmt.login.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-
 import de.fhbielefeld.pmt.AbstractPresenter;
-import de.fhbielefeld.pmt.IViewAccessor;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.login.ILoginComponent;
 import de.fhbielefeld.pmt.login.ILoginModel;
@@ -28,19 +23,19 @@ public class LoginComponent extends AbstractPresenter<ILoginModel, ILoginView> i
 		super(model, view, eventBus);
 	}
 
-	
 	@Subscribe
 	public void onLoginAttempt(LoginAttemptEvent event) {
 		if (event.getSource() == this.view) {
 			if (this.model.loginUser(event.getUserId(), event.getPassword())) {
-				eventBus.post(new LoginSuccessEvent(this.model, event.getUserId()));
-			}else {
+				eventBus.post(new LoginSuccessEvent(this.model, event.getUserId(),
+						this.model.getUserFirstName(event.getUserId()), this.model.getUserLastName(event.getUserId()),
+						this.model.getUserRole(event.getUserId())));
+			} else {
 				eventBus.post(new LoginFailedEvent(this.model));
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * Delegiert den Aufruf an die ViewLogic Klasse
 	 */
