@@ -9,7 +9,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
-import de.fhbielefeld.pmt.login.impl.LoginComponent;
+import de.fhbielefeld.pmt.error.LoginChecker;
+import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.IModuleChooserComponent;
 import de.fhbielefeld.pmt.moduleChooser.event.ClientModuleChosenEvent;
@@ -32,12 +33,7 @@ public class ModuleChooserRootView extends VerticalLayout {
 
 	public ModuleChooserRootView() {
 
-		System.out.println(session.getAttribute("LOGIN_USER_ID"));
-		System.out.println(session.getAttribute("LOGIN_USER_FIRSTNAME"));
-		System.out.println(session.getAttribute("LOGIN_USER_LASTNAME"));
-		System.out.println(session.getAttribute("LOGIN_USER_ROLE"));
-
-		this.eventBus.register(this);
+		this.eventBus.register(this);	
 
 		IModuleChooserComponent moduleChooserComponent = this.createModuleChooserComponent();
 
@@ -47,29 +43,19 @@ public class ModuleChooserRootView extends VerticalLayout {
 		this.setHeightFull();
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-//		try {
-//			if (session.getAttribute("LOGIN_USER_ID")==null) {
-//				this.getUI().ifPresent(ui -> ui.navigate(""));
-//			} else {
-//				this.getUI().ifPresent(ui -> ui.navigate(""));
-//			}
-//		} catch (NullPointerException e) {
-//			session.setAttribute("LOGIN_USER_ID", null);
-//			session.setAttribute("LOGIN_USER_FIRSTNAME", null);
-//			session.setAttribute("LOGIN_USER_LASTNAME", null);
-//			session.setAttribute("LOGIN_USER_ROLE", null);
-//			this.getUI().ifPresent(ui -> ui.navigate(""));
-//			this.setEnabled(false);
-//			System.out.println("jup");
-//			//TODO: wieso wird nach dem Logoutevent noch weiter gemacht und nicht ausgeloggt
-////		}
-//		//Nichtmal so macht er die navigation
-//		this.getUI().ifPresent(ui -> ui.navigate("clientmanagement"));
-//		//Event wird gesendet aber navigation findet nicht statt
-//		if(session.getAttribute("LOGIN_USER_ID") == null) {
-//			this.eventBus.post(new LogoutAttemptEvent(this));
-//		}
 		
+		rootViewLoginCheck();
+	}
+
+	private void rootViewLoginCheck() {
+		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"), session.getAttribute("LOGIN_USER_FIRSTNAME"),
+				session.getAttribute("LOGIN_USER_LASTNAME"), session.getAttribute("LOGIN_USER_ROLE"))) {
+			System.out.println("User ist korrekt angemeldet");
+		} else {
+			this.removeAll();
+			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
+			return;
+		}
 	}
 
 	private IModuleChooserComponent createModuleChooserComponent() {
@@ -109,4 +95,5 @@ public class ModuleChooserRootView extends VerticalLayout {
 		this.getUI().ifPresent(ui -> ui.navigate(""));
 		System.out.println("Logout fertig");
 	}
+
 }
