@@ -18,6 +18,7 @@ import de.fhbielefeld.pmt.login.impl.LoginComponent;
 import de.fhbielefeld.pmt.login.impl.model.LoginModel;
 import de.fhbielefeld.pmt.login.impl.view.VaadinLoginView;
 import de.fhbielefeld.pmt.login.impl.view.VaadinLoginViewLogic;
+import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 
 @Route("")
 @Theme(value = Lumo.class, variant = Lumo.DARK)
@@ -39,7 +40,12 @@ public class LoginRootView extends VerticalLayout{
 	VaadinSession session = VaadinSession.getCurrent();
 	
 	public LoginRootView() {
-
+		
+		System.out.println(session.getAttribute("LOGIN_USER_ID"));
+		System.out.println(session.getAttribute("LOGIN_USER_FIRSTNAME"));
+		System.out.println(session.getAttribute("LOGIN_USER_LASTNAME"));
+		System.out.println(session.getAttribute("LOGIN_USER_ROLE"));
+		
 		this.eventBus.register(this);
 		
 		ILoginComponent loginComponent = this.createLoginComponent();
@@ -65,4 +71,5 @@ public class LoginRootView extends VerticalLayout{
     	session.setAttribute(LOGIN_USER_ROLE, event.getUserRole());
 		this.getUI().ifPresent(ui -> ui.navigate("modulechooser"));
 	}
+    
 }

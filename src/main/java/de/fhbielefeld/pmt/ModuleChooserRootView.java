@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
+import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.IModuleChooserComponent;
 import de.fhbielefeld.pmt.moduleChooser.event.ClientModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.EmployeesModuleChosenEvent;
@@ -75,4 +76,12 @@ public class ModuleChooserRootView extends VerticalLayout {
 		this.getUI().ifPresent(ui -> ui.navigate("teammanagement"));
 	}
 	
+	@Subscribe
+	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
+		session.setAttribute("LOGIN_USER_ID", null);
+		session.setAttribute("LOGIN_USER_FIRSTNAME", null);
+		session.setAttribute("LOGIN_USER_LASTNAME", null);
+		session.setAttribute("LOGIN_USER_ROLE", null);
+		this.getUI().ifPresent(ui -> ui.navigate(""));
+	}
 }

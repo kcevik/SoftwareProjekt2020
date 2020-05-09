@@ -14,6 +14,7 @@ import de.fhbielefeld.pmt.client.impl.ClientComponent;
 import de.fhbielefeld.pmt.client.impl.model.ClientModel;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientView;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientViewLogic;
+import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
@@ -91,5 +92,14 @@ public class ClientRootView extends VerticalLayout {
 	@Subscribe
 	public void onModuleChooserChosenEvent(ModuleChooserChosenEvent event) {
 		this.getUI().ifPresent(ui -> ui.navigate("modulechooser"));
+	}
+	
+	@Subscribe
+	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
+		session.setAttribute("LOGIN_USER_ID", null);
+		session.setAttribute("LOGIN_USER_FIRSTNAME", null);
+		session.setAttribute("LOGIN_USER_LASTNAME", null);
+		session.setAttribute("LOGIN_USER_ROLE", null);
+		this.getUI().ifPresent(ui -> ui.navigate(""));
 	}
 }

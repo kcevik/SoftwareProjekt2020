@@ -3,6 +3,7 @@ package de.fhbielefeld.pmt.topBar.impl.view;
 import com.google.common.eventbus.EventBus;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
+import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.topBar.ITopBarView;
 
 /**
@@ -12,10 +13,9 @@ import de.fhbielefeld.pmt.topBar.ITopBarView;
  */
 public class VaadinTopBarViewLogic implements ITopBarView {
 
-	
 	private final VaadinTopBarView view;
 	private final EventBus eventBus;
-	
+
 	public VaadinTopBarViewLogic(VaadinTopBarView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View");
@@ -28,11 +28,12 @@ public class VaadinTopBarViewLogic implements ITopBarView {
 		this.eventBus.register(this);
 		this.registerViewListeners();
 	}
-	
+
 	private void registerViewListeners() {
-		//TODO: EventbusLogout Event sowas
-		this.view.getBtnLogout();
-		
+
+		this.view.getBtnLogout().addClickListener(event -> {
+			this.eventBus.post(new LogoutAttemptEvent(this));
+		});
 	}
 
 	@SuppressWarnings("unchecked")
