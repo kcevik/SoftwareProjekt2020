@@ -54,7 +54,6 @@ public class ClientRootView extends VerticalLayout {
 		this.addClassName("root-view");
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-
 	}
 
 	/**
