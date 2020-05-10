@@ -17,7 +17,7 @@ import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 
 /**
  * Vaadin Logik Klasse. Steuert den zugehörigen VaadinView und alle
- * Unterkomponenten
+ * Unterkomponenten. In diesem Fall Steuerung der ClientView Klasse inklusive Formular.
  * 
  * @author Sebastian Siegmann
  *
@@ -50,17 +50,50 @@ public class VaadinClientViewLogic implements IClientView {
 				.addValueChangeListener(event -> this.displayClient(event.getValue()));
 		this.view.getBtnBackToMainMenu().addClickListener(event -> {
 			this.eventBus.post(new ModuleChooserChosenEvent(this));
-			resetSelectedClient();
+			resetSelectedClient();	
 		});
 		this.view.getBtnCreateClient().addClickListener(event -> displayEmptyForm());
 		this.view.getCLIENTFORM().getBtnSave().addClickListener(event -> this.saveClient());
 		this.view.getCLIENTFORM().getBtnEdit().addClickListener(event -> this.view.getCLIENTFORM().prepareEdit());
 		this.view.getCLIENTFORM().getBtnClose().addClickListener(event -> cancelForm());
+		this.view.getFilterText().addValueChangeListener(event -> this.filterList(this.view.getFilterText().getValue()));
 	}
 
+	/**
+	 * Filterfunktion für das Textfeld. Fügt einen Datensatz der Liste hinzu, falls
+	 * der String parameter enthalten ist.
+	 * 
+	 * @param filter
+	 */
+	private void filterList(String filter) {
+		ArrayList<Client> filtered = new ArrayList<Client>();
+		for (Client c : this.view.getClientList()) {
+			if (c.getName().contains(filter)) {
+				filtered.add(c);
+			} else if (c.getTown().contains(filter)) {
+				filtered.add(c);
+			} else if (c.getStreet().contains(filter)) {
+				filtered.add(c);
+			} else if (String.valueOf(c.getClientID()).contains(filter)) {
+				filtered.add(c);
+			} else if (String.valueOf(c.getHouseNumber()).contains(filter)) {
+				filtered.add(c);
+			} else if (String.valueOf(c.getTelephoneNumber()).contains(filter)) {
+				filtered.add(c);
+			} else if (String.valueOf(c.getZipCode()).contains(filter)) {
+				filtered.add(c);
+			} else if (c.getProjectIDsAsString().contains(filter)) { 
+				filtered.add(c);															
+			}
+		}
+		this.view.getClientGrid().setItems(filtered);
+	}
+	
+	/**
+	 * Setzt den Client sowie das grid und das Formular zurück
+	 */
 	private void cancelForm() {
 		resetSelectedClient();
-		System.out.println("Client is null weil form zurückgesetzt");
 		this.view.clearGridAndForm();
 	}
 
@@ -118,6 +151,9 @@ public class VaadinClientViewLogic implements IClientView {
 		}
 	}
 
+	/**
+	 * Setzt den zwischengespeicherten Clienten auf null
+	 */
 	private void resetSelectedClient() {
 		this.selectedClient = null;
 	}

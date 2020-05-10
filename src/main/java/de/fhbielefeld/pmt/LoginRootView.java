@@ -21,6 +21,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.domain.Employee;
@@ -34,6 +36,7 @@ import de.fhbielefeld.pmt.login.impl.view.VaadinLoginView;
 import de.fhbielefeld.pmt.login.impl.view.VaadinLoginViewLogic;
 
 @Route("")
+@Theme(value = Lumo.class, variant = Lumo.DARK)
 @PWA(name = "LoginView", shortName = "LoginView", enableInstallPrompt = false)
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")

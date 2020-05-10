@@ -5,33 +5,80 @@
 */
 
 /* Example: CSS class name to center align the content . */
-
 .centered-content {
-  margin: 0 auto;
-  max-width: 250px;
+	margin: 0 auto;
+	max-width: 250px;
 }
 
 /*@author Sebastian Siegmann*/
 /* List view */
-.list-view .content {
-    display: flex; 
+.list-view, .content {
+	display: flex;
 }
-.list-view .client-grid {
-    flex: 3; 
+
+.list-view {
+	margin-top: 150px;
+	position: absolute;
+	height: 1080px;
 }
-.list-view .client-form {
-    flex: 1;
-    padding: var(--lumo-space-m);  
+
+.list-view, .client-grid, .team-grid {
+	flex: 3;
 }
-@media all and (max-width: 1100px) {  
-    .list-view.editing .toolbar,
-    .list-view.editing .contact-grid {
-        display: none;
-   }
+
+.list-view, .client-form, .team-form {
+	flex: 1;
+	padding: var(--lumo-space-m);
 }
+
+@media all and (max-width: 1100px) {
+	.list-view.editing .toolbar, 
+	.list-view.editing .contact-grid {
+		display: none;
+	}
+}
+
+/*TopBar und einzelne Komponenten*/
+.topBar {
+	position: absolute;
+	top: 0;
+	border-bottom: 4px solid;
+	border-color: rgb(215,224,237);
+	border-width: 100%
+}
+
 .lbl-heading-form {
 	font-size: 1.5em;
 	font-weight: bold;
 }
 
+.iconTopBar {
+	align-self: flex-start;
+}
 
+.btnTopBar {
+	align-self: flex-end;
+}
+
+.lblTopBar {
+	align-self: center;
+	font-size: 3em;
+}
+
+/*LUMO.DARK Theme Anpassungen*/
+html {
+	background-color: #233348;
+	overflow: scroll;
+}
+
+/*Testborder um Container zu erkennen*/
+.testingborder {
+	border: 4px solid;
+	border-color: #1676f3;
+}
+
+@-moz-document url-prefix() {
+  .list-view {
+  	padding-top: 75px;
+}
+}

@@ -1,7 +1,5 @@
 package de.fhbielefeld.pmt.moduleChooser.impl.view;
 
-import java.awt.Panel;
-
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -23,6 +21,9 @@ public class VaadinModuleChooserView extends VerticalLayout{
 	private final Button btnSuperviseTeams = new Button("Teams verwalten");
 	TextField tfPersonalNr = new TextField("Personalnummer");
 	
+	/**
+	 * @author David Bistron
+	 */
 	private final Icon icon = new Icon(VaadinIcon.BAR_CHART);
 	// TODO: back-Button mit routing verbinden, damit wir 1. tatsächlich zurück kommen, 2. ein korrekter Logout stattfindet
 	private Button back = new Button(new Icon(VaadinIcon.BACKWARDS));

@@ -49,7 +49,6 @@ public class VaadinClientView extends VerticalLayout {
 		content.addClassName("content");
 		content.setSizeFull();
 		this.add(new HorizontalLayout(filterText, btnCreateClient), content, btnBackToMainMenu);
-
 	}
 
 	/**
@@ -82,38 +81,8 @@ public class VaadinClientView extends VerticalLayout {
 		this.filterText.setPlaceholder("Filter nach Namen");
 		this.filterText.setClearButtonVisible(true);
 		this.filterText.setValueChangeMode(ValueChangeMode.LAZY);
-		this.filterText.addValueChangeListener(e -> filterList(filterText.getValue()));
 	}
 
-	/**
-	 * Filterfunktion für das Textfeld. Fügt einen Datensatz der Liste hinzu, falls
-	 * der String parameter enthalten ist.
-	 * 
-	 * @param filter
-	 */
-	private void filterList(String filter) {
-		ArrayList<Client> filtered = new ArrayList<Client>();
-		for (Client c : this.clientList) {
-			if (c.getName().contains(filter)) {
-				filtered.add(c);
-			} else if (c.getTown().contains(filter)) {
-				filtered.add(c);
-			} else if (c.getStreet().contains(filter)) {
-				filtered.add(c);
-			} else if (String.valueOf(c.getClientID()).contains(filter)) {
-				filtered.add(c);
-			} else if (String.valueOf(c.getHouseNumber()).contains(filter)) {
-				filtered.add(c);
-			} else if (String.valueOf(c.getTelephoneNumber()).contains(filter)) {
-				filtered.add(c);
-			} else if (String.valueOf(c.getZipCode()).contains(filter)) {
-				filtered.add(c);
-			} else if (c.getProjectIDsAsString().contains(filter)) { 
-				filtered.add(c);															
-			}
-		}
-		this.clientGrid.setItems(filtered);
-	}
 
 	/**
 	 * Setzt Eigenschaften für das Grid fest.
@@ -161,9 +130,17 @@ public class VaadinClientView extends VerticalLayout {
 			this.clientList.add(c);
 		}
 	}
+	
+	public List<Client> getClientList() {
+		return clientList;
+	}
 
 	public Button getBtnCreateClient() {
 		return btnCreateClient;
+	}
+
+	public TextField getFilterText() {
+		return filterText;
 	}
 
 	/**

@@ -1,27 +1,23 @@
 package de.fhbielefeld.pmt;
 
-import java.util.EventObject;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.moduleChooser.IModuleChooserComponent;
 import de.fhbielefeld.pmt.moduleChooser.event.ClientModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.EmployeesModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.moduleChooser.event.TeamModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ProjectsModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.impl.ModuleChooserComponent;
 import de.fhbielefeld.pmt.moduleChooser.impl.model.ModuleChooserModel;
+import de.fhbielefeld.pmt.moduleChooser.impl.view.TeamsModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.impl.view.VaadinModuleChooserView;
 import de.fhbielefeld.pmt.moduleChooser.impl.view.VaadinModuleChooserViewLogic;
 
@@ -31,6 +27,7 @@ import de.fhbielefeld.pmt.moduleChooser.impl.view.VaadinModuleChooserViewLogic;
 
 public class ModuleChooserRootView extends VerticalLayout {
 	
+	private static final long serialVersionUID = 1L;
 	private final EventBus eventBus = new EventBus();
 	VaadinSession session = VaadinSession.getCurrent();
 
@@ -53,16 +50,25 @@ public class ModuleChooserRootView extends VerticalLayout {
 		return ModuleChooserComponent;
 	}
 
-
-
 	@Subscribe
 	public void onEmloyeeModuleChosen(EmployeesModuleChosenEvent event) {
+		System.out.println("wenn ich dich wähle, dann bist du ein EmployeeModule");
 		this.getUI().ifPresent(ui -> ui.navigate("employeemgmt"));
 	}
 	
 	@Subscribe
 	public void onClientModuleChosen(ClientModuleChosenEvent event) {
+		System.out.println("wenn ich dich wähle, dann bist du ein ClientModule");
 		this.getUI().ifPresent(ui -> ui.navigate("clientmanagement"));
+	}
+	
+	/**
+	 * @author David Bistron
+	 */
+	@Subscribe
+	public void onTeamsModuleChosen(TeamsModuleChosenEvent event) {
+		System.out.println("wenn ich dich wähle, dann bist du ein TeamModule");
+		this.getUI().ifPresent(ui -> ui.navigate("teammanagement"));
 	}
 	
 	@Subscribe
