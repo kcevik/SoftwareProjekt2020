@@ -33,28 +33,30 @@ public class ModuleChooserRootView extends VerticalLayout {
 
 	public ModuleChooserRootView() {
 
-		this.eventBus.register(this);	
+		this.eventBus.register(this);
 
-		IModuleChooserComponent moduleChooserComponent = this.createModuleChooserComponent();
-
-		Component moduleChooserView = moduleChooserComponent.getViewAs(Component.class);
-
-		this.add(moduleChooserView);
+		if (rootViewLoginCheck()) {
+			IModuleChooserComponent moduleChooserComponent = this.createModuleChooserComponent();
+			Component moduleChooserView = moduleChooserComponent.getViewAs(Component.class);
+			this.add(moduleChooserView);
+		}
 		this.setHeightFull();
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-		
-		rootViewLoginCheck();
 	}
 
-	private void rootViewLoginCheck() {
-		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"), session.getAttribute("LOGIN_USER_FIRSTNAME"),
-				session.getAttribute("LOGIN_USER_LASTNAME"), session.getAttribute("LOGIN_USER_ROLE"))) {
+	/**
+	 * TODO: Das Teil sollte man dokumentieren
+	 */
+	private boolean rootViewLoginCheck() {
+		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
+				session.getAttribute("LOGIN_USER_FIRSTNAME"), session.getAttribute("LOGIN_USER_LASTNAME"),
+				session.getAttribute("LOGIN_USER_ROLE"))) {
 			System.out.println("User ist korrekt angemeldet");
+			return true;
 		} else {
-			this.removeAll();
 			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
-			return;
+			return false;
 		}
 	}
 

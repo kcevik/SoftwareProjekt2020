@@ -69,7 +69,6 @@ public class ClientRootView extends VerticalLayout {
 		} else {
 			this.removeAll();
 			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
-			return;
 		}
 	}
 

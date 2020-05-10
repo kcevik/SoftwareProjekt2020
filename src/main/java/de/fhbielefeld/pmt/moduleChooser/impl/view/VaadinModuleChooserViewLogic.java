@@ -1,10 +1,6 @@
 package de.fhbielefeld.pmt.moduleChooser.impl.view;
-
-import org.eclipse.persistence.sessions.Session;
-
 import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.server.VaadinSession;
-
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.IModuleChooserView;
@@ -33,8 +29,12 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 		this.view.getBtnSuperviseClients().addClickListener(e -> this.eventBus.post(new ClientModuleChosenEvent(this)));
 		this.view.getBtnSuperviseEmployees()
 				.addClickListener(e -> this.eventBus.post(new EmployeesModuleChosenEvent(this)));
-		this.view.getBtnSuperviseProjects()
-				.addClickListener(e -> this.eventBus.post(new ProjectsModuleChosenEvent(this)));
+		if (VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE").toString().equals("manager")) {
+			this.view.getBtnSuperviseProjects()
+					.addClickListener(e -> this.eventBus.post(new ProjectsModuleChosenEvent(this)));
+		} else {
+			this.view.getBtnSuperviseProjects().setEnabled(false);
+		}
 		this.view.getBtnSuperviseTeams().addClickListener(e -> this.eventBus.post(new TeamsModuleChosenEvent(this)));
 		try {
 			this.view.getLblWelcome()
@@ -45,14 +45,11 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 			this.view.getLblWelcome().setText("Default Session user is null");
 		}
 		this.view.getBtnLogout().addClickListener(event -> this.eventBus.post(new LogoutAttemptEvent(this)));
-		if(VaadinSession.getCurrent().getAttribute("LOGIN_USER_LASTNAME")==null) {
-			this.view.getBtnLogout().click();
-			//TODO: Datenbank abfrage oder sowas wird erst beim zweiten mal getriggert
-		}
+		
 	}
 
 	@Override
-	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {
+	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException { 
 		if (type.isAssignableFrom(this.view.getClass())) {
 			return (T) this.view;
 		}
