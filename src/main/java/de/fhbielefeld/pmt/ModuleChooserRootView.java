@@ -19,6 +19,7 @@ import de.fhbielefeld.pmt.moduleChooser.IModuleChooserComponent;
 import de.fhbielefeld.pmt.moduleChooser.event.ClientModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.EmployeesModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.moduleChooser.event.ProjectsModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.impl.ModuleChooserComponent;
 import de.fhbielefeld.pmt.moduleChooser.impl.model.ModuleChooserModel;
 import de.fhbielefeld.pmt.moduleChooser.impl.view.VaadinModuleChooserView;
@@ -62,6 +63,11 @@ public class ModuleChooserRootView extends VerticalLayout {
 	@Subscribe
 	public void onClientModuleChosen(ClientModuleChosenEvent event) {
 		this.getUI().ifPresent(ui -> ui.navigate("clientmanagement"));
+	}
+	
+	@Subscribe
+	public void onProjectModuleChosen(ProjectsModuleChosenEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("projectmanagement"));
 	}
 	
 }

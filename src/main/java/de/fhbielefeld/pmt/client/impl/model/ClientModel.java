@@ -35,7 +35,7 @@ public class ClientModel implements IClientModel {
 	}
 
 	/**
-	 * Bestätigt on ausgelesene Daten null sind oder Werte enthalten.
+	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
 	 */
 	@Override
 	public boolean isReadSuccessfull() {

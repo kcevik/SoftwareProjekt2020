@@ -240,7 +240,7 @@ public class Client implements Serializable {
 	public String getProjectIDsAsString() {
 		String projectIDs = "";
 		for (Project p : this.getProjectList()) {
-			projectIDs += p.getProjectId() + " ";
+			projectIDs += p.getProjectID() + " ";
 		}
 		return projectIDs;
 	}
@@ -253,5 +253,10 @@ public class Client implements Serializable {
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getName();
 	}
 }

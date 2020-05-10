@@ -430,5 +430,10 @@ public class Employee implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getFirstName() + " " + this.getLastName();
+	}
 
 }
