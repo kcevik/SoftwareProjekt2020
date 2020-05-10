@@ -1,5 +1,7 @@
 package de.fhbielefeld.pmt.login.impl.model;
 
+import java.io.IOException;
+
 import javax.persistence.NoResultException;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -36,7 +38,7 @@ public class LoginModel implements ILoginModel{
 		}catch(NoResultException e) {
 			System.out.println("Es existiert kein Benutzer mit dieser ID");
 			return false;
-		}
+		} 
 		
 		if (employee != null && password.equals(employee.getPassword())) {
 			return true;

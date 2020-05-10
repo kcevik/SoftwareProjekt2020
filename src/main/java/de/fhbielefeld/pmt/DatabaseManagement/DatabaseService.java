@@ -260,6 +260,13 @@ public class DatabaseService {
 		return result;
 
 	}
+	
+	public List<Employee> readManager() {
+		
+		TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e", Employee.class);
+		List<Employee> resultListEmployee = query.getResultList();
+		return resultListEmployee;
+	}
 
 	/**
 	 * Public method for persisting a costs

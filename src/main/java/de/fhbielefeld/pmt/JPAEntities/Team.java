@@ -152,4 +152,8 @@ public class Team implements Serializable {
 		this.projectList.remove(project);
 	}
 	
+	@Override
+	public String toString() {
+		return Long.toString(this.getTeamID());
+	}
 }
