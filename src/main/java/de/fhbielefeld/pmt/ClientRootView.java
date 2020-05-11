@@ -62,7 +62,7 @@ public class ClientRootView extends VerticalLayout {
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 		
 		rootViewLoginCheck();
-		rootViewAuthorizationCheck();
+		
 	}
 	
 	private void rootViewAuthorizationCheck() {
@@ -79,6 +79,7 @@ public class ClientRootView extends VerticalLayout {
 		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"), session.getAttribute("LOGIN_USER_FIRSTNAME"),
 				session.getAttribute("LOGIN_USER_LASTNAME"), session.getAttribute("LOGIN_USER_ROLE"))) {
 			System.out.println("User ist korrekt angemeldet");
+			rootViewAuthorizationCheck();
 		} else {
 			this.removeAll();
 			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
@@ -124,6 +125,7 @@ public class ClientRootView extends VerticalLayout {
 	
 	@Subscribe
 	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
+		System.out.println("onLogoutEvent ist angekommen");
 		session.setAttribute("LOGIN_USER_ID", null);
 		session.setAttribute("LOGIN_USER_FIRSTNAME", null);
 		session.setAttribute("LOGIN_USER_LASTNAME", null);

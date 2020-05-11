@@ -90,4 +90,14 @@ public class ModuleChooserRootView extends VerticalLayout {
 		this.getUI().ifPresent(ui -> ui.navigate("teammanagement"));
 	}
 	
+	@Subscribe
+	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
+		System.out.println("onLogoutEvent ist angekommen");
+		session.setAttribute("LOGIN_USER_ID", null);
+		session.setAttribute("LOGIN_USER_FIRSTNAME", null);
+		session.setAttribute("LOGIN_USER_LASTNAME", null);
+		session.setAttribute("LOGIN_USER_ROLE", null);
+		this.getUI().ifPresent(ui -> ui.navigate(""));
+	}
+	
 }
