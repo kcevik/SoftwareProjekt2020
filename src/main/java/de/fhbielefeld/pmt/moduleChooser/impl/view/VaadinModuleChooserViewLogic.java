@@ -50,6 +50,7 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 		// Erste Idee dazu... Geht schöner -> Vllt If Rolle = XY Dann führe methode
 		// buildManagerUI Oder so aus
 		// Der View dann die session variable übergeben und denn baut die das fertig?
+		//TODO: Für @Siggi
 		if (AuthorizationChecker.checkIsAuthorizedManager(VaadinSession.getCurrent(),
 				VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE"))) {
 			this.view.getBtnSuperviseProjects()

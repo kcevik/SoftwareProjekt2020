@@ -49,7 +49,7 @@ public class ModuleChooserRootView extends VerticalLayout {
 	}
 
 	/**
-	 * TODO: Das Teil sollte man dokumentieren
+	 * Guckt nach ob ein User angemeldet ist oder nicht. Je nach dem wird eine Error Seite erstellt oder die normale Seite geladen
 	 */
 	private boolean rootViewLoginCheck() {
 		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
@@ -92,12 +92,11 @@ public class ModuleChooserRootView extends VerticalLayout {
 	
 	@Subscribe
 	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
-		System.out.println("onLogoutEvent ist angekommen");
+		//System.out.println("onLogoutEvent ist angekommen");
 		session.setAttribute("LOGIN_USER_ID", null);
 		session.setAttribute("LOGIN_USER_FIRSTNAME", null);
 		session.setAttribute("LOGIN_USER_LASTNAME", null);
 		session.setAttribute("LOGIN_USER_ROLE", null);
 		this.getUI().ifPresent(ui -> ui.navigate(""));
 	}
-	
 }
