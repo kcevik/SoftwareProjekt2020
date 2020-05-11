@@ -81,6 +81,10 @@ html {
 	align-items: center;
 }
 
+.notAuthorizedErrorSite{
+	align-items: center;
+}
+
 @-moz-document url-prefix() {
   .list-view {
   	padding-top: 75px;

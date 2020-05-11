@@ -14,7 +14,9 @@ import de.fhbielefeld.pmt.client.impl.ClientComponent;
 import de.fhbielefeld.pmt.client.impl.model.ClientModel;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientView;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientViewLogic;
+import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.error.LoginChecker;
+import de.fhbielefeld.pmt.error.impl.view.NotAuthorizedError;
 import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
@@ -60,8 +62,19 @@ public class ClientRootView extends VerticalLayout {
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 		
 		rootViewLoginCheck();
+		rootViewAuthorizationCheck();
 	}
 	
+	private void rootViewAuthorizationCheck() {
+		if (AuthorizationChecker.checkIsAuthorizedManager(session, session.getAttribute("LOGIN_USER_ROLE"))) {
+			System.out.println("User hat Berechtigung");
+		} else {
+			this.removeAll();
+			this.add(NotAuthorizedError.getErrorSite(this.eventBus, this));
+		}
+		
+	}
+
 	private void rootViewLoginCheck() {
 		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"), session.getAttribute("LOGIN_USER_FIRSTNAME"),
 				session.getAttribute("LOGIN_USER_LASTNAME"), session.getAttribute("LOGIN_USER_ROLE"))) {

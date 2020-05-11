@@ -26,7 +26,7 @@ public class VaadinModuleChooserView extends VerticalLayout{
 	 */
 	private final Icon icon = new Icon(VaadinIcon.CHART_GRID);
 	// TODO: back-Button mit routing verbinden, damit wir 1. tatsächlich zurück kommen, 2. ein korrekter Logout stattfindet
-	private Button btnLogout = new Button(new Icon(VaadinIcon.BACKWARDS));
+	private Button btnLogout = new Button("Logout",new Icon(VaadinIcon.BACKWARDS));
 	// TODO: User mit echtem User verknüpfen
 	private Label lblWelcome = new Label("Willkommen zurück, User!");
 	
