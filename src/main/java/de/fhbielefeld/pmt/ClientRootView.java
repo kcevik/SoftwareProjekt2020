@@ -14,6 +14,11 @@ import de.fhbielefeld.pmt.client.impl.ClientComponent;
 import de.fhbielefeld.pmt.client.impl.model.ClientModel;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientView;
 import de.fhbielefeld.pmt.client.impl.view.VaadinClientViewLogic;
+import de.fhbielefeld.pmt.error.AuthorizationChecker;
+import de.fhbielefeld.pmt.error.LoginChecker;
+import de.fhbielefeld.pmt.error.impl.view.NotAuthorizedError;
+import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
+import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
@@ -42,18 +47,42 @@ public class ClientRootView extends VerticalLayout {
 	public ClientRootView() {
 
 		this.eventBus.register(this);
+		
 		ITopBarComponent topBarComponent = this.createTopBarComponent();
 		IClientComponent clientComponent = this.createClientComponent();
 
 		Component topBarView = topBarComponent.getViewAs(Component.class);
 		Component clientView = clientComponent.getViewAs(Component.class);
+		
 		this.add(topBarView);
 		this.add(clientView);
 		this.setHeightFull();
 		this.addClassName("root-view");
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+		
+		rootViewLoginCheck();
+		rootViewAuthorizationCheck();
+	}
+	
+	private void rootViewAuthorizationCheck() {
+		if (AuthorizationChecker.checkIsAuthorizedManager(session, session.getAttribute("LOGIN_USER_ROLE"))) {
+			System.out.println("User hat Berechtigung");
+		} else {
+			this.removeAll();
+			this.add(NotAuthorizedError.getErrorSite(this.eventBus, this));
+		}
+		
+	}
 
+	private void rootViewLoginCheck() {
+		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"), session.getAttribute("LOGIN_USER_FIRSTNAME"),
+				session.getAttribute("LOGIN_USER_LASTNAME"), session.getAttribute("LOGIN_USER_ROLE"))) {
+			System.out.println("User ist korrekt angemeldet");
+		} else {
+			this.removeAll();
+			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
+		}
 	}
 
 	/**
@@ -91,5 +120,14 @@ public class ClientRootView extends VerticalLayout {
 	@Subscribe
 	public void onModuleChooserChosenEvent(ModuleChooserChosenEvent event) {
 		this.getUI().ifPresent(ui -> ui.navigate("modulechooser"));
+	}
+	
+	@Subscribe
+	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
+		session.setAttribute("LOGIN_USER_ID", null);
+		session.setAttribute("LOGIN_USER_FIRSTNAME", null);
+		session.setAttribute("LOGIN_USER_LASTNAME", null);
+		session.setAttribute("LOGIN_USER_ROLE", null);
+		this.getUI().ifPresent(ui -> ui.navigate(""));
 	}
 }

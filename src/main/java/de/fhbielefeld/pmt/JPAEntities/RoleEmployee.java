@@ -11,23 +11,27 @@ import javax.persistence.*;
 
 public class RoleEmployee extends Role implements Serializable {
 
-	
 	private static final long serialVersionUID = 1L;
 
 	public RoleEmployee() {
 		super();
 	}
-	
+
 	public boolean hasType(String type) {
-		if (type.equalsIgnoreCase("Mitarbeiter")){
+		if (type.equalsIgnoreCase("employee")) {
 			return true;
 		} else {
 			return super.hasType(type);
 		}
 	}
 	
+	@Override
 	public String toString() {
 		return "Rolle: Mitarbeiter";
 	}
-   
+
+	@Override
+	public String getRoleDesignation() {
+		return "employee";
+	}
 }

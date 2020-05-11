@@ -25,5 +25,9 @@ public class Role implements Serializable {
 	public boolean hasType(String type) {
 		return false;
 	}
+	
+	public String getRoleDesignation() {
+		return "";
+	}
    
 }

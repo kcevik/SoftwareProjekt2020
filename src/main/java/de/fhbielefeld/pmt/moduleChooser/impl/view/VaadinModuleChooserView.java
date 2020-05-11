@@ -24,11 +24,11 @@ public class VaadinModuleChooserView extends VerticalLayout{
 	/**
 	 * @author David Bistron
 	 */
-	private final Icon icon = new Icon(VaadinIcon.BAR_CHART);
+	private final Icon icon = new Icon(VaadinIcon.CHART_GRID);
 	// TODO: back-Button mit routing verbinden, damit wir 1. tatsächlich zurück kommen, 2. ein korrekter Logout stattfindet
-	private Button back = new Button(new Icon(VaadinIcon.BACKWARDS));
+	private Button btnLogout = new Button("Logout",new Icon(VaadinIcon.BACKWARDS));
 	// TODO: User mit echtem User verknüpfen
-	private Label welcome = new Label("Willkommen zurück, User!");
+	private Label lblWelcome = new Label("Willkommen zurück, User!");
 	
 	public VaadinModuleChooserView() {
 	
@@ -39,7 +39,7 @@ public class VaadinModuleChooserView extends VerticalLayout{
 
 	private void builtUI() {
 		
-		HorizontalLayout header = new HorizontalLayout(icon, welcome, back);
+		HorizontalLayout header = new HorizontalLayout(icon, lblWelcome, btnLogout);
 		header.setAlignItems(FlexComponent.Alignment.CENTER);
 		header.setFlexGrow(1, icon);
 		header.setPadding(true);
@@ -84,5 +84,13 @@ public class VaadinModuleChooserView extends VerticalLayout{
 	public Button getBtnSuperviseTeams() {
 		return this.btnSuperviseTeams;
 	}
+
+	public Label getLblWelcome() {
+		return lblWelcome;
+	}
+
+	public Button getBtnLogout() {
+		return btnLogout;
+	}	
 
 }	

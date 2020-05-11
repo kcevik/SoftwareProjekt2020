@@ -1,6 +1,5 @@
 package de.fhbielefeld.pmt.JPAEntities;
 
-
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -12,23 +11,27 @@ import javax.persistence.*;
 
 public class RoleCEO extends Role implements Serializable {
 
-	
 	private static final long serialVersionUID = 1L;
 
 	public RoleCEO() {
 		super();
 	}
-	
+
 	public boolean hasType(String type) {
-		if (type.equalsIgnoreCase("Geschaeftsfuehrer")){
+		if (type.equalsIgnoreCase("ceo")) {
 			return true;
 		} else {
 			return super.hasType(type);
 		}
 	}
-	
+
+	@Override
 	public String toString() {
 		return "Rolle: Geschaeftsfuehrer";
 	}
-   
+
+	@Override
+	public String getRoleDesignation() {
+		return "ceo";
+	}
 }
