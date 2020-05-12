@@ -16,6 +16,7 @@ import de.fhbielefeld.pmt.moduleChooser.IModuleChooserComponent;
 import de.fhbielefeld.pmt.moduleChooser.event.ClientModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.EmployeesModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.moduleChooser.event.PersonalDetailsChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.TeamModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ProjectsModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.impl.ModuleChooserComponent;
@@ -88,6 +89,12 @@ public class ModuleChooserRootView extends VerticalLayout {
 	public void onTeamsModuleChosen(TeamsModuleChosenEvent event) {
 		System.out.println("wenn ich dich wähle, dann bist du ein TeamModule");
 		this.getUI().ifPresent(ui -> ui.navigate("teammanagement"));
+	}
+	
+	@Subscribe
+	public void onPersonalDetailsChosen(PersonalDetailsChosenEvent event) {
+		System.out.println("wenn ich dich wähle, dann bist du ein Mein Konto");
+		this.getUI().ifPresent(ui -> ui.navigate("personalDetails"));
 	}
 	
 	@Subscribe
