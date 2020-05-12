@@ -8,8 +8,11 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
+import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
  * VaadinView Klasse, welche das Formular erstellt
@@ -29,7 +32,7 @@ public class VaadinClientViewForm extends FormLayout {
 	private final TextField tfZipCode = new TextField("PLZ:");
 	private final TextField tfTown = new TextField("Ort:");
 	private final Checkbox ckIsActive = new Checkbox("Aktiv");
-	private final ComboBox<String> cbProjects = new ComboBox<String>("Projekte:");
+	private final MultiSelectListBox<Project> cbProjects = new MultiSelectListBox<Project>();
 
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
@@ -151,7 +154,7 @@ public class VaadinClientViewForm extends FormLayout {
 		return ckIsActive;
 	}
 
-	public ComboBox<String> getCbProjects() {
+	public MultiSelectListBox<Project> getCbProjects() {
 		return cbProjects;
 	}
 

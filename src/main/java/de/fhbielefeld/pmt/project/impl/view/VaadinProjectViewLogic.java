@@ -26,8 +26,6 @@ import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
 import de.fhbielefeld.pmt.project.impl.event.SendProjectToDBEvent;
-import de.fhbielefeld.pmt.project.impl.event.TransportAllClientsEvent;
-import de.fhbielefeld.pmt.project.impl.event.TransportAllProjectsEvent;
 
 public class VaadinProjectViewLogic implements IProjectView{
 	
@@ -227,11 +225,6 @@ public class VaadinProjectViewLogic implements IProjectView{
 		}
 	}
 	
-	
-	
-	
-	
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {

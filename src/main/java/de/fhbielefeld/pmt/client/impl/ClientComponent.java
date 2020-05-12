@@ -5,12 +5,12 @@ import com.google.common.eventbus.Subscribe;
 
 import de.fhbielefeld.pmt.AbstractPresenter;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
+import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.client.IClientComponent;
 import de.fhbielefeld.pmt.client.IClientModel;
 import de.fhbielefeld.pmt.client.IClientView;
 import de.fhbielefeld.pmt.client.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.client.impl.event.SendClientToDBEvent;
-import de.fhbielefeld.pmt.client.impl.event.TransportAllClientsEvent;
 
 
 /**
@@ -33,9 +33,9 @@ public class ClientComponent extends AbstractPresenter<IClientModel, IClientView
 	public void onReadAllClientsEvent(ReadAllClientsEvent event) {
 		if (event.getSource() == this.view) {
 			if (this.model.isReadSuccessfull()) {
-				TransportAllClientsEvent containsData = new TransportAllClientsEvent(this.view);
-				containsData.setClientList(this.model.getClientListFromDatabase());
-				this.eventBus.post(containsData);	
+				for (Client c : this.model.getClientListFromDatabase()) {
+					this.view.addClient(c);
+				}
 			}
 		}
 	}

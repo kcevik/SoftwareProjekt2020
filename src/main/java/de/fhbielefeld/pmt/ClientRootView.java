@@ -133,7 +133,7 @@ public class ClientRootView extends VerticalLayout {
 		vaadinClientViewLogic = new VaadinClientViewLogic(new VaadinClientView(), this.eventBus);
 		IClientComponent clientComponent = new ClientComponent(
 				new ClientModel(DatabaseService.DatabaseServiceGetInstance()), vaadinClientViewLogic, this.eventBus);
-		vaadinClientViewLogic.initReadAllClientsEvent();
+		vaadinClientViewLogic.initReadFromDB();
 		return clientComponent;
 	}
 

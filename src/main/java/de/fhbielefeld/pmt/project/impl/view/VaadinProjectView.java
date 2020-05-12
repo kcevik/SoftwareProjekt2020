@@ -39,10 +39,7 @@ public class VaadinProjectView extends VerticalLayout {
 		
 		this.initUI();
 		this.buitUI();
-	}
-	
-	
-	
+	}	
 	
 	/**
 	 * Erzeugt die Vaadin Komponenten

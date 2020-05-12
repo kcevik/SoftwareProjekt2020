@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Range;
 
 /**
  * Entity implementation class for Entity: Client
@@ -19,13 +24,27 @@ public class Client implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long clientID;
+
+	@NotNull
 	private String name;
+
 	private String telephoneNumber;
+
 	private String street;
+
+//	@Range(min = 1, max = 5)
+	@Min(0)
 	private int houseNumber;
+
+//	@Range(min = 4, max = 5)
+//	@Min(1000)
+//	@Max(99999)
 	private int zipCode;
+
 	private String town;
+
 	private boolean isActive;
+
 	@OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST)
 	private Set<Project> projectList;
 
@@ -254,7 +273,7 @@ public class Client implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.getName();

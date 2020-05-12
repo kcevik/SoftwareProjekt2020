@@ -28,7 +28,7 @@ public class VaadinClientView extends VerticalLayout {
 
 	private final Grid<Client> clientGrid = new Grid<>(Client.class);
 	private final List<Client> clientList = new ArrayList<Client>();
-	private final TextField filterText = new TextField();
+	private final TextField tfFilter = new TextField();
 	private final Button btnBackToMainMenu = new Button();
 	private final Button btnCreateClient = new Button();
 
@@ -48,7 +48,7 @@ public class VaadinClientView extends VerticalLayout {
 		Div content = new Div(clientGrid, CLIENTFORM);
 		content.addClassName("content");
 		content.setSizeFull();
-		this.add(new HorizontalLayout(filterText, btnCreateClient), content, btnBackToMainMenu);
+		this.add(new HorizontalLayout(tfFilter, btnCreateClient), content, btnBackToMainMenu);
 	}
 
 	/**
@@ -78,9 +78,9 @@ public class VaadinClientView extends VerticalLayout {
 	 * Setzt Eigenschaften für den Filter fest
 	 */
 	private void configureFilter() {
-		this.filterText.setPlaceholder("Filter nach Namen");
-		this.filterText.setClearButtonVisible(true);
-		this.filterText.setValueChangeMode(ValueChangeMode.LAZY);
+		this.tfFilter.setPlaceholder("Filter nach Namen");
+		this.tfFilter.setClearButtonVisible(true);
+		this.tfFilter.setValueChangeMode(ValueChangeMode.LAZY);
 	}
 
 
@@ -140,7 +140,7 @@ public class VaadinClientView extends VerticalLayout {
 	}
 
 	public TextField getFilterText() {
-		return filterText;
+		return tfFilter;
 	}
 
 	/**

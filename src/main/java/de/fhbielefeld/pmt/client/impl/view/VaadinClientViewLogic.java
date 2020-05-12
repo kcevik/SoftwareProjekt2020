@@ -1,32 +1,42 @@
 package de.fhbielefeld.pmt.client.impl.view;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.converter.StringToIntegerConverter;
+import com.vaadin.flow.data.converter.StringToLongConverter;
+import com.vaadin.flow.data.validator.RegexpValidator;
+
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.client.IClientView;
 import de.fhbielefeld.pmt.client.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.client.impl.event.SendClientToDBEvent;
-import de.fhbielefeld.pmt.client.impl.event.TransportAllClientsEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 
 /**
  * Vaadin Logik Klasse. Steuert den zugehörigen VaadinView und alle
- * Unterkomponenten. In diesem Fall Steuerung der ClientView Klasse inklusive Formular.
+ * Unterkomponenten. In diesem Fall Steuerung der ClientView Klasse inklusive
+ * Formular.
  * 
  * @author Sebastian Siegmann
  *
  */
 public class VaadinClientViewLogic implements IClientView {
 
+	BeanValidationBinder<Client> binder = new BeanValidationBinder<>(Client.class);
 	private final VaadinClientView view;
 	private final EventBus eventBus;
 	private Client selectedClient;
+	private List<Project> projects;
+	private List<Client> clients;
 
 	public VaadinClientViewLogic(VaadinClientView view, EventBus eventBus) {
 		if (view == null) {
@@ -38,7 +48,9 @@ public class VaadinClientViewLogic implements IClientView {
 		}
 		this.eventBus = eventBus;
 		this.eventBus.register(this);
+		this.clients = new ArrayList<Client>();
 		this.registerViewListeners();
+		this.bindToFields();
 	}
 
 	/**
@@ -46,67 +58,77 @@ public class VaadinClientViewLogic implements IClientView {
 	 * welche Listener gebraucht werden
 	 */
 	private void registerViewListeners() {
-		this.view.getClientGrid().asSingleSelect()
-				.addValueChangeListener(event -> this.displayClient(event.getValue()));
-		this.view.getBtnBackToMainMenu().addClickListener(event -> {
-			this.eventBus.post(new ModuleChooserChosenEvent(this));
-			resetSelectedClient();	
+		this.view.getClientGrid().asSingleSelect().addValueChangeListener(event -> {
+			this.selectedClient = event.getValue();
+			this.displayClient();
 		});
-		this.view.getBtnCreateClient().addClickListener(event -> displayEmptyForm());
+		this.view.getBtnBackToMainMenu().addClickListener(event -> eventBus.post(new ModuleChooserChosenEvent(this)));
+		this.view.getBtnCreateClient().addClickListener(event -> newClient());
 		this.view.getCLIENTFORM().getBtnSave().addClickListener(event -> this.saveClient());
 		this.view.getCLIENTFORM().getBtnEdit().addClickListener(event -> this.view.getCLIENTFORM().prepareEdit());
 		this.view.getCLIENTFORM().getBtnClose().addClickListener(event -> cancelForm());
-		this.view.getFilterText().addValueChangeListener(event -> this.filterList(this.view.getFilterText().getValue()));
+		this.view.getFilterText().addValueChangeListener(event -> filterList(this.view.getFilterText().getValue()));
+	}
+
+	private void bindToFields() {
+		
+		StringToIntegerConverter plainIntegerConverter = new StringToIntegerConverter("") {
+			private static final long serialVersionUID = 1L;
+			protected java.text.NumberFormat getFormat(Locale locale) {
+		        NumberFormat format = super.getFormat(locale);
+		        format.setGroupingUsed(false);
+		        return format;
+		    };
+		};
+		
+		this.binder.forField(this.view.getCLIENTFORM().getTfClientID()).withConverter(new StringToLongConverter(""))
+				.bind(Client::getClientID, null);
+		this.binder.forField(this.view.getCLIENTFORM().getTfName())
+				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
+				.bind(Client::getName, Client::setName);
+		this.binder.bind(this.view.getCLIENTFORM().getTfTelephonenumber(), "telephoneNumber");
+		this.binder.bind(this.view.getCLIENTFORM().getTfStreet(), "street");
+		this.binder.forField(this.view.getCLIENTFORM().getTfHouseNumber())
+				.withValidator(new RegexpValidator("Hausnummer korrekt angeben bitte", "([0-9]+)([^0-9]*)"))
+				.withConverter(plainIntegerConverter)
+				.bind(Client::getHouseNumber, Client::setHouseNumber);
+		this.binder.forField(this.view.getCLIENTFORM().getTfZipCode()).withValidator(new RegexpValidator(
+				"Bitte eine PLZ mit 4 oder 5 Zahlen eingeben",
+				"[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-8][0-9]{4}|9[0-8][0-9]{3}|99[0-8][0-9]{2}|999[0-8][0-9]|9999[0-9]"))
+				.withConverter(plainIntegerConverter)
+				.bind(Client::getZipCode, Client::setZipCode);
+		this.binder.bind(this.view.getCLIENTFORM().getTfTown(), "town");
+		this.binder.bind(this.view.getCLIENTFORM().getCkIsActive(), "active");
 	}
 
 	/**
-	 * Filterfunktion für das Textfeld. Fügt einen Datensatz der Liste hinzu, falls
-	 * der String parameter enthalten ist.
-	 * 
-	 * @param filter
-	 */
-	private void filterList(String filter) {
-		ArrayList<Client> filtered = new ArrayList<Client>();
-		for (Client c : this.view.getClientList()) {
-			if (c.getName().contains(filter)) {
-				filtered.add(c);
-			} else if (c.getTown().contains(filter)) {
-				filtered.add(c);
-			} else if (c.getStreet().contains(filter)) {
-				filtered.add(c);
-			} else if (String.valueOf(c.getClientID()).contains(filter)) {
-				filtered.add(c);
-			} else if (String.valueOf(c.getHouseNumber()).contains(filter)) {
-				filtered.add(c);
-			} else if (String.valueOf(c.getTelephoneNumber()).contains(filter)) {
-				filtered.add(c);
-			} else if (String.valueOf(c.getZipCode()).contains(filter)) {
-				filtered.add(c);
-			} else if (c.getProjectIDsAsString().contains(filter)) { 
-				filtered.add(c);															
-			}
-		}
-		this.view.getClientGrid().setItems(filtered);
-	}
-	
-	/**
-	 * Setzt den Client sowie das grid und das Formular zurück
+	 * setzt das zuvor selektierte Project beim verlassen des formViews zurück
 	 */
 	private void cancelForm() {
 		resetSelectedClient();
+		System.out.println("Client is null weil form zurückgesetzt");
 		this.view.clearGridAndForm();
 	}
 
-	/**
-	 * Stellt die CLIENTFORM leer dar
-	 */
-	private void displayEmptyForm() {
-		resetSelectedClient();
-		System.out.println("Client is null");
-		this.view.getClientGrid().deselectAll();
-		this.view.getCLIENTFORM().clearClientForm();
-		this.view.getCLIENTFORM().prepareEdit();
-		this.view.getCLIENTFORM().setVisible(true);
+	@SuppressWarnings("rawtypes")
+	private void displayClient() {
+		if (this.selectedClient != null) {
+			try {
+				if (this.projects != null) {
+					@SuppressWarnings("unchecked")
+					List<Project> projects = new ArrayList(this.projects);
+					this.view.getCLIENTFORM().getCbProjects().setItems(projects);
+				}
+				// TODO: DB Level Bidirektional Setter und Getter aufrufen
+				this.binder.setBean(this.selectedClient);
+				this.view.getCLIENTFORM().closeEdit();
+				this.view.getCLIENTFORM().setVisible(true);
+			} catch (NumberFormatException e) {
+				Notification.show("NumberFormatException");
+			}
+		} else {
+			this.view.getCLIENTFORM().setVisible(false);
+		}
 	}
 
 	/**
@@ -114,40 +136,21 @@ public class VaadinClientViewLogic implements IClientView {
 	 * Formularfeldern und verschickt den das Client Objekt mit einem Bus
 	 */
 	private void saveClient() {
-		if (this.selectedClient == null) {
-			this.selectedClient = new Client();
-			System.out.println("new Client erzeugt in saveClient");
-		}
-		try {
-			this.selectedClient.setName(this.view.getCLIENTFORM().getTfName().getValue());
-			this.selectedClient.setTelephoneNumber(this.view.getCLIENTFORM().getTfTelephonenumber().getValue());
-			this.selectedClient.setStreet(this.view.getCLIENTFORM().getTfStreet().getValue());
-			this.selectedClient
-					.setHouseNumber(Integer.valueOf(this.view.getCLIENTFORM().getTfHouseNumber().getValue()));
-			this.selectedClient.setZipCode(Integer.valueOf(this.view.getCLIENTFORM().getTfZipCode().getValue()));
-			this.selectedClient.setTown(this.view.getCLIENTFORM().getTfTown().getValue());
-			this.selectedClient.setActive(this.view.getCLIENTFORM().getCkIsActive().getValue());
-			this.eventBus.post(new SendClientToDBEvent(this.selectedClient));
-			this.view.getCLIENTFORM().setVisible(false);
-			this.view.addClient(selectedClient);
-			this.view.updateGrid();
-			Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
-					.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-		} catch (NumberFormatException e) {
-			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
-					Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
-			this.view.getCLIENTFORM().setVisible(true);
-			this.view.getCLIENTFORM().clearClientForm();
-			this.view.getClientGrid().deselectAll();
-		} catch (NullPointerException e2) {
-			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
-					Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
-			this.view.getCLIENTFORM().setVisible(true);
-			this.view.getCLIENTFORM().clearClientForm();
-			this.view.getClientGrid().deselectAll();
-		} finally {
-			resetSelectedClient();
-			System.out.println("Client wegen exception auf null gesetzt");
+
+		if (this.binder.validate().isOk()) {
+			try {
+				this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
+				this.view.getCLIENTFORM().setVisible(false);
+				this.addClient(selectedClient);
+				this.updateGrid();
+				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
+						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+			} catch (NumberFormatException e) {
+				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
+						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+			} finally {
+				resetSelectedClient();
+			}
 		}
 	}
 
@@ -158,65 +161,77 @@ public class VaadinClientViewLogic implements IClientView {
 		this.selectedClient = null;
 	}
 
+	private void newClient() {
+		this.selectedClient = new Client();
+		displayClient();
+		this.view.getCLIENTFORM().prepareEdit();
+	}
+
 	/**
-	 * Setzt den ausgewählen Client aus dem Grid in eine Instanzvariable ein und
-	 * setzt die Attribute des Clients in die Formularfelder
+	 * Filterfunktion für das Textfeld. Fügt einen Datensatz der Liste hinzu, falls
+	 * der String parameter enthalten ist.
 	 * 
-	 * @param client
+	 * @param filter
 	 */
-	private void displayClient(Client client) {
-		this.selectedClient = client;
-		if (client != null) {
-			try {
-				System.out.println("Jetzt is der client der der ausgeählt ist in dem grid");
-				this.view.getCLIENTFORM().getTfClientID().setValue(String.valueOf(this.selectedClient.getClientID()));
-				this.view.getCLIENTFORM().getTfName().setValue(this.selectedClient.getName());
-				this.view.getCLIENTFORM().getTfTelephonenumber()
-						.setValue(String.valueOf(this.selectedClient.getTelephoneNumber()));
-				this.view.getCLIENTFORM().getTfStreet().setValue(this.selectedClient.getStreet());
-				this.view.getCLIENTFORM().getTfHouseNumber()
-						.setValue(String.valueOf(this.selectedClient.getHouseNumber()));
-				this.view.getCLIENTFORM().getTfZipCode().setValue(String.valueOf(this.selectedClient.getZipCode()));
-				this.view.getCLIENTFORM().getTfTown().setValue(this.selectedClient.getTown());
-				this.view.getCLIENTFORM().getCkIsActive().setValue(this.selectedClient.isActive());
-				// TODO: Auswahl von Projekten oder nur Anzeigen?
-				ArrayList<String> projectStrings = new ArrayList<String>();
-				for (Project p : this.selectedClient.getProjectList()) {
-					projectStrings.add(String.valueOf(p.getProjectID()));
-				}
-				this.view.getCLIENTFORM().getCbProjects().setItems(projectStrings);
-				this.view.getCLIENTFORM().getCbProjects().setPlaceholder("Nach IDs suchen...");
-				this.view.getCLIENTFORM().closeEdit();
-				this.view.getCLIENTFORM().setVisible(true);
-			} catch (NumberFormatException e) {
-				this.view.getCLIENTFORM().clearClientForm();
-				Notification.show("NumberFormatException");
+	private void filterList(String filter) {
+		// TODO: Cast Exception
+		ArrayList<Client> filtered = new ArrayList<Client>();
+		for (Client c : this.view.getClientList()) {
+			if (c.getName() != null && c.getName().contains(filter)) {
+				filtered.add(c);
+			} else if (c.getTown() != null && c.getTown().contains(filter)) {
+				filtered.add(c);
+			} else if (c.getStreet() != null && c.getStreet().contains(filter)) {
+				filtered.add(c);
+			} else if (String.valueOf(c.getClientID()).contains(filter)) {
+				filtered.add(c);
+			} else if (String.valueOf(c.getHouseNumber()).contains(filter)) {
+				filtered.add(c);
+			} else if (String.valueOf(c.getTelephoneNumber()).contains(filter)) {
+				filtered.add(c);
+			} else if (String.valueOf(c.getZipCode()).contains(filter)) {
+				filtered.add(c);
+			} else if (c.getProjectIDsAsString() != null && c.getProjectIDsAsString().contains(filter)) {
+				filtered.add(c);
 			}
-		} else {
-			this.view.getCLIENTFORM().setVisible(false);
 		}
+		this.view.getClientGrid().setItems(filtered);
 	}
 
 	/**
 	 * Erstellt ein neues Event, welches die DB Abfrage anstößt
 	 */
-	public void initReadAllClientsEvent() {
+	public void initReadFromDB() {
 		this.eventBus.post(new ReadAllClientsEvent(this));
+		this.updateGrid();
 	}
 
 	/**
-	 * Nimmt das TransportAllClientsEvent entgegen und ließt die mitgelieferte Liste
-	 * aus. Jeder Client der Liste wird einzeln dem View hinzugefügt.
-	 * 
-	 * @param event
+	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
 	 */
-	@Subscribe
-	public void setClientItems(TransportAllClientsEvent event) {
-		for (Client c : event.getClientList()) {
-			this.view.addClient(c);
-		}
-		this.view.updateGrid();
+	public void updateGrid() {
+		this.view.getClientGrid().setItems(this.clients);
 	}
+
+	public void addClient(Client c) {
+		if (!this.clients.contains(c)) {
+			this.clients.add(c);
+		}
+	}
+
+//	/**
+//	 * Nimmt das TransportAllClientsEvent entgegen und ließt die mitgelieferte Liste
+//	 * aus. Jeder Client der Liste wird einzeln dem View hinzugefügt.
+//	 * 
+//	 * @param event
+//	 */
+//	@Subscribe
+//	public void setClientItems(TransportAllClientsEvent event) {
+//		for (Client c : event.getClientList()) {
+//			this.view.addClient(c);
+//		}
+//		this.view.updateGrid();
+//	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -226,4 +241,9 @@ public class VaadinClientViewLogic implements IClientView {
 		}
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
+
+	public void setClients(List<Client> clients) {
+		this.clients = clients;
+	}
+
 }
