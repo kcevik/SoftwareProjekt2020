@@ -95,7 +95,7 @@ public class PersonalDetailsRootView extends VerticalLayout {
 	 * wird eine Error Seite dargestellt
 	 */
 	private boolean rootViewAuthorizationCheck() {
-		if (AuthorizationChecker.checkIsAuthorizedManager(session, session.getAttribute("LOGIN_USER_ROLE"))) {
+		if (AuthorizationChecker.checkIsAuthorizedEmployee(session, session.getAttribute("LOGIN_USER_ROLE"))) {
 			System.out.println("User hat Berechtigung");
 			return true;
 		} else {
