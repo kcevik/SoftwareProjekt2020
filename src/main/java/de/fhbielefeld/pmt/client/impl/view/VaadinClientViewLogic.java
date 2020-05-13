@@ -71,32 +71,36 @@ public class VaadinClientViewLogic implements IClientView {
 	}
 
 	private void bindToFields() {
-		
+
 		StringToIntegerConverter plainIntegerConverter = new StringToIntegerConverter("") {
 			private static final long serialVersionUID = 1L;
+
 			protected java.text.NumberFormat getFormat(Locale locale) {
-		        NumberFormat format = super.getFormat(locale);
-		        format.setGroupingUsed(false);
-		        return format;
-		    };
+				NumberFormat format = super.getFormat(locale);
+				format.setGroupingUsed(false);
+				return format;
+			};
 		};
-		
+
 		this.binder.forField(this.view.getCLIENTFORM().getTfClientID()).withConverter(new StringToLongConverter(""))
 				.bind(Client::getClientID, null);
 		this.binder.forField(this.view.getCLIENTFORM().getTfName())
 				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
 				.bind(Client::getName, Client::setName);
-		this.binder.bind(this.view.getCLIENTFORM().getTfTelephonenumber(), "telephoneNumber");
+		this.binder.forField(this.view.getCLIENTFORM().getTfTelephonenumber())
+				.withValidator(new RegexpValidator(
+				"Bitte eine gültige Telefonnummer angeben",
+				"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"))
+				.bind(Client::getTelephoneNumber, Client::setTelephoneNumber);
 		this.binder.bind(this.view.getCLIENTFORM().getTfStreet(), "street");
 		this.binder.forField(this.view.getCLIENTFORM().getTfHouseNumber())
 				.withValidator(new RegexpValidator("Hausnummer korrekt angeben bitte", "([0-9]+)([^0-9]*)"))
-				.withConverter(plainIntegerConverter)
-				.bind(Client::getHouseNumber, Client::setHouseNumber);
-		this.binder.forField(this.view.getCLIENTFORM().getTfZipCode()).withValidator(new RegexpValidator(
+				.withConverter(plainIntegerConverter).bind(Client::getHouseNumber, Client::setHouseNumber);
+		this.binder.forField(this.view.getCLIENTFORM().getTfZipCode())
+				.withValidator(new RegexpValidator(
 				"Bitte eine PLZ mit 4 oder 5 Zahlen eingeben",
 				"[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-8][0-9]{4}|9[0-8][0-9]{3}|99[0-8][0-9]{2}|999[0-8][0-9]|9999[0-9]"))
-				.withConverter(plainIntegerConverter)
-				.bind(Client::getZipCode, Client::setZipCode);
+				.withConverter(plainIntegerConverter).bind(Client::getZipCode, Client::setZipCode);
 		this.binder.bind(this.view.getCLIENTFORM().getTfTown(), "town");
 		this.binder.bind(this.view.getCLIENTFORM().getCkIsActive(), "active");
 	}

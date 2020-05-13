@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 /**
  * Entity implementation class for Entity: RoleEmployee
- *
+ *@author Sebastian Siegmann
  */
 @Entity
 
