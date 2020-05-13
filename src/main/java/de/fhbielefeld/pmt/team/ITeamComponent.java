@@ -8,6 +8,6 @@ import de.fhbielefeld.pmt.IViewAccessor;
  *
  */
 public interface ITeamComponent extends IViewAccessor {
-	// gilt für alle
+	
 }
 

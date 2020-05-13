@@ -83,10 +83,10 @@ public class ModuleChooserRootView extends VerticalLayout {
 
 	/**
 	 * @author David Bistron
+	 * Methode, die benötigt wird, damit das Routing zur TeamView funktioniert
 	 */
 	@Subscribe
 	public void onTeamsModuleChosen(TeamsModuleChosenEvent event) {
-		System.out.println("wenn ich dich wähle, dann bist du ein TeamModule");
 		this.getUI().ifPresent(ui -> ui.navigate("teammanagement"));
 	}
 	

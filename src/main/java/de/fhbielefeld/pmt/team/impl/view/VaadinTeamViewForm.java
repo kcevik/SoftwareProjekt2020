@@ -4,16 +4,18 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
+
 /**
  * 
  * @author David Bistron
@@ -22,35 +24,123 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 public class VaadinTeamViewForm extends FormLayout {
 
 	private static final long serialVersionUID = 1L;
-	
-	TextField teamID = new TextField("Team-ID:");
-	TextField teamName = new TextField("Teamname:");
-	// TODO: Anstatt Textfield MA muss ne Verbindung zu den hinterlegten MA erstellt werden
-	ComboBox<Project> projects = new ComboBox<Project>("zugehörige Projekte:");
-	ComboBox<Employee> mitarbeiter = new ComboBox<>("zugehörige Mitarbeiter: ");
-	Checkbox isActive = new Checkbox("Aktives Team?");
+	private final Label createEdit = new Label("Anlegen / Bearbeiten");
+	private final TextField teamID = new TextField("Team-ID:");
+	private final TextField teamName = new TextField("Teamname:");
+	// TODO: Anstatt Textfield MA muss ne Verbindung zu den hinterlegten MA erstellt werden --> BINDER
+	private final ComboBox<Project> teamProjects = new ComboBox<Project>("zugehörige Projekte:");
+	private final ComboBox<Employee> teamEmployee = new ComboBox<Employee>("zugehörige Mitarbeiter: ");
+	private final Checkbox isActive = new Checkbox("Aktives Team?");
 
-	Button btnSave = new Button("Speichern");
-	Button btnDelete = new Button("Löschen");
-	Button btnClose = new Button("Abbrechen");
-	
-	// TODO: Delete btnGeil
-	Button btnVaad = new Button("Vaadin", new Icon(VaadinIcon.THUMBS_UP));
+	private final Button btnSave = new Button("Speichern");
+	private final Button btnEdit = new Button("Bearbeiten");
+	private final Button btnClose = new Button("Abbrechen");
 
 	public VaadinTeamViewForm() {
 		addClassName("team-form");
-		add(teamID, teamName, mitarbeiter, projects, isActive, configureButtons());
+		configureTeamFormTextFields();
+		add(createEdit);
+		createEdit.addClassName("lbl-heading-form");
+		add(teamID, teamName, teamEmployee, teamProjects, isActive, configureTeamFormButtons());
 	}
 
-	public Component configureButtons() {
+	public void configureTeamFormTextFields() {
+		this.createEdit.setEnabled(true);
+		this.teamID.setEnabled(false);
+		this.teamName.setEnabled(false);
+		this.teamEmployee.setEnabled(false);
+		this.teamProjects.setEnabled(false);
+		this.isActive.setEnabled(false);
+		teamEmployee.isReadOnly();
+		teamProjects.isReadOnly();
+		
+	}
+	
+	public Component configureTeamFormButtons() {
 		btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-		btnDelete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+		btnSave.setVisible(false);
+		btnEdit.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		btnClose.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-		btnVaad.setIconAfterText(true);
-
 		btnSave.addClickShortcut(Key.ENTER);
 		btnClose.addClickShortcut(Key.ESCAPE);
-		return new HorizontalLayout(btnSave, btnDelete, btnClose, btnVaad);
+		return new HorizontalLayout(btnSave, btnEdit, btnClose);
 
 	}
+
+	/**
+	 * Methode, die die TeamForm 
+	 */
+	public void prepareTeamFormFields() {
+		this.teamID.setEnabled(false);
+		this.teamName.setEnabled(true);
+		this.teamEmployee.setEnabled(true);
+		this.teamProjects.setEnabled(true);
+		this.isActive.setEnabled(true);
+		this.btnSave.setVisible(true);
+		this.btnEdit.setVisible(false);
+	}
+	
+	/**
+	 * Methode, die die TeamForm ausblended
+	 */
+	public void closeTeamFormFields() {
+		this.teamID.setEnabled(false);
+		this.teamName.setEnabled(false);
+		this.teamEmployee.setEnabled(true);
+		this.teamProjects.setEnabled(false);
+		this.isActive.setEnabled(false);
+		this.btnSave.setVisible(false);
+		this.btnEdit.setVisible(true);
+	}
+	
+	/**
+	 * Methode, die das Formular zurücksetzt
+	 */
+	public void resetTeamForm() {
+		this.setVisible(false);
+		this.teamID.clear();
+		this.teamName.clear();
+		this.teamProjects.clear();
+		this.teamEmployee.clear();
+		this.isActive.clear();
+		this.closeTeamFormFields();
+	}
+	
+	/**
+	 * Get-Methoden, die benötigt werden, damit die Klasse VaadinTeamViewLogic die Daten der aktuell in dem teamGrid ausgewählten Teams
+	 * in der teamForm darstellen kann 
+	 * @return
+	 */
+	public TextField getTeamID() {
+		return teamID;
+	}
+	
+	public TextField getTeamName() {
+		return teamName;
+	}
+	
+	public ComboBox<Project> getTeamProjects(){
+		return teamProjects;
+	}
+	
+	public ComboBox<Employee> getTeamEmployee(){
+		return teamEmployee;
+	}
+	
+	public Checkbox getIsActive() {
+		return isActive;
+	}
+	
+	public Button getBtnSave() {
+		return btnSave;
+	}
+
+	public Button getBtnDelete() {
+		return btnEdit;
+	}
+
+	public Button getBtnClose() {
+		return btnClose;
+	}
+	
 }

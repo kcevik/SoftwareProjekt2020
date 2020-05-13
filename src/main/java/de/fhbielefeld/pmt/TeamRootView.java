@@ -1,6 +1,7 @@
 package de.fhbielefeld.pmt;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -9,14 +10,21 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
+import de.fhbielefeld.pmt.client.impl.model.ClientModel;
+import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
+import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.team.ITeamComponent;
 import de.fhbielefeld.pmt.team.impl.TeamComponent;
 import de.fhbielefeld.pmt.team.impl.model.TeamModel;
 import de.fhbielefeld.pmt.team.impl.view.VaadinTeamView;
 import de.fhbielefeld.pmt.team.impl.view.VaadinTeamViewLogic;
+import de.fhbielefeld.pmt.topBar.ITopBarComponent;
+import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
+import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
+import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
 
 /**
- * 
+ * Klasse, die 
  * @author David Bistron
  *
  */
@@ -29,14 +37,21 @@ public class TeamRootView extends VerticalLayout {
 	private final EventBus eventBus = new EventBus();
 	VaadinSession session = VaadinSession.getCurrent();
 	
+	/**
+	 * Methode zur Erstellug der View (Routing im Web mit URL)
+	 * ruft die Methoden createTopBarComponent = Obere Leiste und TeamComponent = Unterer Bereich auf
+	 */
 	public TeamRootView() {
 
 		this.eventBus.register(this);
-		
+		ITopBarComponent topBarComponent = this.createTopBarComponent();
 		ITeamComponent teamComponent = this.createTeamComponent();
 		
+		// TODO: Warum getViewAs(Component.class)?
+		Component topBarView = topBarComponent.getViewAs(Component.class);
 		Component teamView = teamComponent.getViewAs(Component.class);
 		
+		this.add(topBarView);
 		this.add(teamView);
 		this.setHeightFull();
 		this.setAlignItems(Alignment.CENTER);
@@ -44,11 +59,47 @@ public class TeamRootView extends VerticalLayout {
 		
 	}
 	
+	private ITopBarComponent createTopBarComponent() {
+		VaadinTopBarView vaadinTopBarView;
+		vaadinTopBarView = new VaadinTopBarView();
+		vaadinTopBarView.setLblHeadingText("Teamübersicht");
+		ITopBarComponent topBarComponent = new TopBarComponent(
+				// TODO: müsste es nicht ein new TeamModel sein?
+				new ClientModel(DatabaseService.DatabaseServiceGetInstance()),
+				new VaadinTopBarViewLogic(vaadinTopBarView, this.eventBus), this.eventBus);
+		return topBarComponent;
+	}
+	
 	private ITeamComponent createTeamComponent() {
 		VaadinTeamViewLogic vaadinTeamViewLogic;
 		vaadinTeamViewLogic = new VaadinTeamViewLogic(new VaadinTeamView(), this.eventBus);
-		ITeamComponent teamComponent = new TeamComponent(new TeamModel(DatabaseService.DatabaseServiceGetInstance()), vaadinTeamViewLogic, this.eventBus);
-		vaadinTeamViewLogic.freddyKommBusBauen();
+		// TODO: Warum kommt das hier? Wir holen die Daten aus der DB und packen Sie in das TeamModel?
+		ITeamComponent teamComponent = new TeamComponent(
+				new TeamModel(DatabaseService.DatabaseServiceGetInstance()), vaadinTeamViewLogic, this.eventBus);
+		vaadinTeamViewLogic.initReadAllTeamsEvent();
 		return teamComponent;
 	}
+	
+	/**
+	 * Methode, die die Rückkehr zum Aufgabenauswahl-Screen steuert, wenn der Button "zurück zur Aufgabenauswahl" gedrückt wird
+	 * @param event
+	 */
+	@Subscribe
+	public void onModuleChoserChoosenEvent(ModuleChooserChosenEvent event) {
+		this.getUI().ifPresent(UI -> UI.navigate("modulechooser"));
+	}
+	
+	/**
+	 * Methode, die die Rückkehr zum LogIn-Screen steuert, wenn der Button "Logout" gedrückt wird
+	 * @param event
+	 */
+	@Subscribe
+	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
+		session.setAttribute("LOGIN_USER_ID", null);
+		session.setAttribute("LOGIN_USER_FIRSTNAME", null);
+		session.setAttribute("LOGIN_USER_LASTNAME", null);
+		session.setAttribute("LOGIN_USER_ROLE", null);
+		this.getUI().ifPresent(ui -> ui.navigate(""));
+	}
+	
 }
