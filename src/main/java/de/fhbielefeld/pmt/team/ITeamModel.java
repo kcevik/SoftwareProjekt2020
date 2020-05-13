@@ -12,5 +12,6 @@ public interface ITeamModel {
 
 	List<Team> getTeamListFromDatabase();
 	boolean isReadSuccessfull();
+	public void persistTeam(Team team);
 
 }

@@ -4,7 +4,7 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.team.ITeamView;
 
 /**
- * 
+ * EventObject = Vaadin-Komponente
  * @author David Bistron
  *
  */

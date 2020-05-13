@@ -7,7 +7,7 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.team.ITeamModel;
 
 /**
- * 
+ * Klasse, die den Datenbankzugriff kontrolliert 
  * @author David Bistron
  *
  */
@@ -27,6 +27,11 @@ public class TeamModel implements ITeamModel {
 		return dbService.readTeam();
 	}
 
+	// @Override -> will er nicht?
+	public void persistTeam(Team team) {
+		this.dbService.persistTeam(team);
+	}
+	
 	@Override
 	public boolean isReadSuccessfull() {
 		if (this.getTeamListFromDatabase() != null) {

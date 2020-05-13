@@ -370,4 +370,11 @@ public class Project implements Serializable {
 	public void removeEmployee(Employee employee) {
 		this.employeeList.remove(employee);
 	}
+
+	@Override
+	public String toString() {
+		return projectID + "";
+	}
+	
+	
 }

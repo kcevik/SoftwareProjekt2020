@@ -99,6 +99,17 @@ public class Team implements Serializable {
 	}
 
 	/**
+	 * Methode, um einen neuen Teamnamen in der Datenbank speichern zu können
+	 * Die Methode wird genutzt von der Klasse VaadinTeamViewLogic
+	 * @author David Bistron
+	 * @return none
+	 * @param teamName
+	 */
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+	
+	/**
 	 * Public Methode um  
 	 * @return 
 	 * @param 

@@ -3,6 +3,7 @@ package de.fhbielefeld.pmt.login.impl.view;
 import java.awt.Panel;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.charts.model.Label;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -14,8 +15,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.theme.lumo.Lumo;
 
 import de.fhbielefeld.pmt.login.ILoginComponent;
 import de.fhbielefeld.pmt.login.ILoginView;
@@ -38,10 +41,25 @@ public class VaadinLoginView extends VerticalLayout{
 	
 	private final LoginForm loginForm = new LoginForm();
 	
+	/*
+	 *
+	 * @author David Bistron
+	 *
+	 *
+	Button toogleButton = new Button("Do you like it dark?", click -> {
+		ThemeList darkTheme = UI.getCurrent().getElement().getThemeList();
+			if (darkTheme.contains(Lumo.DARK)) {
+				darkTheme.remove(Lumo.DARK);
+			} else {
+				darkTheme.add(Lumo.DARK);
+			}
+	});
+	*/
+	
 	public VaadinLoginView() {
 		this.initUI();
 		this.builtUI();
-		
+	
 	}
 
 	/**
@@ -53,6 +71,7 @@ public class VaadinLoginView extends VerticalLayout{
 		this.add("Projektmanagement-Tool");
 		this.add(loginForm);
 		this.setAlignItems(Alignment.CENTER);
+		// this.add(toogleButton);
 	}
 
 	/**

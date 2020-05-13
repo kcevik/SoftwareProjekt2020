@@ -38,7 +38,7 @@ public class VaadinModuleChooserView extends VerticalLayout{
 	
 
 	private void builtUI() {
-		
+		btnLogout.setText("Logout");
 		HorizontalLayout header = new HorizontalLayout(icon, lblWelcome, btnLogout);
 		header.setAlignItems(FlexComponent.Alignment.CENTER);
 		header.setFlexGrow(1, icon);
