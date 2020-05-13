@@ -1,8 +1,5 @@
 package de.fhbielefeld.pmt.team.impl.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -14,10 +11,11 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.binder.Binder;
 
+import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
+
 /**
  * 
  * @author David Bistron
@@ -30,8 +28,8 @@ public class VaadinTeamViewForm extends FormLayout {
 	private final TextField teamID = new TextField("Team-ID:");
 	private final TextField teamName = new TextField("Teamname:");
 	// TODO: Anstatt Textfield MA muss ne Verbindung zu den hinterlegten MA erstellt werden --> BINDER
-	private final ComboBox<String> teamProjects = new ComboBox<String>("zugehörige Projekte:");
-	private final ComboBox<String> teamEmployee = new ComboBox<String>("zugehörige Mitarbeiter: ");
+	private final ComboBox<Project> teamProjects = new ComboBox<Project>("zugehörige Projekte:");
+	private final ComboBox<Employee> teamEmployee = new ComboBox<Employee>("zugehörige Mitarbeiter: ");
 	private final Checkbox isActive = new Checkbox("Aktives Team?");
 
 	private final Button btnSave = new Button("Speichern");
@@ -121,11 +119,11 @@ public class VaadinTeamViewForm extends FormLayout {
 		return teamName;
 	}
 	
-	public ComboBox<String> getTeamProjects(){
+	public ComboBox<Project> getTeamProjects(){
 		return teamProjects;
 	}
 	
-	public ComboBox<String> getTeamEmployee(){
+	public ComboBox<Employee> getTeamEmployee(){
 		return teamEmployee;
 	}
 	

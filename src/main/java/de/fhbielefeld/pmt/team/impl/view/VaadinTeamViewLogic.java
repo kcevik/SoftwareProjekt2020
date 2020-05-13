@@ -6,7 +6,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
@@ -67,6 +66,14 @@ public class VaadinTeamViewLogic implements ITeamView{
 
 	}
 	
+	public void employeeBinder() {
+		this.bindEmployee.bind(this.view.getTeamForm().getTeamEmployee(), "lastName");
+	}
+	
+	public void projectBinder() {
+		this.bindProject.bind(this.view.getTeamForm().getTeamProjects(), "projectName");
+	}
+	
 	public void filterList(String filter) {
 		ArrayList<Team> filtered = new ArrayList<Team>();
 		for (Team t : this.view.getTeamList()) {
@@ -115,7 +122,7 @@ public class VaadinTeamViewLogic implements ITeamView{
 				for (Project p : this.selectedTeam.getProjectList()) {
 					projects.add(String.valueOf(p.getProjectId()));
 				}
-				this.view.getTeamForm().getTeamProjects().setItems(projects);
+				// this.view.getTeamForm().getTeamProjects().setItems(projects);
 				// this.view.getTeamForm().getTeamProjects().setPlaceholder("Nach IDs suchen...");
 				this.view.getTeamForm().closeTeamFormFields();
 				this.view.getTeamForm().setVisible(true);
@@ -185,15 +192,6 @@ public class VaadinTeamViewLogic implements ITeamView{
 			return (T) this.view;
 		}
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
-	}
-	
-	public void employeeBinder() {
-		this.bindEmployee.bind(this.view.getTeamForm().getTeamEmployee(), "lastName");
-		
-	}
-	
-	public void projectBinder() {
-		this.bindProject.bind(this.view.getTeamForm().getTeamProjects(), "projectName");
 	}
 	
 }
