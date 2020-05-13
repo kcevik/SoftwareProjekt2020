@@ -3,11 +3,12 @@ package de.fhbielefeld.pmt.client;
 import java.util.List;
 
 import de.fhbielefeld.pmt.JPAEntities.Client;
+import de.fhbielefeld.pmt.topBar.IModel;
 
 /** Interfacedefinition für das ClientModel
  * @author Sebastian Siegmann
  */
-public interface IClientModel {
+public interface IClientModel extends IModel{
 	
 	List<Client> getClientListFromDatabase();
 	boolean isReadSuccessfull();

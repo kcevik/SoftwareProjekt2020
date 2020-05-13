@@ -5,6 +5,7 @@ import com.google.common.eventbus.EventBus;
 import de.fhbielefeld.pmt.AbstractPresenter;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.client.IClientModel;
+import de.fhbielefeld.pmt.topBar.IModel;
 import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.ITopBarView;
 /**
@@ -13,9 +14,9 @@ import de.fhbielefeld.pmt.topBar.ITopBarView;
  *
  */
 //TODO: Was ist mit dem Model? Braucht das Ding hier eigentlich nich? NUll? ClientModel nutzen? Eigenes Model schreiben?
-public class TopBarComponent extends AbstractPresenter<IClientModel, ITopBarView> implements ITopBarComponent{
+public class TopBarComponent extends AbstractPresenter<IModel, ITopBarView> implements ITopBarComponent{
 
-	public TopBarComponent(IClientModel model, ITopBarView view, EventBus eventBus) {
+	public TopBarComponent(IModel model , ITopBarView view, EventBus eventBus) {
 		super(model, view, eventBus);
 		this.eventBus.register(this);
 	}
