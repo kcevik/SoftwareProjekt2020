@@ -120,7 +120,7 @@ public class VaadinTeamViewLogic implements ITeamView{
 				// TODO: Auswahl von Projekten oder nur Anzeigen? --> hier Binder?				
 				ArrayList<String> projects = new ArrayList<String>();
 				for (Project p : this.selectedTeam.getProjectList()) {
-					projects.add(String.valueOf(p.getProjectId()));
+					projects.add(String.valueOf(p.getProjectID()));
 				}
 				// this.view.getTeamForm().getTeamProjects().setItems(projects);
 				// this.view.getTeamForm().getTeamProjects().setPlaceholder("Nach IDs suchen...");

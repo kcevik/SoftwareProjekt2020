@@ -5,6 +5,7 @@ import com.google.common.eventbus.EventBus;
 import de.fhbielefeld.pmt.AbstractPresenter;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.client.IClientModel;
+import de.fhbielefeld.pmt.team.ITeamModel;
 import de.fhbielefeld.pmt.topBar.IModel;
 import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.ITopBarView;
