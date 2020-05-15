@@ -84,6 +84,7 @@ public class VaadinEmployeeViewForm extends FormLayout {
 	}
 	
 	public void prepareEdit() {
+		this.lastName.setEnabled(true);
 		this.firstName.setEnabled(true);
 		this.employeeID.setEnabled(true);
 		this.isSuitabilityProjectManager.setEnabled(true);
@@ -94,6 +95,7 @@ public class VaadinEmployeeViewForm extends FormLayout {
 	}
 	
 	public void closeEdit() {
+		this.lastName.setEnabled(false);
 		this.firstName.setEnabled(false);
 		this.employeeID.setEnabled(false);
 		this.isSuitabilityProjectManager.setEnabled(false);

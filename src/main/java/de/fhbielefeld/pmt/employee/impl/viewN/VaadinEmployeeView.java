@@ -16,7 +16,7 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 /**
  * VaadinView Klasse die den Inhalt des RootViews darstellt
  * 
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  *
  */
 @CssImport("./styles/shared-styles.css")

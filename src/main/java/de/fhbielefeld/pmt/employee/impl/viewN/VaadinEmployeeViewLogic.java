@@ -16,7 +16,7 @@ import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
  * Vaadin Logik Klasse. Steuert den zugehörigen VaadinView und alle
  * Unterkomponenten
  * 
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  *
  */
 public class VaadinEmployeeViewLogic implements IEmployeeView {

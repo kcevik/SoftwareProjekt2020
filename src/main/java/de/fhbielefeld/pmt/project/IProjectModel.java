@@ -5,11 +5,12 @@ import java.util.List;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.modelViewComponent.IModel;
 
 /** Interfacedefinition für das ProjectModel
  * @author Lucas Eickmann
  */
-public interface IProjectModel {
+public interface IProjectModel  extends IModel{
 	
 	public List<Project> getProjectListFromDatabase();
 	public boolean isReadSuccessfull();

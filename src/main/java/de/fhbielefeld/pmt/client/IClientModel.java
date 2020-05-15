@@ -3,7 +3,7 @@ package de.fhbielefeld.pmt.client;
 import java.util.List;
 
 import de.fhbielefeld.pmt.JPAEntities.Client;
-import de.fhbielefeld.pmt.topBar.IModel;
+import de.fhbielefeld.pmt.modelViewComponent.IModel;
 
 /** Interfacedefinition für das ClientModel
  * @author Sebastian Siegmann

@@ -24,7 +24,7 @@ import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
 
 /**
  * Grundaufbau der Vaadin Seite. Startpunkt für das Erstellen einer neuen Browserseite.
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  * 
  */
 
