@@ -15,7 +15,7 @@ public class AuthorizationChecker {
 
 	public static boolean checkIsAuthorizedManager(VaadinSession session, Object userRole) {
 		if ((userRole != null) && (session != null) && ((userRole.toString().equalsIgnoreCase("manager"))
-				|| (userRole.toString().equalsIgnoreCase("employee")))) {
+				|| (userRole.toString().equalsIgnoreCase("ceo")))) {
 			return true;
 		} else {
 			return false;
