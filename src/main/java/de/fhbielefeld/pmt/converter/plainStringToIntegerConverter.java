@@ -4,7 +4,11 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
-
+/**
+ * 
+ * @author LucasEickmann
+ *
+ */
 public class plainStringToIntegerConverter extends StringToIntegerConverter {
 
 	/**
@@ -16,10 +20,10 @@ public class plainStringToIntegerConverter extends StringToIntegerConverter {
 		super(errorMessage);
 	}
 	
-	protected java.text.NumberFormat getFormat(Locale locale) {
+	protected NumberFormat getFormat(Locale locale) {
 		NumberFormat format = super.getFormat(locale);
 		format.setGroupingUsed(false);
 		return format;
-	};
+	}
 
 }

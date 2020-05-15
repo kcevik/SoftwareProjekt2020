@@ -16,10 +16,9 @@ public class plainStringToDoubleConverter extends StringToDoubleConverter {
 		// TODO Auto-generated constructor stub
 	}
 	
-	protected java.text.NumberFormat getFormat(Locale locale) {
+	protected NumberFormat getFormat(Locale locale) {
 		NumberFormat format = super.getFormat(locale);
 		format.setGroupingUsed(false);
 		return format;
-	};
-
+	}
 }
