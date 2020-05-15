@@ -2,6 +2,7 @@ package de.fhbielefeld.pmt.client.impl;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+
 import de.fhbielefeld.pmt.AbstractPresenter;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
@@ -10,7 +11,6 @@ import de.fhbielefeld.pmt.client.IClientModel;
 import de.fhbielefeld.pmt.client.IClientView;
 import de.fhbielefeld.pmt.client.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.client.impl.event.SendClientToDBEvent;
-import de.fhbielefeld.pmt.client.impl.event.ReadAllProjectsEvent;
 
 
 /**
@@ -36,16 +36,6 @@ public class ClientComponent extends AbstractPresenter<IClientModel, IClientView
 				for (Client c : this.model.getClientListFromDatabase()) {
 					this.view.addClient(c);
 				}
-			}
-		}
-	}
-	
-	@Subscribe
-	public void onReadAllProjectsEvent(ReadAllProjectsEvent event) {
-		if (event.getSource() == this.view) {
-			if (this.model.isReadSuccessfull()) {
-				System.out.println("Es gibt nen event teil 2");
-				this.view.setProjects(this.model.getProjectListFromDatabase());	
 			}
 		}
 	}
