@@ -1,6 +1,8 @@
 package de.fhbielefeld.pmt.login;
 
-public interface ILoginModel {
+import de.fhbielefeld.pmt.modelViewComponent.IModel;
+
+public interface ILoginModel  extends IModel{
 	
 	/**
 	 * Führt den Anmeldevorgang durch.

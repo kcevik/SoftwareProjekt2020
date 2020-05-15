@@ -8,7 +8,7 @@ import de.fhbielefeld.pmt.employeeN.IEmployeeModel;
 
 /**
  * Model Klasse regelt DB Zugriffe und gibt Daten von der DB an Controller Klassen weiter
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  */
 public class EmployeeModel implements IEmployeeModel {
 
