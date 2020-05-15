@@ -6,12 +6,14 @@ import java.util.List;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
+import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 
@@ -34,9 +36,9 @@ public class VaadinTeamView extends VerticalLayout {
 	// TODO: Warum team.class?
 	private Grid<Team> teamGrid = new Grid<Team>(Team.class);
 	private List<Team> teamList = new ArrayList<Team>();
-	private TextField filterText = new TextField();
-	private Button createNewTeam = new Button("Neues Team anlegen");
-	private Button backToMainMenu = new Button("Zurück zur Aufgabenauswahl");
+	private TextField tfFilterText = new TextField();
+	private Button btnCreateNewTeam = new Button("Neues Team anlegen");
+	private Button btnBackToMainMenu = new Button("Zurück zur Aufgabenauswahl");
 	private VaadinTeamViewForm teamForm = new VaadinTeamViewForm();
 
 	/**
@@ -58,7 +60,7 @@ public class VaadinTeamView extends VerticalLayout {
 		Div content = new Div(teamGrid, teamForm);
 		content.addClassName("content");
 		content.setSizeFull();
-		this.add(new HorizontalLayout(filterText, createNewTeam), content, backToMainMenu);
+		this.add(new HorizontalLayout(tfFilterText, btnCreateNewTeam), content, btnBackToMainMenu);
 	
 	}
 
@@ -68,7 +70,7 @@ public class VaadinTeamView extends VerticalLayout {
 	private void initUI() {
 		
 		addClassName("list-view");
-		this.teamForm.setVisible(true);
+		this.teamForm.setVisible(false);
 		setSizeFull();
 		configureGrid();
 		configureFilter();
@@ -80,10 +82,9 @@ public class VaadinTeamView extends VerticalLayout {
 	 * setValueChangeMode sorgt dafür, dass eine Eingabe in dem Filter-Feld das Ergebnis etwas zeitverzögert darstellt
 	 */
 	private void configureFilter() {
-		this.filterText.setPlaceholder("Filter nach Team");
-		this.filterText.setClearButtonVisible(true);
-		this.filterText.setValueChangeMode(ValueChangeMode.LAZY);
-		this.filterText.addValueChangeListener(e -> filterList(filterText.getValue()));
+		this.tfFilterText.setPlaceholder("Filter nach Team/TeamID");
+		this.tfFilterText.setClearButtonVisible(true);
+		this.tfFilterText.setValueChangeMode(ValueChangeMode.LAZY);
 	}
 
 	/**
@@ -95,12 +96,11 @@ public class VaadinTeamView extends VerticalLayout {
 		this.teamForm.resetTeamForm();
 	}
 	
+	// TODO: Doppelter Code --> muss in die Logic!
 	/**
 	 * Methode, die die Filterung nach Teams steuert. Wird in der Methode configureFilter verwendet
-	 */
-	
 	private void filterList(String filter) {
-		ArrayList<Team> filtered = new ArrayList<Team>();
+		List<Team> filtered = new ArrayList<Team>();
 		for (Team t : this.getTeamList()) {
 			if (t.getTeamName().contains(filter)) {
 				filtered.add(t);
@@ -108,9 +108,11 @@ public class VaadinTeamView extends VerticalLayout {
 				filtered.add(t);															
 			}
 		}
+		//this.getTeamGrid().setVisible(true);
 		this.getTeamGrid().setItems(filtered);
+		  
 	}
-
+	 */
 	/**
 	 * Methode, um das Grid zu erstellen. Beinhaltet die Spaltenüberschriften, die identisch mit der Datenbank sind
 	 * vgl. Klasse Team im Package JPAEntities
@@ -124,6 +126,9 @@ public class VaadinTeamView extends VerticalLayout {
 		
 		// TODO: Hierdurch wird eine weitere Spalte mit Projekte angelegt, in der die Projekte gesammelt werden
 		// TODO: ist irgendwie doppelt, da ja bereits "Zugehörige Projekte" vorhanden sind
+		this.teamGrid.getColumnByKey("employeeList").setVisible(false);
+		this.teamGrid.getColumnByKey("projectList").setVisible(false);
+		
 		this.teamGrid.addColumn(team -> { 
 			String projectString = "";
 			for (Project p : team.getProjectList()) {
@@ -133,10 +138,22 @@ public class VaadinTeamView extends VerticalLayout {
 				projectString = projectString.substring(0, projectString.length() - 2);
 			}
 			return projectString;
-		}).setHeader("Projekte");
+		}).setHeader("Zugehörige Projekte als String");
+		
+		this.teamGrid.addColumn(team -> {
+			String employeeString = "";
+			for (Employee e : team.getEmployeeList()) {
+				employeeString += e.getLastName() + ", " + e.getFirstName() + "; ";
+			}
+			if (employeeString.length() > 2) {
+				employeeString = employeeString.substring(0, employeeString.length());
+			}
+			return employeeString;
+		}).setHeader("Zugehörige Mitarbeiter als String");
+		
 		this.teamGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.teamGrid.setHeightFull();
-		// this.teamGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		this.teamGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 	}
 
 	/**
@@ -157,20 +174,13 @@ public class VaadinTeamView extends VerticalLayout {
 			this.teamList.add(t);
 		}
 	}
-
-	/**
-	 * Aktualisierung des Grid. Wie? Die darzustellende Liste wird neu übergeben
-	 */
-	public void updateGrid() {
-		this.teamGrid.setItems(this.teamList);
-	}
-	
+		
 	/**
 	 * get-Methode für den Button, damit dieser in der ViewLogic für den Event-Listener aufgerufen werden kann!
 	 * @return backToMainMenu
 	 */
 	public Button getBackToMainMenu() {
-		return backToMainMenu;
+		return btnBackToMainMenu;
 	}
 	
 	/**
@@ -178,7 +188,7 @@ public class VaadinTeamView extends VerticalLayout {
 	 * @return createNewTeam
 	 */
 	public Button getCreateNewTeam() {
-		return createNewTeam;
+		return btnCreateNewTeam;
 	}
 	
 	public VaadinTeamViewForm getTeamForm() {
@@ -186,11 +196,18 @@ public class VaadinTeamView extends VerticalLayout {
 	}
 	
 	public TextField getFilterText() {
-		return filterText;
+		return tfFilterText;
 	}
 	
 	public List<Team> getTeamList(){
 		return teamList;
+	}
+	
+	/**
+	 * Aktualisierung des Grid. Wie? Die darzustellende Liste wird neu übergeben
+	 */
+	public void updateGrid() {
+		this.teamGrid.setItems(this.teamList);
 	}
 
 }

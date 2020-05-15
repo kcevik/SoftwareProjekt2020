@@ -389,6 +389,6 @@ public class Project implements Serializable {
 	
 	@Override
 	public String toString() {
-		return Integer.toString(this.getProjectID());
+		return Integer.toString(this.getProjectID()) + " Projektname: " + this.getProjectName();
 	}
 }

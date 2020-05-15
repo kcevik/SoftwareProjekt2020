@@ -1,5 +1,7 @@
 package de.fhbielefeld.pmt.team.impl.view;
 
+import org.vaadin.gatanaso.MultiselectComboBox;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -9,29 +11,35 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
-import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
- * 
+ * Klasse, die die TeamForm (links innerhalb der View) erstellt
  * @author David Bistron
  *
  */
 public class VaadinTeamViewForm extends FormLayout {
 
 	private static final long serialVersionUID = 1L;
-	private final Label createEdit = new Label("Anlegen / Bearbeiten");
-	private final TextField teamID = new TextField("Team-ID:");
-	private final TextField teamName = new TextField("Teamname:");
-	// TODO: Anstatt Textfield MA muss ne Verbindung zu den hinterlegten MA erstellt werden --> BINDER
-	private final ComboBox<Project> teamProjects = new ComboBox<Project>("zugehörige Projekte:");
-	private final ComboBox<Employee> teamEmployee = new ComboBox<Employee>("zugehörige Mitarbeiter: ");
-	private final Checkbox isActive = new Checkbox("Aktives Team?");
+	private final Label lblCreateEdit = new Label("Anlegen / Bearbeiten");
+	private final TextField tfTeamID = new TextField("Team-ID:");
+	private final TextField tfTeamName = new TextField("Teamname:");
+	// TODO: MultiselectListBoxen erscheinen nicht
+	private final ComboBox<Project> cbTeamProject = new ComboBox<Project>("zugehörige Projekte: ");
+	private final ComboBox<Employee> cbTeamEmployee = new ComboBox<Employee>("zugehörige Mitarbeiter: ");
+	// private final MultiSelectListBox<Project> mslbTeamProjects = new MultiSelectListBox<Project>();
+	// private final MultiSelectListBox<Employee> mslbTeamEmployee = new MultiSelectListBox<Employee>();
+	
+	private final MultiselectComboBox<Project> mscbTeamProject = new MultiselectComboBox<Project>("zugehörige Projekte: ");
+	private final MultiselectComboBox<Employee> mscbTeamEmployee = new MultiselectComboBox<Employee>("zugehörige Mitarbeiter: ");
 
+	
+	private final Checkbox cbIsActive = new Checkbox("Aktives Team?");
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
 	private final Button btnClose = new Button("Abbrechen");
@@ -39,20 +47,26 @@ public class VaadinTeamViewForm extends FormLayout {
 	public VaadinTeamViewForm() {
 		addClassName("team-form");
 		configureTeamFormTextFields();
-		add(createEdit);
-		createEdit.addClassName("lbl-heading-form");
-		add(teamID, teamName, teamEmployee, teamProjects, isActive, configureTeamFormButtons());
+		add(lblCreateEdit);
+		lblCreateEdit.addClassName("lbl-heading-form");
+		add(tfTeamID, tfTeamName, cbTeamProject, cbTeamEmployee, mscbTeamProject, mscbTeamEmployee, cbIsActive, configureTeamFormButtons());
 	}
 
 	public void configureTeamFormTextFields() {
-		this.createEdit.setEnabled(true);
-		this.teamID.setEnabled(false);
-		this.teamName.setEnabled(false);
-		this.teamEmployee.setEnabled(false);
-		this.teamProjects.setEnabled(false);
-		this.isActive.setEnabled(false);
-		teamEmployee.isReadOnly();
-		teamProjects.isReadOnly();
+		this.lblCreateEdit.setEnabled(false);
+		this.tfTeamID.setEnabled(false);
+		this.tfTeamName.setEnabled(false);
+		
+		// TODO: nur eins davon am Ende implementieren!
+		this.cbTeamProject.setEnabled(false);
+		this.cbTeamEmployee.setEnabled(false);
+		
+		this.mscbTeamProject.setEnabled(false);
+		this.mscbTeamEmployee.setEnabled(false);
+		
+		this.cbIsActive.setEnabled(false);
+		cbTeamProject.isReadOnly();
+		cbTeamEmployee.isReadOnly();
 		
 	}
 	
@@ -71,11 +85,14 @@ public class VaadinTeamViewForm extends FormLayout {
 	 * Methode, die die TeamForm 
 	 */
 	public void prepareTeamFormFields() {
-		this.teamID.setEnabled(false);
-		this.teamName.setEnabled(true);
-		this.teamEmployee.setEnabled(true);
-		this.teamProjects.setEnabled(true);
-		this.isActive.setEnabled(true);
+		this.tfTeamID.setEnabled(false);
+		this.tfTeamName.setEnabled(true);
+		// TODO: nur eins davon am Ende implementieren!
+		this.cbTeamEmployee.setEnabled(true);
+		this.cbTeamProject.setEnabled(true);
+		this.mscbTeamEmployee.setEnabled(true);
+		this.mscbTeamProject.setEnabled(true);
+		this.cbIsActive.setEnabled(true);
 		this.btnSave.setVisible(true);
 		this.btnEdit.setVisible(false);
 	}
@@ -84,11 +101,14 @@ public class VaadinTeamViewForm extends FormLayout {
 	 * Methode, die die TeamForm ausblended
 	 */
 	public void closeTeamFormFields() {
-		this.teamID.setEnabled(false);
-		this.teamName.setEnabled(false);
-		this.teamEmployee.setEnabled(true);
-		this.teamProjects.setEnabled(false);
-		this.isActive.setEnabled(false);
+		this.tfTeamID.setEnabled(false);
+		this.tfTeamName.setEnabled(false);
+		// TODO: nur eines davon am Ende implementieren!
+		this.cbTeamEmployee.setEnabled(false);
+		this.cbTeamProject.setEnabled(false);
+		this.mscbTeamEmployee.setEnabled(false);
+		this.mscbTeamProject.setEnabled(false);
+		this.cbIsActive.setEnabled(false);
 		this.btnSave.setVisible(false);
 		this.btnEdit.setVisible(true);
 	}
@@ -98,11 +118,14 @@ public class VaadinTeamViewForm extends FormLayout {
 	 */
 	public void resetTeamForm() {
 		this.setVisible(false);
-		this.teamID.clear();
-		this.teamName.clear();
-		this.teamProjects.clear();
-		this.teamEmployee.clear();
-		this.isActive.clear();
+		this.tfTeamID.clear();
+		this.tfTeamName.clear();
+		// TODO: nur eins davon am Ende implementieren!
+		this.cbTeamProject.clear();
+		this.cbTeamEmployee.clear();
+		this.mscbTeamEmployee.clear();
+		this.mscbTeamProject.clear();
+		this.cbIsActive.clear();
 		this.closeTeamFormFields();
 	}
 	
@@ -111,24 +134,42 @@ public class VaadinTeamViewForm extends FormLayout {
 	 * in der teamForm darstellen kann 
 	 * @return
 	 */
-	public TextField getTeamID() {
-		return teamID;
+	public TextField getTfTeamID() {
+		return tfTeamID;
 	}
 	
-	public TextField getTeamName() {
-		return teamName;
+	public TextField getTfTeamName() {
+		return tfTeamName;
 	}
 	
-	public ComboBox<Project> getTeamProjects(){
-		return teamProjects;
+	/*
+	public MultiSelectListBox<Project> getTeamProjects(){
+		return mslbTeamProjects;
 	}
 	
-	public ComboBox<Employee> getTeamEmployee(){
-		return teamEmployee;
+	public MultiSelectListBox<Employee> getTeamEmployee(){
+		return mslbTeamEmployee;
+	}
+	*/
+	
+	public ComboBox<Project> getCbTeamProject(){
+		return cbTeamProject;
+	}
+	
+	public ComboBox<Employee> getCbTeamEmployee(){
+		return cbTeamEmployee;
+	}
+	
+	public MultiselectComboBox<Project> getMscbTeamProject(){
+		return mscbTeamProject;
+	}
+	
+	public MultiselectComboBox<Employee> getMscbTeamEmployee(){
+		return mscbTeamEmployee;
 	}
 	
 	public Checkbox getIsActive() {
-		return isActive;
+		return cbIsActive;
 	}
 	
 	public Button getBtnSave() {
