@@ -90,6 +90,14 @@ public class ModuleChooserRootView extends VerticalLayout {
 		this.getUI().ifPresent(ui -> ui.navigate("teammanagement"));
 	}
 	
+	/**
+	 * @author Lucas Eickmann
+	 */
+	@Subscribe
+	public void onProjectModuleChosen(ProjectsModuleChosenEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("projectmanagement"));
+	}
+	
 	@Subscribe
 	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
 		//System.out.println("onLogoutEvent ist angekommen");

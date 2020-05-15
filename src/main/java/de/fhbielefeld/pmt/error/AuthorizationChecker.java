@@ -27,4 +27,12 @@ public class AuthorizationChecker {
 			return false;
 		}
 	}
+	
+	public static boolean checkIsMinAuthorizedEmployee(VaadinSession session, Object userRole) {
+		if ((userRole != null) && (session != null) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

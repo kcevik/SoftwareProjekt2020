@@ -32,7 +32,7 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 	@Subscribe
 	public void onReadAllProjectsEvent(ReadAllProjectsEvent event) {
 		if (event.getSource() == this.view) {
-			if (this.model.isClientReadSuccessfull()) {
+			if (this.model.isReadSuccessfull()) {
 				this.view.setProjects(this.model.getProjectListFromDatabase());
 			}
 		}
