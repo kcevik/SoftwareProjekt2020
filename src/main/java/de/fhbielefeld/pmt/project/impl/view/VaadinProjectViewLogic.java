@@ -20,6 +20,8 @@ import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
+import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.project.IProjectView;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
@@ -58,7 +60,7 @@ public class VaadinProjectViewLogic implements IProjectView{
 
 	private void bindToFields() {
 		this.binder.forField(this.view.getProjectForm().getNfProjectId())
-			.withConverter(new StringToIntegerConverter(""))
+			.withConverter(new plainStringToIntegerConverter(""))
 			.bind(Project::getProjectID, null);
 		this.binder.bind(this.view.getProjectForm().getTfProjectName(), "projectName");
 		this.binder.bind(this.view.getProjectForm().getCbProjectManager(), "projectManager");
@@ -69,7 +71,7 @@ public class VaadinProjectViewLogic implements IProjectView{
 		this.binder.bind(this.view.getProjectForm().getCbSupProject(), "supProject");
 		this.binder.forField(this.view.getProjectForm().getTfBudget())
 			.withValidator(new RegexpValidator("Bitte positive Zahl eingeben. Bsp.: 1234,56", "\\d+\\,?\\d+"))
-			.withConverter(new StringToDoubleConverter("Bitte positive Zahl eingeben"))
+			.withConverter(new plainStringToDoubleConverter("Bitte positive Zahl eingeben"))
 			.bind(Project::getBudget, Project::setBudget);
 		this.binder.bind(this.view.getProjectForm().getCkIsActive(), "active");
 	}
