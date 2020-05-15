@@ -69,6 +69,7 @@
 html {
 	background-color: #233348;
 	overflow: scroll;
+	overflow-x: hidden;
 }
 
 /*Testborder um Container zu erkennen*/

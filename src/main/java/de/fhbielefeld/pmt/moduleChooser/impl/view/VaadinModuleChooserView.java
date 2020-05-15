@@ -19,6 +19,7 @@ public class VaadinModuleChooserView extends VerticalLayout{
 	private final Button btnSuperviseEmployees = new Button("Mitarbeiter verwalten");
 	private final Button btnSuperviseClients = new Button("Kunden verwalten");
 	private final Button btnSuperviseTeams = new Button("Teams verwalten");
+	private final Button btnSupervisePersonalDetails = new Button("Mein Konto");
 	TextField tfPersonalNr = new TextField("Personalnummer");
 	
 	/**
@@ -54,6 +55,7 @@ public class VaadinModuleChooserView extends VerticalLayout{
 		buttonLayout.add(this.btnSuperviseEmployees);
 		buttonLayout.add(this.btnSuperviseClients);
 		buttonLayout.add(this.btnSuperviseTeams);
+		buttonLayout.add(this.btnSupervisePersonalDetails);
 		buttonLayout.setPadding(true);
 		// buttonLayout.setSpacing(true);
 		
@@ -66,6 +68,7 @@ public class VaadinModuleChooserView extends VerticalLayout{
 		btnSuperviseEmployees.setSizeFull();
 		btnSuperviseClients.setSizeFull();
 		btnSuperviseTeams.setSizeFull();
+		btnSupervisePersonalDetails.setSizeFull();
 	}
 	
 
@@ -83,6 +86,10 @@ public class VaadinModuleChooserView extends VerticalLayout{
 
 	public Button getBtnSuperviseTeams() {
 		return this.btnSuperviseTeams;
+	}
+
+	public Button getBtnSupervisePersonalDetails() {
+		return btnSupervisePersonalDetails;
 	}
 
 	public Label getLblWelcome() {

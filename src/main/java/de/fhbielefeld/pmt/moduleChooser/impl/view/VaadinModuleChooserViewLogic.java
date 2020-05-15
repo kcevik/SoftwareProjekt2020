@@ -8,6 +8,7 @@ import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.IModuleChooserView;
 import de.fhbielefeld.pmt.moduleChooser.event.ClientModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.EmployeesModuleChosenEvent;
+import de.fhbielefeld.pmt.moduleChooser.event.PersonalDetailsChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ProjectsModuleChosenEvent;
 
 public class VaadinModuleChooserViewLogic implements IModuleChooserView {
@@ -60,6 +61,7 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 			// this.view.getBtnSuperviseProjects().setVisible(false);
 		}
 		this.view.getBtnSuperviseTeams().addClickListener(e -> this.eventBus.post(new TeamsModuleChosenEvent(this)));
+		this.view.getBtnSupervisePersonalDetails().addClickListener(event -> this.eventBus.post(new PersonalDetailsChosenEvent(this)));
 		try {
 			this.view.getLblWelcome()
 					.setText("Willkommen zurück, " + VaadinSession.getCurrent().getAttribute("LOGIN_USER_FIRSTNAME")
