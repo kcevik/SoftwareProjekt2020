@@ -15,13 +15,14 @@ import javax.persistence.*;
 
 public class Team implements Serializable {
 
-	
 	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long teamID;
 	private String teamName;
 	private boolean isActive;
+	
 	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "teamList")
 	private Set<Employee> employeeList;
 	
@@ -119,6 +120,17 @@ public class Team implements Serializable {
 	}
 
 	/**
+	 * @author David Bistron
+	 * @param employeeList
+	 * setter-Methode wird benötigt und von der Klasse VaadinTeamViewLogic aufgerufen, damit in der MultiselectComboBox
+	 * neue Mitarbeiter hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
+	 * bearbeitet werden
+	 */
+	public void setEmployeeList(Set<Employee> employeeList) {
+		this.employeeList = employeeList;
+	}
+	
+	/**
 	 * Public Methode um  
 	 * @return 
 	 * @param 
@@ -143,6 +155,17 @@ public class Team implements Serializable {
 	 */
 	public Set<Project> getProjectList() {
 		return projectList;
+	}
+	
+	/**
+	 * @author David Bistron
+	 * @param projectList
+	 * setter-Methode wird benötigt und von der Klasse VaadinTeamViewLogic aufgerufen, damit in der MultiselectComboBox
+	 * neue Projekte hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
+	 * bearbeitet werden
+	 */
+	public void setProjectList(Set<Project> projectList) {
+		this.projectList = projectList;
 	}
 
 	/**

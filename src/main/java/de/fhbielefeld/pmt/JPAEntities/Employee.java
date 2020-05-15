@@ -433,7 +433,7 @@ public class Employee implements Serializable {
 	
 	@Override
 	public String toString() {
-		return this.getFirstName() + " " + this.getLastName();
+		return this.getFirstName() + " " + this.getLastName() + " " + this.getEmployeeID();
 	}
 
 }

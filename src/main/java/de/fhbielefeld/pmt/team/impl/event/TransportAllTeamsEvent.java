@@ -7,7 +7,7 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.team.ITeamView;
 
 /**
- * 
+ * Klasse, die dafür sorgt, dass Teams per Event an das TeamGrid gesendet und dort dargestellt werden
  * @author David Bistron
  *
  */
