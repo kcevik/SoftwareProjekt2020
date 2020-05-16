@@ -93,23 +93,48 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 		    };
 		};
 		
-		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfClientID()).withConverter(new StringToLongConverter(""))
-				.bind(Client::getClientID, null);
-		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfName())
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfEmployeeID()).withConverter(new StringToLongConverter(""))
+				.bind(Employee::getPersonalNr, null); //Wyh The fuck heißt das ding Personalnummer
+		
+//		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfPassword())
+//				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
+//				.bind(Employee::getPassword, Employee::setPassword);
+		
+		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfPassword(), "password");
+		
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfFirstName())
 				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
-				.bind(Client::getName, Client::setName);
-		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfTelephonenumber(), "telephoneNumber");
+				.bind(Employee::getFirstName, Employee::setFirstName);
+		
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfLastName())
+				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
+				.bind(Employee::getLastName, Employee::setLastName);
+		
+		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfOccupation(), "occupation");
+		
+		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfRole(), "role");
+		
+		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfRoom(), "room");
+		
+		this.binder.bind(this.view.getPERSONALDETAILSFORM().getCkIsSuitabilityProjectManager(), "suitabilityProjectManager");
+		
+		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfTelephoneNumber(), "telephoneNumber");
+		
 		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfStreet(), "street");
+		
 		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfHouseNumber())
 				.withValidator(new RegexpValidator("Hausnummer korrekt angeben bitte", "([0-9]+)([^0-9]*)"))
 				.withConverter(plainIntegerConverter)
-				.bind(Client::getHouseNumber, Client::setHouseNumber);
+				.bind(Employee::get, Employee::setHouseNumber);
+		
 		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfZipCode()).withValidator(new RegexpValidator(
 				"Bitte eine PLZ mit 4 oder 5 Zahlen eingeben",
 				"[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-8][0-9]{4}|9[0-8][0-9]{3}|99[0-8][0-9]{2}|999[0-8][0-9]|9999[0-9]"))
 				.withConverter(plainIntegerConverter)
-				.bind(Client::getZipCode, Client::setZipCode);
+				.bind(Employee::getZipCode, Employee::setZipCode);
+		
 		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfTown(), "town");
+		
 		this.binder.bind(this.view.getPERSONALDETAILSFORM().getCkIsActive(), "active");
 	}
 
