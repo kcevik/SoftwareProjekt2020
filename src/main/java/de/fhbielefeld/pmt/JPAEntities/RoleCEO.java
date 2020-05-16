@@ -27,7 +27,7 @@ public class RoleCEO extends Role implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Rolle: Geschaeftsfuehrer";
+		return "Geschaeftsfuehrer";
 	}
 
 	@Override
