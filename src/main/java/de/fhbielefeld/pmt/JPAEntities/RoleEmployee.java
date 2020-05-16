@@ -27,7 +27,7 @@ public class RoleEmployee extends Role implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Rolle: Mitarbeiter";
+		return "Mitarbeiter";
 	}
 
 	@Override
