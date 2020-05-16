@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Client;
+import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.client.IClientModel;
 
 /**
@@ -40,6 +41,20 @@ public class ClientModel implements IClientModel {
 	@Override
 	public boolean isReadSuccessfull() {
 		if(this.getClientListFromDatabase()!=null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public List<Project> getProjectListFromDatabase() {
+		return dbService.readproject();
+	}
+
+	@Override
+	public boolean isReadProjectSuccessfull() {
+		if(this.getProjectListFromDatabase()!=null) {
 			return true;
 		} else {
 			return false;

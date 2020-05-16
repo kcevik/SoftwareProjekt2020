@@ -4,11 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.Range;
 
 /**
  * Entity implementation class for Entity: Client
@@ -93,6 +90,17 @@ public class Client implements Serializable {
 	 */
 	public void addProject(Project project) {
 		this.projectList.add(project);
+	}
+	
+	/**
+	 * @author David Bistron
+	 * @param projectList
+	 * setter-Methode wird benötigt und von der Klasse VaadinTeamViewLogic aufgerufen, damit in der MultiselectComboBox
+	 * neue Projekte hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
+	 * bearbeitet werden
+	 */
+	public void setProjectList(Set<Project> projectList) {
+		this.projectList = projectList;
 	}
 
 	/**

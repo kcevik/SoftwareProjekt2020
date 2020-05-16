@@ -1,23 +1,19 @@
 package de.fhbielefeld.pmt.client.impl.view;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
 import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
-
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.client.IClientView;
 import de.fhbielefeld.pmt.client.impl.event.ReadAllClientsEvent;
+import de.fhbielefeld.pmt.client.impl.event.ReadAllProjectsEvent;
 import de.fhbielefeld.pmt.client.impl.event.SendClientToDBEvent;
 import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
@@ -50,6 +46,7 @@ public class VaadinClientViewLogic implements IClientView {
 		this.eventBus = eventBus;
 		this.eventBus.register(this);
 		this.clients = new ArrayList<Client>();
+		this.projects = new ArrayList<Project>();
 		this.registerViewListeners();
 		this.bindToFields();
 	}
@@ -73,27 +70,28 @@ public class VaadinClientViewLogic implements IClientView {
 
 	private void bindToFields() {
 
-		this.binder.forField(this.view.getCLIENTFORM().getTfClientID()).withConverter(new StringToLongConverter(""))
-				.bind(Client::getClientID, null);
-		this.binder.forField(this.view.getCLIENTFORM().getTfName())
+		this.binder.forField(this.view.getCLIENTFORM().getTfClientID()).asRequired()
+				.withConverter(new StringToLongConverter("")).bind(Client::getClientID, null);
+		this.binder.forField(this.view.getCLIENTFORM().getTfName()).asRequired()
 				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
 				.bind(Client::getName, Client::setName);
 		this.binder.forField(this.view.getCLIENTFORM().getTfTelephonenumber())
-				.withValidator(new RegexpValidator(
-				"Bitte eine gültige Telefonnummer angeben",
-				"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"))
+				.withValidator(new RegexpValidator("Bitte eine gültige Telefonnummer angeben",
+						"^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$"))
 				.bind(Client::getTelephoneNumber, Client::setTelephoneNumber);
 		this.binder.bind(this.view.getCLIENTFORM().getTfStreet(), "street");
 		this.binder.forField(this.view.getCLIENTFORM().getTfHouseNumber())
 				.withValidator(new RegexpValidator("Hausnummer korrekt angeben bitte", "([0-9]+)([^0-9]*)"))
-				.withConverter(new plainStringToIntegerConverter("")).bind(Client::getHouseNumber, Client::setHouseNumber);
-		this.binder.forField(this.view.getCLIENTFORM().getTfZipCode())
-				.withValidator(new RegexpValidator(
+				.withConverter(new plainStringToIntegerConverter(""))
+				.bind(Client::getHouseNumber, Client::setHouseNumber);
+		this.binder.forField(this.view.getCLIENTFORM().getTfZipCode()).withValidator(new RegexpValidator(
 				"Bitte eine PLZ mit 4 oder 5 Zahlen eingeben",
 				"[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-8][0-9]{4}|9[0-8][0-9]{3}|99[0-8][0-9]{2}|999[0-8][0-9]|9999[0-9]"))
 				.withConverter(new plainStringToIntegerConverter("")).bind(Client::getZipCode, Client::setZipCode);
 		this.binder.bind(this.view.getCLIENTFORM().getTfTown(), "town");
 		this.binder.bind(this.view.getCLIENTFORM().getCkIsActive(), "active");
+		this.binder.forField(this.view.getCLIENTFORM().getMscbProjects())
+				.bind(Client::getProjectList, Client::setProjectList);
 	}
 
 	/**
@@ -105,16 +103,12 @@ public class VaadinClientViewLogic implements IClientView {
 		this.view.clearGridAndForm();
 	}
 
-	@SuppressWarnings("rawtypes")
 	private void displayClient() {
 		if (this.selectedClient != null) {
 			try {
 				if (this.projects != null) {
-					@SuppressWarnings("unchecked")
-					List<Project> projects = new ArrayList(this.projects);
-					this.view.getCLIENTFORM().getCbProjects().setItems(projects);
+					this.view.getCLIENTFORM().getMscbProjects().setItems(this.projects);
 				}
-				// TODO: DB Level Bidirektional Setter und Getter aufrufen
 				this.binder.setBean(this.selectedClient);
 				this.view.getCLIENTFORM().closeEdit();
 				this.view.getCLIENTFORM().setVisible(true);
@@ -160,6 +154,7 @@ public class VaadinClientViewLogic implements IClientView {
 		this.selectedClient = new Client();
 		displayClient();
 		this.view.getCLIENTFORM().prepareEdit();
+		this.view.getCLIENTFORM().getMscbProjects().setItems(this.projects);
 	}
 
 	/**
@@ -170,8 +165,8 @@ public class VaadinClientViewLogic implements IClientView {
 	 */
 	private void filterList(String filter) {
 		// TODO: Cast Exception
-		ArrayList<Client> filtered = new ArrayList<Client>();
-		for (Client c : this.view.getClientList()) {
+		List<Client> filtered = new ArrayList<Client>();
+		for (Client c : this.clients) {
 			if (c.getName() != null && c.getName().contains(filter)) {
 				filtered.add(c);
 			} else if (c.getTown() != null && c.getTown().contains(filter)) {
@@ -198,6 +193,7 @@ public class VaadinClientViewLogic implements IClientView {
 	 */
 	public void initReadFromDB() {
 		this.eventBus.post(new ReadAllClientsEvent(this));
+		this.eventBus.post(new ReadAllProjectsEvent(this));
 		this.updateGrid();
 	}
 
@@ -207,26 +203,13 @@ public class VaadinClientViewLogic implements IClientView {
 	public void updateGrid() {
 		this.view.getClientGrid().setItems(this.clients);
 	}
-
+ 
 	public void addClient(Client c) {
 		if (!this.clients.contains(c)) {
 			this.clients.add(c);
 		}
 	}
 
-//	/**
-//	 * Nimmt das TransportAllClientsEvent entgegen und ließt die mitgelieferte Liste
-//	 * aus. Jeder Client der Liste wird einzeln dem View hinzugefügt.
-//	 * 
-//	 * @param event
-//	 */
-//	@Subscribe
-//	public void setClientItems(TransportAllClientsEvent event) {
-//		for (Client c : event.getClientList()) {
-//			this.view.addClient(c);
-//		}
-//		this.view.updateGrid();
-//	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -237,8 +220,13 @@ public class VaadinClientViewLogic implements IClientView {
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
 
+	@Override
 	public void setClients(List<Client> clients) {
 		this.clients = clients;
 	}
 
+	@Override
+	public void setProjects(List<Project> projectListFromDatabase) {
+		this.projects = projectListFromDatabase;
+	}
 }
