@@ -5,10 +5,9 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.listbox.MultiSelectListBox;
+import org.vaadin.gatanaso.MultiselectComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
@@ -32,7 +31,7 @@ public class VaadinClientViewForm extends FormLayout {
 	private final TextField tfZipCode = new TextField("PLZ:");
 	private final TextField tfTown = new TextField("Ort:");
 	private final Checkbox ckIsActive = new Checkbox("Aktiv");
-	private final MultiSelectListBox<Project> cbProjects = new MultiSelectListBox<Project>();
+	private final MultiselectComboBox<Project> mscbProjects = new MultiselectComboBox<Project>();
 
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
@@ -41,11 +40,11 @@ public class VaadinClientViewForm extends FormLayout {
 	public VaadinClientViewForm() {
 		addClassName("client-form");
 		configureTextFields();
-		cbProjects.isReadOnly();
+		mscbProjects.isReadOnly();
 		lblBeschreibung.add("Anlegen/Bearbeiten");
 		lblBeschreibung.addClassName("lbl-heading-form");
 		add(lblBeschreibung, tfClientID, tfName, tfTelephonenumber, tfStreet, tfHouseNumber, tfZipCode, tfTown,
-				ckIsActive, cbProjects, configureButtons());
+				ckIsActive, mscbProjects, configureButtons());
 	}
 
 	private void configureTextFields() {
@@ -57,7 +56,7 @@ public class VaadinClientViewForm extends FormLayout {
 		this.tfZipCode.setEnabled(false);
 		this.tfTown.setEnabled(false);
 		this.ckIsActive.setEnabled(false);
-		this.cbProjects.setEnabled(false);
+		this.mscbProjects.setEnabled(false);
 	}
 
 	/**
@@ -91,7 +90,7 @@ public class VaadinClientViewForm extends FormLayout {
 		this.tfZipCode.clear();
 		this.tfTown.clear();
 		this.ckIsActive.clear();
-		this.cbProjects.clear();
+		this.mscbProjects.clear();
 		this.closeEdit();
 	}
 	
@@ -103,7 +102,7 @@ public class VaadinClientViewForm extends FormLayout {
 		this.tfZipCode.setEnabled(true);
 		this.tfTown.setEnabled(true);
 		this.ckIsActive.setEnabled(true);
-		this.cbProjects.setEnabled(true);
+		this.mscbProjects.setEnabled(true);
 		this.btnSave.setVisible(true);
 		this.btnEdit.setVisible(false);
 	}
@@ -116,7 +115,7 @@ public class VaadinClientViewForm extends FormLayout {
 		this.tfZipCode.setEnabled(false);
 		this.tfTown.setEnabled(false);
 		this.ckIsActive.setEnabled(false);
-		this.cbProjects.setEnabled(false);
+		this.mscbProjects.setEnabled(false);
 		this.btnSave.setVisible(false);
 		this.btnEdit.setVisible(true);
 	}
@@ -154,8 +153,8 @@ public class VaadinClientViewForm extends FormLayout {
 		return ckIsActive;
 	}
 
-	public MultiSelectListBox<Project> getCbProjects() {
-		return cbProjects;
+	public MultiselectComboBox<Project> getMscbProjects() {
+		return mscbProjects;
 	}
 
 	public Button getBtnSave() {
