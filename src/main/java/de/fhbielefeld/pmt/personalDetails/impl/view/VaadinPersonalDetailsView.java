@@ -10,7 +10,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 
-
 /**
  * VaadinView Klasse die den Inhalt des RootViews darstellt
  * 
