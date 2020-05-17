@@ -16,7 +16,8 @@ public class RoleProjectManager extends Role implements Serializable {
 
 	
 	private static final long serialVersionUID = 1L;
-
+	private final String DESIGNATION = "Projectmanager";
+	
 	public RoleProjectManager() {
 		super();
 	}
@@ -36,6 +37,6 @@ public class RoleProjectManager extends Role implements Serializable {
    
 	@Override
 	public String getRoleDesignation() {
-		return "manager";
+		return this.DESIGNATION;
 	}
 }

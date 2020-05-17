@@ -15,9 +15,7 @@ import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.IModuleChooserComponent;
 import de.fhbielefeld.pmt.moduleChooser.event.ClientModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.EmployeesModuleChosenEvent;
-import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.PersonalDetailsChosenEvent;
-import de.fhbielefeld.pmt.moduleChooser.event.TeamModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ProjectsModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.impl.ModuleChooserComponent;
 import de.fhbielefeld.pmt.moduleChooser.impl.model.ModuleChooserModel;
@@ -56,7 +54,6 @@ public class ModuleChooserRootView extends VerticalLayout {
 		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
 				session.getAttribute("LOGIN_USER_FIRSTNAME"), session.getAttribute("LOGIN_USER_LASTNAME"),
 				session.getAttribute("LOGIN_USER_ROLE"))) {
-			System.out.println("User ist korrekt angemeldet");
 			return true;
 		} else {
 			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
@@ -107,7 +104,6 @@ public class ModuleChooserRootView extends VerticalLayout {
 	
 	@Subscribe
 	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
-		//System.out.println("onLogoutEvent ist angekommen");
 		session.setAttribute("LOGIN_USER_ID", null);
 		session.setAttribute("LOGIN_USER_FIRSTNAME", null);
 		session.setAttribute("LOGIN_USER_LASTNAME", null);

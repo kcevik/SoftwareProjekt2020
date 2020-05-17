@@ -11,6 +11,8 @@ import com.vaadin.flow.data.converter.StringToDoubleConverter;
  */
 public class plainStringToDoubleConverter extends StringToDoubleConverter {
 
+	private static final long serialVersionUID = 1L;
+
 	public plainStringToDoubleConverter(String errorMessage) {
 		super(errorMessage);
 		// TODO Auto-generated constructor stub

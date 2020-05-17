@@ -5,7 +5,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
-
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Remark;
 import de.fhbielefeld.pmt.JPAEntities.Costs;
@@ -16,7 +15,7 @@ import de.fhbielefeld.pmt.JPAEntities.Role;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 
 /**
- * Implementation of the Service that handels database interactions
+ * Service Klasse, die DB Interaktionen druchführt
  * 
  * @author Sebastian Siegmann
  * @version 1.0
@@ -29,7 +28,7 @@ public class DatabaseService {
 	private static DatabaseService databaseService;
 
 	/**
-	 * Private constructor of DatabaseService
+	 * Privater Konstruktor von DatabaseService
 	 * 
 	 * @return none
 	 */
@@ -37,13 +36,13 @@ public class DatabaseService {
 
 		emf = Persistence.createEntityManagerFactory("SoftwareProjekt2020");
 		em = emf.createEntityManager();
-
 	}
 
+	
 	/**
 	 * Public method for getting a new DatabaseService
 	 * 
-	 * @return instance of DatabaseService
+	 * @return DatabaseService Instanz
 	 */
 	public static DatabaseService DatabaseServiceGetInstance() {
 
@@ -51,47 +50,46 @@ public class DatabaseService {
 			databaseService = new DatabaseService();
 		}
 		return databaseService;
-
 	}
 
+	
 	/**
-	 * Public method for persisting a client
+	 * Schreibt übergebenen Client in die Datenbank
 	 * 
-	 * @param An instance of the class Client that will be persisted
+	 * @param Client
 	 * @return none
 	 */
 	public synchronized void persistClient(Client client) {
 
 		if (client == null) {
-			// TODO: Fehlermelddung is empty
+			throw new IllegalArgumentException();
 		} else {
 			em.getTransaction().begin();
 			em.persist(client);
 			em.getTransaction().commit();
 		}
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of clients
+	 * Gibt Liste aller Clients aus DB zurück
 	 * 
 	 * @param none
-	 * @return List<Client> List of clients
+	 * @return List<Client>
 	 */
 	public List<Client> readClient() {
 
 		TypedQuery<Client> query = em.createQuery("SELECT c FROM Client c", Client.class);
 		List<Client> resultListClient = query.getResultList();
 		return resultListClient;
-
 	}
-	
 
+	
 	/**
-	 * Public method for retrieving a list of employee
+	 * Gibt einen Client identifiziert durch die ID zurück
 	 * 
-	 * @param none
-	 * @return List<Client> List of client
+	 * @param Long clientID
+	 * @return Client
 	 */
 	public Client readSingleClient(Long clientID) {
 
@@ -99,46 +97,60 @@ public class DatabaseService {
 		query.setParameter("clientID", clientID);
 		Client result = query.getSingleResult();
 		return result;
-
 	}
+	
+	
+	/**
+	 * Gibt Liste aller aktiven Clients aus DB zurück
+	 * 
+	 * @param none
+	 * @return List<Client>
+	 */
+	public List<Client> readActiveClients() {
+
+		TypedQuery<Client> query = em.createQuery("SELECT c FROM Client c WHERE c.isActive = true", Client.class);
+		List<Client> resultListClient = query.getResultList();
+		return resultListClient;
+	}
+	
 
 	/**
-	 * Public method for persisting a project
+	 * Schreibt übergebenes Projekt in die Datenbank
 	 * 
-	 * @param An instance of the class Project that will be persisted
+	 * @param Project
 	 * @return none
 	 */
 	public synchronized void persistProject(Project project) {
 
 		if (project == null) {
-			// TODO: Fehlermelddung is empty
+			throw new IllegalArgumentException();
 		} else {
 			em.getTransaction().begin();
 			em.persist(project);
 			em.getTransaction().commit();
 		}
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of projects
+	 * Gibt Liste aller Projects aus DB zurück
 	 * 
 	 * @param none
-	 * @return List<Project> List of clients
+	 * @return List<Project>
 	 */
 	public List<Project> readproject() {
 
 		TypedQuery<Project> query = em.createQuery("SELECT p FROM Project p", Project.class);
 		List<Project> resultListProject = query.getResultList();
 		return resultListProject;
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of employee
+	 * Gibt ein Project, identifiziert durch die ID, zurück
 	 * 
 	 * @param none
-	 * @return List<Project> List of employee
+	 * @return Project
 	 */
 	public Project readSingleProject(Long projectID) {
 
@@ -147,46 +159,60 @@ public class DatabaseService {
 		query.setParameter("projectID", projectID);
 		Project result = query.getSingleResult();
 		return result;
-
 	}
 
+	
 	/**
-	 * Public method for persisting a team
+	 * Gibt Liste aller aktiven Projects aus DB zurück
 	 * 
-	 * @param An instance of the class Team that will be persisted
+	 * @param none
+	 * @return List<Project>
+	 */
+	public List<Project> readActiveProjects() {
+
+		TypedQuery<Project> query = em.createQuery("SELECT p FROM Project p WHERE p.isActive = true", Project.class);
+		List<Project> resultListProject = query.getResultList();
+		return resultListProject;
+	}
+
+	
+	/**
+	 * Schreibt übergebenes Team in die Datenbank
+	 * 
+	 * @param Team
 	 * @return none
 	 */
 	public synchronized void persistTeam(Team team) {
 
 		if (team == null) {
-			// TODO: Fehlermelddung is empty
+			throw new IllegalArgumentException();
 		} else {
 			em.getTransaction().begin();
 			em.persist(team);
 			em.getTransaction().commit();
 		}
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of team
+	 * Gibt Liste aller Teams aus DB zurück
 	 * 
 	 * @param none
-	 * @return List<Team> List of team
+	 * @return List<Team>
 	 */
 	public List<Team> readTeam() {
 
 		TypedQuery<Team> query = em.createQuery("SELECT t FROM Team t", Team.class);
 		List<Team> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of employee
+	 * Gibt ein Team, identifiziert durch die ID, zurück
 	 * 
 	 * @param Long teamID
-	 * @return List<Team> List of team
+	 * @return Team
 	 */
 	public Team readSingleTeam(Long teamID) {
 
@@ -194,29 +220,43 @@ public class DatabaseService {
 		query.setParameter("teamID", teamID);
 		Team result = query.getSingleResult();
 		return result;
+	}
+	
+	
+	/**
+	 * Gibt Liste aller aktiven Teams aus DB zurück
+	 * 
+	 * @param none
+	 * @return List<Team>
+	 */
+	public List<Team> readActiveTeams() {
 
+		TypedQuery<Team> query = em.createQuery("SELECT t FROM Team t WHERE t.isActive = true", Team.class);
+		List<Team> resultListTeam = query.getResultList();
+		return resultListTeam;
 	}
 
+	
 	/**
-	 * Public method for persisting a employee
+	 * Schreibt übergebenen Employee in die Datenbanke
 	 * 
-	 * @param An instance of the class Client that will be persisted
+	 * @param Employee
 	 * @return none
 	 */
 	public synchronized void persistEmployee(Employee employee) {
 
 		if (employee == null) {
-			// TODO: Fehlermelddung is empty
+			throw new IllegalArgumentException();
 		} else {
 			em.getTransaction().begin();
 			em.persist(employee);
 			em.getTransaction().commit();
 		}
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of employee
+	 * Gibt Liste aller Employees aus DB zurück
 	 * 
 	 * @param none
 	 * @return List<Employee> List of employee
@@ -226,30 +266,27 @@ public class DatabaseService {
 		TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e", Employee.class);
 		List<Employee> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-
-	}
-	
-	
-	/**
-	 * Public method for retrieving a list of employee
-	 * 
-	 * @param none
-	 * @return List<Employee> List of employee
-	 */
-	public List<Employee> readEmployee(Long employeeID) {
-
-		TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e WHERE e.employeeID = :employeeID", Employee.class);
-		List<Employee> resultListEmployee = query.getResultList();
-		return resultListEmployee;
 	}
 
 	
-	
+//	/**
+//	 * Public method for retrieving a list of employee
+//	 * 
+//	 * @param none
+//	 * @return List<Employee> List of employee
+//	 */
+//	public List<Employee> readEmployee(Long employeeID) {
+//
+//		TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e WHERE e.employeeID = :employeeID", Employee.class);
+//		List<Employee> resultListEmployee = query.getResultList();
+//		return resultListEmployee;
+//	}
+
 	/**
-	 * Public method for retrieving a list of employee
+	 * Gibt ein Employee, identifiziert durch die ID, zurück
 	 * 
 	 * @param none
-	 * @return List<Employee> List of employee
+	 * @return Employee
 	 */
 	public Employee readSingleEmployee(Long employeeID) {
 
@@ -260,51 +297,59 @@ public class DatabaseService {
 		return result;
 
 	}
+
 	
-	public List<Employee> readManager() {
-		
-		TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e", Employee.class);
+	/**
+	 * Gibt Liste aller aktiven Employees aus DB zurück
+	 * 
+	 * @param none
+	 * @return List<Employee>
+	 */
+	public List<Employee> readActiveEmployees() {
+
+		TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e WHERE e.isActive = true", Employee.class);
 		List<Employee> resultListEmployee = query.getResultList();
 		return resultListEmployee;
 	}
-
+	
+	
 	/**
-	 * Public method for persisting a costs
+	 * Schreibt übergebenes Cost Objekt in die Datenbank
 	 * 
-	 * @param An instance of the class Costs that will be persisted
+	 * @param Cost
 	 * @return none
 	 */
 	public synchronized void persistCosts(Costs costs) {
 
 		if (costs == null) {
-			// TODO: Fehlermelddung is empty
+			throw new IllegalArgumentException();
 		} else {
 			em.getTransaction().begin();
 			em.persist(costs);
 			em.getTransaction().commit();
 		}
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of costs
+	 * Gibt Liste aller Costs aus DB zurück
 	 * 
 	 * @param none
-	 * @return List<Costs> List of employee
+	 * @return List<Costs>
 	 */
 	public List<Costs> readCosts() {
 
 		TypedQuery<Costs> query = em.createQuery("SELECT c FROM Costs c", Costs.class);
 		List<Costs> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of employee
+	 * Gibt ein Cost Objekt, identifiziert durch die ID, zurück
 	 * 
 	 * @param none
-	 * @return List<Costs> List of employee
+	 * @return Cost
 	 */
 	public Costs readSingleCosts(Long costsID) {
 
@@ -312,46 +357,46 @@ public class DatabaseService {
 		query.setParameter("costsID", costsID);
 		Costs result = query.getSingleResult();
 		return result;
-
 	}
 
+	
 	/**
-	 * Public method for persisting a projectActivity
+	 * Schreibt übergebene ProjectActvity in die Datenbank
 	 * 
-	 * @param An instance of the class Client that will be persisted
+	 * @param ProjectActivity
 	 * @return none
 	 */
 	public synchronized void persistProjectActivity(ProjectActivity projectActivity) {
 
 		if (projectActivity == null) {
-			// TODO: Fehlermelddung is empty
+			throw new IllegalArgumentException();
 		} else {
 			em.getTransaction().begin();
 			em.persist(projectActivity);
 			em.getTransaction().commit();
 		}
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of projectActivity
+	 * Gibt Liste aller ProjectActivities aus DB zurück
 	 * 
 	 * @param none
-	 * @return List<ProjectActivity> List of projectActivity
+	 * @return List<ProjectActivity>
 	 */
 	public List<ProjectActivity> readProjectActivity() {
 
 		TypedQuery<ProjectActivity> query = em.createQuery("SELECT pa FROM ProjectActivity pa", ProjectActivity.class);
 		List<ProjectActivity> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of employee
+	 * Gibt eine ProjectActivity, identifiziert durch die ID, zurück
 	 * 
 	 * @param none
-	 * @return List<ProjectActivity> List of employee
+	 * @return ProjectActivity
 	 */
 	public ProjectActivity readSingleProjectActivity(Long projectActivityID) {
 
@@ -361,46 +406,46 @@ public class DatabaseService {
 		query.setParameter("projectActivityID", projectActivityID);
 		ProjectActivity result = query.getSingleResult();
 		return result;
-
 	}
 
+	
 	/**
-	 * Public method for persisting a Remark
+	 * Schreibt übergebenes Remark in die Datenbank
 	 * 
-	 * @param An instance of the class Client that will be persisted
+	 * @param Remark
 	 * @return none
 	 */
 	public synchronized void persistRemark(Remark Remark) {
 
 		if (Remark == null) {
-			// TODO: Fehlermelddung is empty
+			throw new IllegalArgumentException();
 		} else {
 			em.getTransaction().begin();
 			em.persist(Remark);
 			em.getTransaction().commit();
 		}
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of Remark
+	 * Gibt Liste aller Remarks aus DB zurück
 	 * 
 	 * @param none
-	 * @return List<Remark> List of Remark
+	 * @return List<Remark>
 	 */
 	public List<Remark> readRemark() {
 
 		TypedQuery<Remark> query = em.createQuery("SELECT r FROM Remark r", Remark.class);
 		List<Remark> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of employee
+	 * Gibt ein Remark, identifiziert durch die ID, zurück
 	 * 
 	 * @param none
-	 * @return List<Remark> List of employee
+	 * @return Remark
 	 */
 	public Remark readSingleRemark(Long remarkID) {
 
@@ -408,46 +453,46 @@ public class DatabaseService {
 		query.setParameter("remarkID", remarkID);
 		Remark result = query.getSingleResult();
 		return result;
-
 	}
 
+	
 	/**
-	 * Public method for persisting a Remark
+	 * Schreibt übergebene Role in die Datenbank
 	 * 
-	 * @param An instance of the class Role that will be persisted
+	 * @param Role
 	 * @return none
 	 */
 	public synchronized void persistRole(Role role) {
 
 		if (role == null) {
-			// TODO: Fehlermelddung is empty
+			throw new IllegalArgumentException();
 		} else {
 			em.getTransaction().begin();
 			em.persist(role);
 			em.getTransaction().commit();
 		}
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of Remark
+	 * Gibt Liste aller Roles aus DB zurück
 	 * 
 	 * @param none
-	 * @return List<Role> List of Remark
+	 * @return List<Role>
 	 */
 	public List<Role> readRole() {
 
 		TypedQuery<Role> query = em.createQuery("SELECT r FROM Role r", Role.class);
 		List<Role> resultListEmployee = query.getResultList();
 		return resultListEmployee;
-
 	}
 
+	
 	/**
-	 * Public method for retrieving a list of employee
+	 * Gibt eine Role, identifiziert durch die ID, zurück
 	 * 
 	 * @param none
-	 * @return List<Role> List of employee
+	 * @return Role
 	 */
 	public Role readSinglerRole(Long roleID) {
 
@@ -456,5 +501,57 @@ public class DatabaseService {
 		Role result = query.getSingleResult();
 		return result;
 
+	}
+
+	
+	/**
+	 * Gibt alle Objekte mit der Rolle Manager wieder
+	 * 
+	 * @param none
+	 * @return List<Employee>
+	 */
+	public List<Employee> readManagerRole() {
+
+		/**
+		 * Einfach in SQL: SELECT e.* FROM EMPLOYEE e, "ROLE" r WHERE r.ROLEID =
+		 * e.ROLE_ROLEID AND r.DTYPE LIKE 'RoleProjectManager'
+		 */
+		TypedQuery<Employee> query = em.createQuery(
+				"SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'Projectmanager'",
+				Employee.class);
+		List<Employee> resultListEmployee = query.getResultList();
+		return resultListEmployee;
+	}
+
+	
+	/**
+	 * Gibt alle Objekte mit der Rolle CEO wieder
+	 * 
+	 * @param none
+	 * @return List<Employee> 
+	 */
+	public List<Employee> readCEORole() {
+
+		TypedQuery<Employee> query = em.createQuery(
+				"SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'CEO'",
+				Employee.class);
+		List<Employee> resultListEmployee = query.getResultList();
+		return resultListEmployee;
+	}
+
+	
+	/**
+	 * Gibt alle Objekte mit der Rolle Employee wieder
+	 * 
+	 * @param none
+	 * @return List<Employee>
+	 */
+	public List<Employee> readEmployeeRole() {
+
+		TypedQuery<Employee> query = em.createQuery(
+				"SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'Employee'",
+				Employee.class);
+		List<Employee> resultListEmployee = query.getResultList();
+		return resultListEmployee;
 	}
 }

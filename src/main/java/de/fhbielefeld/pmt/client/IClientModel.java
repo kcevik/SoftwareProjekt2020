@@ -14,6 +14,7 @@ public interface IClientModel extends IModel{
 	List<Client> getClientListFromDatabase();
 	boolean isReadSuccessfull();
 	public void persistClient(Client client);
-	List<Project> getProjectListFromDatabase();
-	boolean isReadProjectSuccessfull();
+	
+	List<Project> getActiveProjectListFromDatabase();
+	boolean isReadActiveProjectSuccessfull();
 }
