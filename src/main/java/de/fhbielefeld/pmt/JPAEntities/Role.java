@@ -26,11 +26,6 @@ public class Role implements Serializable {
 		return false;
 	}
 	
-	@Override
-	public String toString() {
-		return RoleID + "";
-	}
-
 	public String getRoleDesignation() {
 		return "";
 	}

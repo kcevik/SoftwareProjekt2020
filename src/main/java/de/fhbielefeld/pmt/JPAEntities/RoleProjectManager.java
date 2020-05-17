@@ -31,7 +31,7 @@ public class RoleProjectManager extends Role implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Projektleiter";
+		return "Rolle: Projektleiter";
 	}
    
 	@Override

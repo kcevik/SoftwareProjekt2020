@@ -1,4 +1,4 @@
-package de.fhbielefeld.pmt.employee.impl.viewN;
+package de.fhbielefeld.pmt.employee.impl.view;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -6,10 +6,10 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
-import de.fhbielefeld.pmt.employeeN.IEmployeeView;
-import de.fhbielefeld.pmt.employee.impl.eventN.ReadAllEmployeesEvent;
-import de.fhbielefeld.pmt.employee.impl.eventN.SendEmployeeToDBEvent;
-import de.fhbielefeld.pmt.employee.impl.eventN.TransportAllEmployeesEvent;
+import de.fhbielefeld.pmt.employee.IEmployeeView;
+import de.fhbielefeld.pmt.employee.impl.event.ReadAllEmployeesEvent;
+import de.fhbielefeld.pmt.employee.impl.event.SendEmployeeToDBEvent;
+import de.fhbielefeld.pmt.employee.impl.event.TransportAllEmployeesEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 
 /**

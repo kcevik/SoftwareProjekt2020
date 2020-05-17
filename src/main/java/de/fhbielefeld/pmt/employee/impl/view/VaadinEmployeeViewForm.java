@@ -1,4 +1,4 @@
-package de.fhbielefeld.pmt.employee.impl.viewN;
+package de.fhbielefeld.pmt.employee.impl.view;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
@@ -14,7 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 /**
  * VaadinView Klasse, welche das Formular erstellt
  * 
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  *
  */
 public class VaadinEmployeeViewForm extends FormLayout {
@@ -86,7 +86,7 @@ public class VaadinEmployeeViewForm extends FormLayout {
 	public void prepareEdit() {
 		this.lastName.setEnabled(true);
 		this.firstName.setEnabled(true);
-		this.employeeID.setEnabled(true);
+		this.employeeID.setEnabled(false);
 		this.isSuitabilityProjectManager.setEnabled(true);
 		this.isActive.setEnabled(true);
 		this.occupation.setEnabled(true);

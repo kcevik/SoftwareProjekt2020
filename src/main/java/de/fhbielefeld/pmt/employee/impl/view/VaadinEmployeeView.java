@@ -1,4 +1,4 @@
-package de.fhbielefeld.pmt.employee.impl.viewN;
+package de.fhbielefeld.pmt.employee.impl.view;
 
 import java.util.ArrayList;
 import java.util.List;

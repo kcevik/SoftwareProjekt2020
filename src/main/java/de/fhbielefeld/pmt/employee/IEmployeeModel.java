@@ -1,4 +1,4 @@
-package de.fhbielefeld.pmt.employeeN;
+package de.fhbielefeld.pmt.employee;
 
 import java.util.List;
 

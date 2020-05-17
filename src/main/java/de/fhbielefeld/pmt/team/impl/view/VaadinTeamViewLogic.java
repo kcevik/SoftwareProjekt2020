@@ -79,11 +79,10 @@ public class VaadinTeamViewLogic implements ITeamView{
 				
 		this.binderT.forField(this.view.getTeamForm().getTfTeamID())
 		.withConverter(new StringToLongConverter("")).bind(Team::getTeamID, null);
-		
 		this.binderT.forField(this.view.getTeamForm().getTfTeamName()).asRequired().withValidator(new RegexpValidator
 				("Bitte wählen Sie einen Teamnamen zwischen 1 und 50 Zeichen", ".{1,50}")).bind(Team::getTeamName, Team::setTeamName);
-		
 		this.binderT.bind(this.view.getTeamForm().getIsActive(), "active");
+		
 		this.binderT.bind(this.view.getTeamForm().getCbTeamEmployee(), "employeeList");
 		
 		// TODO: Hinweis, dass mind. 1 Projekt und Mitarbeiter ausgewählt werden muss!
