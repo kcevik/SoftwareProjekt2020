@@ -6,6 +6,7 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 import de.fhbielefeld.pmt.JPAEntities.Remark;
+import de.fhbielefeld.pmt.JPAEntities.RoleProjectManager;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 
 /**
@@ -32,6 +33,7 @@ public class TestDrive {
 		// sondern direkt als true zu initialisieren?
 		Employee emp2 = new Employee("password", "Axel", "Schweiss", "Rechnungswesen dude", false, "B302", "18919698",
 				"Nebenstraße", 420, 65859, "Nebenstadt");
+		emp2.setRole(new RoleProjectManager());
 
 		// public Client(String name, String street, int housenumber, String town, int
 		// zipCode, int telephoneNumber)

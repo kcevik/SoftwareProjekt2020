@@ -14,8 +14,8 @@ import de.fhbielefeld.pmt.JPAEntities.RoleProjectManager;
 public class AuthorizationChecker {
 
 	public static boolean checkIsAuthorizedManager(VaadinSession session, Object userRole) {
-		if ((userRole != null) && (session != null) && ((userRole.toString().equalsIgnoreCase("manager"))
-				|| (userRole.toString().equalsIgnoreCase("ceo")))) {
+		if ((userRole != null) && (session != null) && ((userRole.toString().equalsIgnoreCase("Projectmanager"))
+				|| (userRole.toString().equalsIgnoreCase("CEO")))) {
 			return true;
 		} else {
 			return false;
@@ -23,7 +23,7 @@ public class AuthorizationChecker {
 	}
 
 	public static boolean checkIsAuthorizedCEO(VaadinSession session, Object userRole) {
-		if ((userRole != null) && (session != null) && (userRole.toString().equalsIgnoreCase("ceo"))) {
+		if ((userRole != null) && (session != null) && (userRole.toString().equalsIgnoreCase("CEO"))) {
 			return true;
 		} else {
 			return false;
@@ -32,9 +32,9 @@ public class AuthorizationChecker {
 
 	public static boolean checkIsAuthorizedEmployee(VaadinSession session, Object userRole) {
 		if ((userRole != null) && (session != null)
-				&& ((userRole.toString().equalsIgnoreCase("employee"))
-						|| (userRole.toString().equalsIgnoreCase("manager"))
-						|| (userRole.toString().equalsIgnoreCase("ceo")))) {
+				&& ((userRole.toString().equalsIgnoreCase("Employee"))
+						|| (userRole.toString().equalsIgnoreCase("Projectmanager"))
+						|| (userRole.toString().equalsIgnoreCase("CEO")))) {
 			return true;
 		} else {
 			return false;

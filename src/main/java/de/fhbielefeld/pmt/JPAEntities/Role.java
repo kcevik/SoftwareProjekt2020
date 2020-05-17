@@ -13,7 +13,7 @@ public class Role implements Serializable {
 
 	
 	private static final long serialVersionUID = 1L;
-
+	private final String DESIGNATION = "";
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int RoleID;
@@ -32,7 +32,7 @@ public class Role implements Serializable {
 	}
 
 	public String getRoleDesignation() {
-		return "";
+		return this.DESIGNATION;
 	}
    
 }

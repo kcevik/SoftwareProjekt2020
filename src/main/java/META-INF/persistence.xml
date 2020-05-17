@@ -14,8 +14,8 @@
 		<class>de.fhbielefeld.pmt.JPAEntities.Team</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@aix1.fh-bielefeld.de:1521:d1"/>
-			<property name="javax.persistence.jdbc.user" value="dvi275"/>
-			<property name="javax.persistence.jdbc.password" value="fh5155"/>
+			<property name="javax.persistence.jdbc.user" value="dvi276"/>
+			<property name="javax.persistence.jdbc.password" value="fh9126"/>
 			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
 			<!-- <property name="javax.persistence.schema-generation.database.action" value="create"/> -->
 		</properties>
