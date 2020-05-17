@@ -73,13 +73,13 @@ public class VaadinProjectView extends VerticalLayout {
 	}
 	
 	
-	/**
-	 * Setzt die Tabelle und das Forular zurück
-	 */
-	public void clearGridAndForm() {
-		this.projectGrid.deselectAll();
-		this.projectForm.clearProjectForm();
-	}
+//	/**
+//	 * Setzt die Tabelle und das Forular zurück
+//	 */
+//	public void clearGridAndForm() {
+//		this.projectGrid.deselectAll();
+//		this.projectForm.clearProjectForm();
+//	}
 	
 	
 	/**

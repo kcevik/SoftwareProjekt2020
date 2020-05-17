@@ -37,6 +37,8 @@ public class VaadinClientViewForm extends FormLayout {
 	private final Button btnEdit = new Button("Bearbeiten");
 	private final Button btnClose = new Button("Abbrechen");
 
+
+
 	public VaadinClientViewForm() {
 		addClassName("client-form");
 		configureTextFields();
@@ -168,5 +170,10 @@ public class VaadinClientViewForm extends FormLayout {
 	public Button getBtnClose() {
 		return btnClose;
 	}
+	
+	public Label getLblBeschreibung() {
+		return lblBeschreibung;
+	}
+
 
 }

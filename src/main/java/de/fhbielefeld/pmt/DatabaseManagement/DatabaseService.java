@@ -144,10 +144,41 @@ public class DatabaseService {
 		List<Project> resultListProject = query.getResultList();
 		return resultListProject;
 	}
-
 	
 	/**
-	 * Gibt ein Project, identifiziert durch die ID, zurück
+	 * 
+	 * 
+	 * @param none
+	 * @return List<Project> List of projects
+	 */
+	public List<Project> readProjectForUser(String userID) {
+		
+		TypedQuery<Project> queryEmployee = em.createQuery("SELECT p FROM Project p join p.employeeList e WHERE e.employeeID = " + userID + "", Project.class);
+
+		List<Project> resultListProjectEmployee = queryEmployee.getResultList();
+		
+		return resultListProjectEmployee;
+
+	}
+	
+	
+	/**
+	 * 
+	 * 
+	 * @param none
+	 * @return List<Project> List of projects
+	 */
+	public List<Project> readProjectForUserByTeam(String userID) {
+		
+		TypedQuery<Project> queryTeam = em.createQuery("SELECT p FROM Project p join p.teamList tl join tl.employeeList e WHERE e.employeeID = " + userID + "", Project.class);
+
+		List<Project> resultListProjectTeam = queryTeam.getResultList();
+		
+		return resultListProjectTeam;
+
+	}
+
+	/** Gibt ein Project, identifiziert durch die ID, zurück
 	 * 
 	 * @param none
 	 * @return Project

@@ -14,27 +14,38 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
-
+import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
 import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
+import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.project.IProjectView;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
+import de.fhbielefeld.pmt.project.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
+import de.fhbielefeld.pmt.project.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.project.impl.event.SendProjectToDBEvent;
 
+/**
+ * 
+ * @author LucasEickmann
+ *
+ */
 public class VaadinProjectViewLogic implements IProjectView{
 	
 	BeanValidationBinder<Project> binder = new BeanValidationBinder<>(Project.class);
 	private final VaadinProjectView view;
 	private final EventBus eventBus;
 	private Project selectedProject;
+	private List<Employee> employees;
+	private List<Team> teams;
 	private List<Client> clients;
 	private List<Employee> managers;
 	private List<Project> projects;
@@ -64,6 +75,8 @@ public class VaadinProjectViewLogic implements IProjectView{
 			.bind(Project::getProjectID, null);
 		this.binder.bind(this.view.getProjectForm().getTfProjectName(), "projectName");
 		this.binder.bind(this.view.getProjectForm().getCbProjectManager(), "projectManager");
+		this.binder.bind(this.view.getProjectForm().getCbEmployees(), "employeeList");
+		this.binder.bind(this.view.getProjectForm().getCbTeams(), "teamList");
 		this.binder.bind(this.view.getProjectForm().getCbClient(), "client");
 		this.binder.forField(this.view.getProjectForm().getdPStartDate());
 		this.binder.bind(this.view.getProjectForm().getdPStartDate(), "startDate");
@@ -89,6 +102,7 @@ public class VaadinProjectViewLogic implements IProjectView{
 		this.view.getProjectForm().getBtnEdit().addClickListener(event -> this.view.getProjectForm().prepareEdit());
 		this.view.getProjectForm().getBtnClose().addClickListener(event -> cancelForm());
 		this.view.getTfFilter().addValueChangeListener(e -> filterList(this.view.getTfFilter().getValue()));
+		this.view.getProjectForm().getBtnExtendedOptions().addClickListener(event -> /**eventBus.post(new ProjectDetailsModuleChoosen())*/ System.out.println(""));
 	}
 
 	
@@ -97,8 +111,7 @@ public class VaadinProjectViewLogic implements IProjectView{
 	 */
 	private void cancelForm() {
 		resetSelectedProject();
-		System.out.println("Client is null weil form zurückgesetzt");
-		this.view.clearGridAndForm();
+		this.view.getProjectForm().setVisible(false);
 	}
 
 
@@ -107,6 +120,12 @@ public class VaadinProjectViewLogic implements IProjectView{
 	private void displayProject() {
 		if (this.selectedProject != null ) {
 			try {
+				if (this.employees != null) {
+					this.view.getProjectForm().getCbEmployees().setItems(this.employees);
+				}
+				if (this.teams != null) {
+					this.view.getProjectForm().getCbTeams().setItems(this.teams);
+				}
 				if (this.clients != null) {
 					this.view.getProjectForm().getCbClient().setItems(this.clients);
 				}
@@ -208,7 +227,9 @@ public class VaadinProjectViewLogic implements IProjectView{
 	 * Wird von der RootView aufgerufen.
 	 */
 	public void initReadFromDB() {
-		this.eventBus.post(new ReadAllProjectsEvent(this));
+		this.eventBus.post(new ReadAllEmployeesEvent(this));
+		this.eventBus.post(new ReadAllTeamsEvent(this));
+		this.eventBus.post(new ReadAllProjectsEvent(this, VaadinSession.getCurrent().getAttribute("LOGIN_USER_ID").toString(), VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE").toString()));
 		this.eventBus.post(new ReadAllClientsEvent(this));
 		this.eventBus.post(new ReadAllManagersEvent(this));
 		this.updateGrid();
@@ -252,6 +273,16 @@ public class VaadinProjectViewLogic implements IProjectView{
 	@Override
 	public void setProjects(List<Project> projects) {
 		this.projects = projects;
+	}
+	
+	@Override
+	public void setEmployees(List<Employee> employees) {
+		this.employees = employees;
+	}
+	
+	@Override
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
 	}
 
 }

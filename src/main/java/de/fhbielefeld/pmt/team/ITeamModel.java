@@ -24,4 +24,5 @@ public interface ITeamModel extends IModel{
 	List<Employee> getEmployeeListFromDatabase();
 	boolean isEmployeeReadSuccessfull();
 	
+	
 }

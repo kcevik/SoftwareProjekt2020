@@ -1,11 +1,13 @@
 package de.fhbielefeld.pmt.project.impl.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.project.IProjectModel;
 
 /**
@@ -26,13 +28,34 @@ public class ProjectModel implements IProjectModel {
 	}
 
 	/**
-	 * Ließt über DatabaseService alle Clients aus
+	 * Ließt über den DatabaseService alle Projekte aus.
 	 */
 	@Override
 	public List<Project> getProjectListFromDatabase() {
 		return dbService.readproject();
 	}
 
+	/**
+	 * Ließt über den DatabaseService Projekte aus, die einem User je nach Rolle in der Projektübersicht angezeigt werden sollen/dürfen.
+	 */
+	@Override
+	public List<Project> getProjectListFromDatabase(String userID, String userRole) {
+		if (userRole.equalsIgnoreCase("ceo") || userRole.equalsIgnoreCase("Projectmanager")) {
+			return dbService.readproject();
+		}else if (userRole.equals("employee")) {
+			List<Project> listByEmployee = dbService.readProjectForUser(userID);
+			List<Project> listByTeam = dbService.readProjectForUserByTeam(userID);
+			
+			for (Project p : listByTeam) {
+				if (!listByEmployee.contains(p)) {
+					listByEmployee.add(p);
+				}
+			}
+			return listByEmployee;
+		}else return null;
+	}
+
+	
 	/**
 	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
 	 */
@@ -69,8 +92,44 @@ public class ProjectModel implements IProjectModel {
 		} else {
 			return false;
 		}
+	}	
+	
+	
+	/**
+	 * Ließt über DatabaseService alle Employees aus
+	 */
+	@Override
+	public List<Employee> getEmployeeListFromDatabase() {
+		return dbService.readEmployee();
 	}
-
+	
+	@Override
+	public boolean isEmployeeReadSuccessfull() {
+		if(this.getEmployeeListFromDatabase()!=null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	/**
+	 * Ließt über DatabaseService alle Teams aus
+	 */
+	@Override
+	public List<Team> getTeamListFromDatabase() {
+		return dbService.readTeam();
+	}
+	
+	@Override
+	public boolean isTeamReadSuccessfull() {
+		if(this.getTeamListFromDatabase()!=null) {
+			return true;
+		} else {
+			return false;
+		}
+	}	
+	
 	@Override
 	public List<Employee> getManagerListFromDatabase() {
 		return dbService.readManagerRole();

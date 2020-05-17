@@ -2,9 +2,9 @@ package de.fhbielefeld.pmt.JPAEntities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import de.fhbielefeld.pmt.ToStringHashSet;
@@ -51,7 +51,7 @@ public class Project implements Serializable {
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "Project_Employee", joinColumns = { @JoinColumn(name = "ProjectID") }, inverseJoinColumns = {
 			@JoinColumn(name = "EmployeeID") })
-	private Set<Employee> employeeList;
+	private ToStringHashSet<Employee> employeeList;
 	
 	// TODO:Anderer Datentyp oder umwandlung in String und dann erst in DB speichern
 	@NotNull
@@ -87,7 +87,7 @@ public class Project implements Serializable {
 		this.dueDate = dueDate;
 		this.budget = budget;
 		this.isActive = true;
-		this.employeeList = new HashSet<Employee>();
+		this.employeeList = new ToStringHashSet<Employee>();
 		this.teamList = new ToStringHashSet<Team>();
 	}
 	//DegreesOfFullfilment ggf sp�ter hinzuf�gen wenn wir das Ampelsystem haben, oder mit Default Values initialisieren wie isActive
@@ -335,6 +335,26 @@ public class Project implements Serializable {
 	public Set<Team> getTeamList() {
 		return teamList;
 	}
+	
+	/**
+	 * Public Methode um  
+	 * @return 
+	 * @param 
+	 */
+	public void setTeamList(Set<Team> teamSet) {
+		// Entfernt dieses Projekt aus allen Teams, die laut dem neuen übergebenen Setz nicht mehr zu diesem Projekt gehören.
+		for (Team t : this.teamList) {
+			if (!teamSet.contains(t)) {
+				t.removeProject(this);
+			}
+		}
+		
+		teamList.clear();
+		for (Team t : teamSet) {
+			this.teamList.add(t);
+			t.addProject(this);
+		}
+	}
 
 	/**
 	 * Public Methode um  
@@ -370,6 +390,27 @@ public class Project implements Serializable {
 	 */
 	public void addEmployee(Employee employee) {
 		this.employeeList.add(employee);
+	}
+	
+	
+	/**
+	 * Public Methode um  
+	 * @return 
+	 * @param 
+	 */
+	public void setEmployeeList(Set<Employee> employeeSet) {
+		// Entfernt dieses Projekt aus allen Employee, die laut dem neuen übergebenen Setz nicht mehr zu diesem Projekt gehören.
+		for (Employee e : this.employeeList) {
+			if (!employeeSet.contains(e)) {
+				e.removeProject(this);
+			}
+		}
+		
+		employeeList.clear();
+		for (Employee e : employeeSet) {
+			this.employeeList.add(e);
+			e.addProject(this);
+		}
 	}
 
 	/**

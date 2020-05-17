@@ -10,8 +10,10 @@ import de.fhbielefeld.pmt.project.IProjectComponent;
 import de.fhbielefeld.pmt.project.IProjectModel;
 import de.fhbielefeld.pmt.project.IProjectView;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
+import de.fhbielefeld.pmt.project.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
+import de.fhbielefeld.pmt.project.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.project.impl.event.SendProjectToDBEvent;
 import de.fhbielefeld.pmt.project.impl.event.TransportAllClientsEvent;
 import de.fhbielefeld.pmt.project.impl.event.TransportAllProjectsEvent;
@@ -34,7 +36,7 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 	public void onReadAllProjectsEvent(ReadAllProjectsEvent event) {
 		if (event.getSource() == this.view) {
 			if (this.model.isReadSuccessfull()) {
-				this.view.setProjects(this.model.getProjectListFromDatabase());
+				this.view.setProjects(this.model.getProjectListFromDatabase(event.getUserID(), event.getUserRole()));
 			}
 		}
 	}
@@ -71,6 +73,35 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 			if (this.model.isManagerReadSuccessfull()) {
 				if(this.model.getManagerListFromDatabase().isEmpty())
 				this.view.setManagers(this.model.getManagerListFromDatabase());
+			}
+		}
+	}
+	
+	/**
+	 * Nimmt ReadAllEmployeesEvent entgegen und stößt anschließend über das Model die DB Anfrage an.
+	 * Gibt die Liste zurück an die ViewLogic
+	 * @param event
+	 */
+	@Subscribe
+	public void onReadAllEmployeesEvent(ReadAllEmployeesEvent event) {
+		if (event.getSource() == this.view) {
+			if (this.model.isEmployeeReadSuccessfull()) {
+				this.view.setEmployees(this.model.getEmployeeListFromDatabase());
+			}
+		}
+	}
+	
+	
+	/**
+	 * Nimmt ReadAllTeamsEvent entgegen und stößt anschließend über das Model die DB Anfrage an.
+	 * Gibt die Liste zurück an die ViewLogic
+	 * @param event
+	 */
+	@Subscribe
+	public void onReadAllTeamsEvent(ReadAllTeamsEvent event) {
+		if (event.getSource() == this.view) {
+			if (this.model.isTeamReadSuccessfull()) {
+				this.view.setTeams(this.model.getTeamListFromDatabase());
 			}
 		}
 	}
