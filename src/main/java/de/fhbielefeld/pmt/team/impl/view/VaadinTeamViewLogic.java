@@ -84,7 +84,6 @@ public class VaadinTeamViewLogic implements ITeamView{
 				("Bitte wählen Sie einen Teamnamen zwischen 1 und 50 Zeichen", ".{1,50}")).bind(Team::getTeamName, Team::setTeamName);
 		
 		this.binderT.bind(this.view.getTeamForm().getIsActive(), "active");
-		this.binderT.bind(this.view.getTeamForm().getCbTeamEmployee(), "employeeList");
 		
 		// TODO: Hinweis, dass mind. 1 Projekt und Mitarbeiter ausgewählt werden muss!
 		//this.binderT.bind(this.view.getTeamForm().getMscbTeamEmployee(), "employeeList");
@@ -165,19 +164,9 @@ public class VaadinTeamViewLogic implements ITeamView{
 		if (this.selectedTeam != null) {
 			try {
 				if (this.projects != null) {
-					// doppelter Code List<Project> projects = new ArrayList(this.projects);
-					this.view.getTeamForm().getCbTeamProject().setItems(this.projects);
-				}
-				if (this.employees != null) {
-					// doppelter Code List<Employee> employees = new ArrayList(this.employees);
-					this.view.getTeamForm().getCbTeamEmployee().setItems(this.employees);
-				}
-				if (this.projects != null) {
-					// doppelter Code List<Project> projects = new ArrayList(this.projects);
 					this.view.getTeamForm().getMscbTeamProject().setItems(this.projects);
 				}
 				if (this.employees != null) {
-					// doppelter Code List<Employee> employees = new ArrayList(this.employees);
 					this.view.getTeamForm().getMscbTeamEmployee().setItems(this.employees);
 				}
 				this.binderT.setBean(this.selectedTeam);
