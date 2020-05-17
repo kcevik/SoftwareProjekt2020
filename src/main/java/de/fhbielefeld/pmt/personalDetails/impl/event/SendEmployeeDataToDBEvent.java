@@ -5,7 +5,7 @@ import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsView;
 
 /**
  * 
- * @author David Bistron
+ * @author David Bistron, Sebastian Siegmann
  *
  */
 

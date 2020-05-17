@@ -5,9 +5,7 @@ import com.google.common.eventbus.Subscribe;
 
 import de.fhbielefeld.pmt.AbstractPresenter;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
-import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Team;
-import de.fhbielefeld.pmt.client.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.team.ITeamComponent;
 import de.fhbielefeld.pmt.team.ITeamModel;
 import de.fhbielefeld.pmt.team.ITeamView;
@@ -15,7 +13,6 @@ import de.fhbielefeld.pmt.team.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.team.impl.event.ReadAllProjectsEvent;
 import de.fhbielefeld.pmt.team.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.team.impl.event.SendTeamToDBEvent;
-import de.fhbielefeld.pmt.team.impl.event.TransportAllTeamsEvent;
 
 /**
  * Klasse, die den gesamten Bus-Transfer steuert (Kernstück!)
@@ -60,7 +57,6 @@ public class TeamComponent extends AbstractPresenter<ITeamModel, ITeamView> impl
 	public void onReadAllProjectsEvent(ReadAllProjectsEvent event) {
 		if (event.getSource() == this.view) {
 			if (this.model.isReadProjectSuccessfull()) {
-				System.out.println("Es gibt nen event teil 2");
 				this.view.setProjects(this.model.getProjectListFromDatabase());	
 			}
 		}

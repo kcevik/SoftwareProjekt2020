@@ -28,17 +28,9 @@ public class VaadinTeamViewForm extends FormLayout {
 	private static final long serialVersionUID = 1L;
 	private final Label lblCreateEdit = new Label("Anlegen / Bearbeiten");
 	private final TextField tfTeamID = new TextField("Team-ID:");
-	private final TextField tfTeamName = new TextField("Teamname:");
-	// TODO: MultiselectListBoxen erscheinen nicht
-	private final ComboBox<Project> cbTeamProject = new ComboBox<Project>("zugehörige Projekte: ");
-	private final ComboBox<Employee> cbTeamEmployee = new ComboBox<Employee>("zugehörige Mitarbeiter: ");
-	// private final MultiSelectListBox<Project> mslbTeamProjects = new MultiSelectListBox<Project>();
-	// private final MultiSelectListBox<Employee> mslbTeamEmployee = new MultiSelectListBox<Employee>();
-	
+	private final TextField tfTeamName = new TextField("Teamname:");	
 	private final MultiselectComboBox<Project> mscbTeamProject = new MultiselectComboBox<Project>("zugehörige Projekte: ");
 	private final MultiselectComboBox<Employee> mscbTeamEmployee = new MultiselectComboBox<Employee>("zugehörige Mitarbeiter: ");
-
-	
 	private final Checkbox cbIsActive = new Checkbox("Aktives Team?");
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
@@ -49,24 +41,17 @@ public class VaadinTeamViewForm extends FormLayout {
 		configureTeamFormTextFields();
 		add(lblCreateEdit);
 		lblCreateEdit.addClassName("lbl-heading-form");
-		add(tfTeamID, tfTeamName, cbTeamProject, cbTeamEmployee, mscbTeamProject, mscbTeamEmployee, cbIsActive, configureTeamFormButtons());
+		add(tfTeamID, tfTeamName, mscbTeamProject, mscbTeamEmployee, cbIsActive, configureTeamFormButtons());
 	}
 
 	public void configureTeamFormTextFields() {
 		this.lblCreateEdit.setEnabled(false);
 		this.tfTeamID.setEnabled(false);
 		this.tfTeamName.setEnabled(false);
-		
-		// TODO: nur eins davon am Ende implementieren!
-		this.cbTeamProject.setEnabled(false);
-		this.cbTeamEmployee.setEnabled(false);
-		
 		this.mscbTeamProject.setEnabled(false);
 		this.mscbTeamEmployee.setEnabled(false);
-		
 		this.cbIsActive.setEnabled(false);
-		cbTeamProject.isReadOnly();
-		cbTeamEmployee.isReadOnly();
+
 		
 	}
 	
@@ -82,14 +67,11 @@ public class VaadinTeamViewForm extends FormLayout {
 	}
 
 	/**
-	 * Methode, die die TeamForm 
+	 * TODO: Methode, die die TeamForm 
 	 */
 	public void prepareTeamFormFields() {
 		this.tfTeamID.setEnabled(false);
 		this.tfTeamName.setEnabled(true);
-		// TODO: nur eins davon am Ende implementieren!
-		this.cbTeamEmployee.setEnabled(true);
-		this.cbTeamProject.setEnabled(true);
 		this.mscbTeamEmployee.setEnabled(true);
 		this.mscbTeamProject.setEnabled(true);
 		this.cbIsActive.setEnabled(true);
@@ -103,9 +85,6 @@ public class VaadinTeamViewForm extends FormLayout {
 	public void closeTeamFormFields() {
 		this.tfTeamID.setEnabled(false);
 		this.tfTeamName.setEnabled(false);
-		// TODO: nur eines davon am Ende implementieren!
-		this.cbTeamEmployee.setEnabled(false);
-		this.cbTeamProject.setEnabled(false);
 		this.mscbTeamEmployee.setEnabled(false);
 		this.mscbTeamProject.setEnabled(false);
 		this.cbIsActive.setEnabled(false);
@@ -120,9 +99,6 @@ public class VaadinTeamViewForm extends FormLayout {
 		this.setVisible(false);
 		this.tfTeamID.clear();
 		this.tfTeamName.clear();
-		// TODO: nur eins davon am Ende implementieren!
-		this.cbTeamProject.clear();
-		this.cbTeamEmployee.clear();
 		this.mscbTeamEmployee.clear();
 		this.mscbTeamProject.clear();
 		this.cbIsActive.clear();
@@ -140,24 +116,6 @@ public class VaadinTeamViewForm extends FormLayout {
 	
 	public TextField getTfTeamName() {
 		return tfTeamName;
-	}
-	
-	/*
-	public MultiSelectListBox<Project> getTeamProjects(){
-		return mslbTeamProjects;
-	}
-	
-	public MultiSelectListBox<Employee> getTeamEmployee(){
-		return mslbTeamEmployee;
-	}
-	*/
-	
-	public ComboBox<Project> getCbTeamProject(){
-		return cbTeamProject;
-	}
-	
-	public ComboBox<Employee> getCbTeamEmployee(){
-		return cbTeamEmployee;
 	}
 	
 	public MultiselectComboBox<Project> getMscbTeamProject(){

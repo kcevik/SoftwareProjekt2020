@@ -30,7 +30,7 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 
 	private void registerViewListener() {
 
-		if (AuthorizationChecker.checkIsAuthorizedManager(VaadinSession.getCurrent(),
+		if (AuthorizationChecker.checkIsAuthorizedEmployeeFowler(VaadinSession.getCurrent(),
 				VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE"))) {
 			this.view.getBtnSuperviseClients()
 					.addClickListener(e -> this.eventBus.post(new ClientModuleChosenEvent(this)));
@@ -39,7 +39,7 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 			// this.view.getBtnSuperviseClients().setVisible(false);
 		}
 
-		if (AuthorizationChecker.checkIsAuthorizedManager(VaadinSession.getCurrent(),
+		if (AuthorizationChecker.checkIsAuthorizedEmployeeFowler(VaadinSession.getCurrent(),
 				VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE"))) {
 			this.view.getBtnSuperviseEmployees()
 					.addClickListener(e -> this.eventBus.post(new EmployeesModuleChosenEvent(this)));
@@ -52,7 +52,7 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 		// buildManagerUI Oder so aus
 		// Der View dann die session variable übergeben und denn baut die das fertig?
 		//TODO: Für @Siggi
-		if (AuthorizationChecker.checkIsAuthorizedManager(VaadinSession.getCurrent(),
+		if (AuthorizationChecker.checkIsAuthorizedEmployeeFowler(VaadinSession.getCurrent(),
 				VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE"))) {
 			this.view.getBtnSuperviseProjects()
 					.addClickListener(e -> this.eventBus.post(new ProjectsModuleChosenEvent(this)));

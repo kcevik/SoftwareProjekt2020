@@ -76,14 +76,12 @@ public class PersonalDetailsRootView extends VerticalLayout {
 		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
 				session.getAttribute("LOGIN_USER_FIRSTNAME"), session.getAttribute("LOGIN_USER_LASTNAME"),
 				session.getAttribute("LOGIN_USER_ROLE"))) {
-			System.out.println("User ist korrekt angemeldet");
 			if (rootViewAuthorizationCheck()) {
 				return true;
 			} else {
 				return false;
 			}
 		} else {
-			System.out.println("User ist nicht korrekt angemeldet");
 			this.removeAll();
 			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
 			return false;
@@ -96,10 +94,8 @@ public class PersonalDetailsRootView extends VerticalLayout {
 	 */
 	private boolean rootViewAuthorizationCheck() {
 		if (AuthorizationChecker.checkIsAuthorizedEmployee(session, session.getAttribute("LOGIN_USER_ROLE"))) {
-			System.out.println("User hat Berechtigung");
 			return true;
 		} else {
-			System.out.println("User keine Berechtigung");
 			this.removeAll();
 			this.add(NotAuthorizedError.getErrorSite(this.eventBus, this));
 			return false;
@@ -145,7 +141,6 @@ public class PersonalDetailsRootView extends VerticalLayout {
 
 	@Subscribe
 	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
-		System.out.println("onLogoutEvent ist angekommen");
 		session.setAttribute("LOGIN_USER_ID", null);
 		session.setAttribute("LOGIN_USER_FIRSTNAME", null);
 		session.setAttribute("LOGIN_USER_LASTNAME", null);

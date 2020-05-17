@@ -12,6 +12,8 @@ import javax.persistence.*;
 public class RoleCEO extends Role implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	private final String DESIGNATION = "CEO";
 
 	public RoleCEO() {
 		super();
@@ -32,6 +34,6 @@ public class RoleCEO extends Role implements Serializable {
 
 	@Override
 	public String getRoleDesignation() {
-		return "ceo";
+		return this.DESIGNATION;
 	}
 }

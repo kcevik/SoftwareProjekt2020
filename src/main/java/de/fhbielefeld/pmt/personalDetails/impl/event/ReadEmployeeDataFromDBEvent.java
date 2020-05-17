@@ -5,7 +5,7 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsView;
 
 /**
- * @author David
+ * @author David Bistron, Sebastian Siegmann
  * @param view
  */
 public class ReadEmployeeDataFromDBEvent extends EventObject {

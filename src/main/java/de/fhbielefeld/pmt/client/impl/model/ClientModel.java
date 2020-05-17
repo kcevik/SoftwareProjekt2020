@@ -30,13 +30,17 @@ public class ClientModel implements IClientModel {
 		return dbService.readClient();
 	}
 	
+	/**
+	 * Schreibt den übergenen Client in die DB
+	 * @param Client
+	 */
 	@Override
 	public void persistClient(Client client) {
 		this.dbService.persistClient(client);
 	}
 
 	/**
-	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
+	 * Bestätigt ob ausgelesenen Kundendaten null sind oder nicht
 	 */
 	@Override
 	public boolean isReadSuccessfull() {
@@ -47,17 +51,29 @@ public class ClientModel implements IClientModel {
 		}
 	}
 
-	@Override
+	/**
+	 * Ließt alle Projekte aus der Datenbank aus
+	 * @deprecated
+	 * Wird ggf noch benötigt, momentan nicht, aus interface entfernt
+	 */
 	public List<Project> getProjectListFromDatabase() {
 		return dbService.readproject();
 	}
 
+	/**
+	 * Bestätigt ob alle Projekte aus der DB ausgelesen wurden oder null 
+	 */
 	@Override
-	public boolean isReadProjectSuccessfull() {
-		if(this.getProjectListFromDatabase()!=null) {
+	public boolean isReadActiveProjectSuccessfull() {
+		if(this.getActiveProjectListFromDatabase()!=null) {
 			return true;
 		} else {
 			return false;
 		}
 	}	
+	
+	@Override
+	public List<Project> getActiveProjectListFromDatabase() {
+		return dbService.readActiveProjects();
+	}
 }
