@@ -13,7 +13,7 @@ public class RoleEmployee extends Role implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private final String DESIGNATION = "Employee";
-	
+	 
 	public RoleEmployee() {
 		super();
 	}
