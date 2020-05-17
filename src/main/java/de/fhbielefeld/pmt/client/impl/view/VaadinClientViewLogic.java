@@ -13,7 +13,7 @@ import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.client.IClientView;
 import de.fhbielefeld.pmt.client.impl.event.ReadAllClientsEvent;
-import de.fhbielefeld.pmt.client.impl.event.ReadAllProjectsEvent;
+import de.fhbielefeld.pmt.client.impl.event.ReadActiveProjectsEvent;
 import de.fhbielefeld.pmt.client.impl.event.SendClientToDBEvent;
 import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
@@ -99,7 +99,6 @@ public class VaadinClientViewLogic implements IClientView {
 	 */
 	private void cancelForm() {
 		resetSelectedClient();
-		System.out.println("Client is null weil form zurückgesetzt");
 		this.view.clearGridAndForm();
 	}
 
@@ -193,7 +192,7 @@ public class VaadinClientViewLogic implements IClientView {
 	 */
 	public void initReadFromDB() {
 		this.eventBus.post(new ReadAllClientsEvent(this));
-		this.eventBus.post(new ReadAllProjectsEvent(this));
+		this.eventBus.post(new ReadActiveProjectsEvent(this));
 		this.updateGrid();
 	}
 
@@ -228,5 +227,12 @@ public class VaadinClientViewLogic implements IClientView {
 	@Override
 	public void setProjects(List<Project> projectListFromDatabase) {
 		this.projects = projectListFromDatabase;
+	}
+
+	@Override
+	public void addProjects(Project project) {
+		if (!this.projects.contains(project)) {
+			this.projects.add(project);
+		}
 	}
 }

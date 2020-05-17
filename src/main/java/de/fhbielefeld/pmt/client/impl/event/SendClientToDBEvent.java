@@ -1,7 +1,6 @@
 package de.fhbielefeld.pmt.client.impl.event;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.client.IClientView;
-import de.fhbielefeld.pmt.client.impl.view.VaadinClientViewLogic;
 
 /**
  * 
