@@ -42,7 +42,7 @@ public class ProjectModel implements IProjectModel {
 	public List<Project> getProjectListFromDatabase(String userID, String userRole) {
 		if (userRole.equalsIgnoreCase("ceo") || userRole.equalsIgnoreCase("Projectmanager")) {
 			return dbService.readproject();
-		}else if (userRole.equals("employee")) {
+		}else if (userRole.equalsIgnoreCase("employee")) {
 			List<Project> listByEmployee = dbService.readProjectForUser(userID);
 			List<Project> listByTeam = dbService.readProjectForUserByTeam(userID);
 			
