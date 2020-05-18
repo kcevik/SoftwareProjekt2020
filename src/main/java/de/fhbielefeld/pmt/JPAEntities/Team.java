@@ -28,8 +28,6 @@ public class Team implements Serializable {
 	
 	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "teamList")
 	private Set<Project> projectList;
-	//TODO: Is das so richtig mit dem mapping von den Beziehungen holy fuck who knows
-
 	
 	/**
 	 * Public non-private zero-argument constructor for JPAentity class Team
@@ -188,6 +186,6 @@ public class Team implements Serializable {
 	
 	@Override
 	public String toString() {
-		return Long.toString(this.getTeamID());
+		return "(" + this.teamID + ") " + this.teamName;
 	}
 }

@@ -1,6 +1,5 @@
 package de.fhbielefeld.pmt.JPAEntities;
 
-
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -24,9 +23,10 @@ public class Costs implements Serializable {
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "project")
 	private Project project;
-	
+
 	/**
 	 * Public non-private zero-argument constructor for JPAentity class Costs
+	 * 
 	 * @return none
 	 */
 	public Costs() {
@@ -35,6 +35,7 @@ public class Costs implements Serializable {
 
 	/**
 	 * Public constructor of Costs JPAentity class
+	 * 
 	 * @return none
 	 */
 	public Costs(String costType, String description, double incurredCosts, Project project) {
@@ -44,93 +45,108 @@ public class Costs implements Serializable {
 		this.incurredCosts = incurredCosts;
 		this.project = project;
 	}
-	
+
 	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
 	 */
-	// Set-Methode nicht vorhanden, soll nicht veraendert werden 
+	// Set-Methode nicht vorhanden, soll nicht veraendert werden
 	public long getCostsID() {
 		return costsID;
 	}
 
 	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
 	 */
 	public String getCostType() {
 		return costType;
 	}
 
 	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
 	 */
 	public void setCostType(String costType) {
 		this.costType = costType;
 	}
 
 	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
 	 */
 	public double getIncurredCosts() {
 		return incurredCosts;
 	}
 
 	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
 	 */
 	public void setIncurredCosts(double incurredCosts) {
 		this.incurredCosts = incurredCosts;
 	}
 
 	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
 	 */
 	public Project getProject() {
 		return project;
 	}
 
 	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
 	 */
 	public void setProject(Project project) {
 		this.project = project;
 	}
 
+	@Override
+	public String toString() {
+		return "(" + this.costsID + ") " + this.description;
+	}
+
 	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;

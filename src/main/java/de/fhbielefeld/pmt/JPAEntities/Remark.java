@@ -106,6 +106,13 @@ public class Remark implements Serializable {
 	public long getCommentID() {
 		return remarkID;
 	}
+	
+	
+
+	@Override
+	public String toString() {
+		return "(" + this.remarkID + ") " + this.remarkText;
+	}
 
 	/**
 	 * Public Methode um  

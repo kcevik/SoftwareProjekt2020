@@ -91,13 +91,14 @@ public class Client implements Serializable {
 	public void addProject(Project project) {
 		this.projectList.add(project);
 	}
-	
+
 	/**
 	 * @author David Bistron
-	 * @param projectList
-	 * setter-Methode wird benötigt und von der Klasse VaadinTeamViewLogic aufgerufen, damit in der MultiselectComboBox
-	 * neue Projekte hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
-	 * bearbeitet werden
+	 * @param projectList setter-Methode wird benötigt und von der Klasse
+	 *                    VaadinTeamViewLogic aufgerufen, damit in der
+	 *                    MultiselectComboBox neue Projekte hinzugefügt werden
+	 *                    können! Ohne die setter-Methode ist das Feld "gebindet",
+	 *                    kann aber nicht bearbeitet werden
 	 */
 	public void setProjectList(Set<Project> projectList) {
 		this.projectList = projectList;
@@ -284,6 +285,6 @@ public class Client implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.getName();
+		return "(" + this.clientID + ") " + this.getName();
 	}
 }

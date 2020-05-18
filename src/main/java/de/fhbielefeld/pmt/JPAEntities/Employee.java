@@ -19,21 +19,21 @@ public class Employee implements Serializable {
 //TODO:Methodenbeschreibungen schreiben
 	private static final long serialVersionUID = 1L;
 	// TODO: Rollen attribut hinzuf�gen
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long employeeID;
-	
+
 	private String password;
-	
+
 	@NotNull
 	private String firstName;
-	
+
 	@NotNull
 	private String lastName;
-	
+
 	private String occupation;
-	
+
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private Role role;
 	private boolean isSuitabilityProjectManager;
@@ -45,7 +45,7 @@ public class Employee implements Serializable {
 //	@Range(min = 1, max = 5)
 	@Min(0)
 	private int houseNumber;
-	
+
 //	@Range(min = 4, max = 5)
 //	@Min(1000)
 //	@Max(99999)
@@ -470,7 +470,7 @@ public class Employee implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.getFirstName() + " " + this.getLastName() + " " + this.getEmployeeID();
+		return "(" + this.employeeID + ") " + this.getFirstName() + " " + this.getLastName();
 	}
 
 }
