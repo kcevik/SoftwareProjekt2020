@@ -51,7 +51,7 @@ public class ProjectActivityRootView extends VerticalLayout {
 
 		Component topBarView = topBarComponent.getViewAs(Component.class);
 		Component projectActivityView = projectActivityComponent.getViewAs(Component.class);
-
+		
 		this.add(topBarView);
 		this.add(projectActivityView);
 		this.setHeightFull();

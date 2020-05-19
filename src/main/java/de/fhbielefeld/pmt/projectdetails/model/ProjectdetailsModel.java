@@ -38,6 +38,11 @@ public class ProjectdetailsModel implements IProjectdetailsModel{
 		}
 	}
 
+	@Override
+	public void persistCost(Costs cost) {
+		this.dbService.persistCosts(cost);
+	}
+
 
 
 }
