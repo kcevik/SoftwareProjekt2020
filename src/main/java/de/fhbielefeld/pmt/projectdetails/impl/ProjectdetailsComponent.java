@@ -5,10 +5,12 @@ import com.google.common.eventbus.Subscribe;
 
 import de.fhbielefeld.pmt.AbstractPresenter;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
+import de.fhbielefeld.pmt.project.impl.event.SendProjectToDBEvent;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsComponent;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsModel;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 import de.fhbielefeld.pmt.projectdetails.impl.event.ReadAllCostsEvent;
+import de.fhbielefeld.pmt.projectdetails.impl.event.SendCostToDBEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.TransportAllCostsEvent;
 import de.fhbielefeld.pmt.team.impl.event.TransportAllTeamsEvent;
 
@@ -21,7 +23,6 @@ public class ProjectdetailsComponent extends AbstractPresenter<IProjectdetailsMo
 	
 	@Subscribe
 	public void onReadAllCostsEvent(ReadAllCostsEvent event) {
-		System.out.println("bin drin 62");
 		if (event.getSource() == this.view) {
 			if (this.model.isReadSuccessfull()) {
 				TransportAllCostsEvent containsData = new TransportAllCostsEvent(this.view);
@@ -32,8 +33,10 @@ public class ProjectdetailsComponent extends AbstractPresenter<IProjectdetailsMo
 		}
 	}
 	
-	
-	
+	@Subscribe
+	public void onSendCostToDBEvent(SendCostToDBEvent event) {
+		this.model.persistCost(event.getCost());
+	}
 	
 	@Override
 	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {

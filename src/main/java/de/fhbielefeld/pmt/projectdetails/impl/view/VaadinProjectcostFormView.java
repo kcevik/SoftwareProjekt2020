@@ -18,10 +18,12 @@ public class VaadinProjectcostFormView extends FormLayout {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Label lblDescr = new Label();
-	private ComboBox<String> costType = new ComboBox<>("Kostenart");
-	private TextField amount = new TextField("Betrag");
-	private TextArea description = new TextArea("Beschreibung:");
+	private final Label lblDescr = new Label();
+	private final ComboBox<String> cbCostType = new ComboBox<>("Kostenart");
+	private final TextField tfIncurredCosts = new TextField("Betrag");
+	private final TextArea taDescription = new TextArea("Beschreibung:");
+	
+	Button btnEdit = new Button("Bearbeiten");
 	
 	Button btnSave = new Button("Speichern");
 	Button btnCancel = new Button("Abbrechen");
@@ -30,62 +32,100 @@ public class VaadinProjectcostFormView extends FormLayout {
 		addClassName("cost-form");
 		lblDescr.add("Anlegen/Bearbeiten");
 		lblDescr.addClassName("lbl-heading-form");
+		cbCostType.setItems("Kosten externe Dienstleister", "Materialkosten", "Lohnkosten");
 		setSizeFull();
-		this.add(new VerticalLayout(lblDescr, costType, amount, description, configureButtons()));
-		this.prepareInputFields(false);
+		this.configureCostFormFields();
+		this.add(new VerticalLayout(lblDescr, cbCostType, tfIncurredCosts, taDescription, configureButtons()));
+		
 	}
 	
-	public void prepareInputFields(boolean visible) {
+	public void configureCostFormFields() {
 		
-		lblDescr.setVisible(visible);
-		costType.setVisible(visible);
-		amount.setVisible(visible);
-		description.setVisible(visible);
-		btnSave.setVisible(visible);
-		btnCancel.setVisible(visible);
-			
+		lblDescr.setEnabled(false);
+		cbCostType.setReadOnly(true);
+		tfIncurredCosts.setEnabled(false);
+		taDescription.setEnabled(false);
+		btnSave.setVisible(false);
+		btnCancel.setVisible(false);
+		btnEdit.setEnabled(true);
+		this.setVisible(false);	
 	}
+	
 	
 	public Component configureButtons() {
 		btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 		btnCancel.addThemeVariants(ButtonVariant.LUMO_ERROR);
-
+		btnEdit.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 		btnSave.addClickShortcut(Key.ENTER);
 		btnCancel.addClickShortcut(Key.ESCAPE);
 
-		return new HorizontalLayout(btnSave, btnCancel);
+		return new HorizontalLayout(btnSave,  btnEdit, btnCancel);
 	}
-
+	
+	/**
+	 * TODO: Methode, die die TeamForm 
+	 */
+	public void prepareCostFormFields() {
+		lblDescr.setEnabled(true);
+		cbCostType.setReadOnly(false);
+		tfIncurredCosts.setEnabled(true);
+		taDescription.setEnabled(true);
+		btnSave.setEnabled(true);
+		btnCancel.setEnabled(true);
+		btnSave.setVisible(true);
+		btnCancel.setVisible(true);
+		btnEdit.setVisible(false);
+		this.setVisible(true);
+		
+	}
+	
+	/**
+	 * Methode, die die TeamForm ausblended
+	 */
+	public void closeCostFormFields() {
+		this.cbCostType.setReadOnly(true);
+		this.tfIncurredCosts.setEnabled(false);
+		this.taDescription.setEnabled(false);
+		this.btnSave.setEnabled(false);
+		this.btnSave.setVisible(false);
+		this.btnCancel.setVisible(true);
+		this.btnEdit.setVisible(true);
+	}
+	
+	/**
+	 * Methode, die das Formular zurücksetzt
+	 */
+	public void resetCostForm() {
+		this.setVisible(false);
+		this.clearCostForm();
+		this.closeCostFormFields();
+	}
+	
+	public void clearCostForm() {
+		this.cbCostType.setValue("");
+		this.tfIncurredCosts.clear();
+		this.taDescription.clear();
+	}
+	
 	public Label getLblDescr() {
 		return lblDescr;
 	}
 
-	public void setLblDescr(Label lblDescr) {
-		this.lblDescr = lblDescr;
+
+	public ComboBox<String> getCbCostType() {
+		return cbCostType;
+	}
+	
+	public TextArea getTaDescription() {
+		return taDescription;
 	}
 
-	public ComboBox<String> getCostType() {
-		return costType;
+	public TextField getTfIncurredCosts() {
+		return tfIncurredCosts;
 	}
 
-	public void setCostType(ComboBox<String> costType) {
-		this.costType = costType;
-	}
-
-	public TextField getAmount() {
-		return amount;
-	}
-
-	public void setAmount(TextField amount) {
-		this.amount = amount;
-	}
-
-	public TextArea getDescription() {
-		return description;
-	}
-
-	public void setDescription(TextArea description) {
-		this.description = description;
+	public Button getBtnEdit() {
+		return btnEdit;
 	}
 
 	public Button getBtnSave() {

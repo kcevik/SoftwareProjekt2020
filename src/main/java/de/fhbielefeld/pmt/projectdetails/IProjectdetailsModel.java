@@ -9,4 +9,6 @@ public interface IProjectdetailsModel {
 
 	boolean isReadSuccessfull();
 
+	void persistCost(Costs cost);
+
 }
