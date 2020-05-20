@@ -19,7 +19,7 @@ public class RoleEmployee extends Role implements Serializable {
 	}
 
 	public boolean hasType(String type) {
-		if (type.equalsIgnoreCase("employee")) {
+		if (type.equalsIgnoreCase(this.DESIGNATION)) {
 			return true;
 		} else {
 			return super.hasType(type);

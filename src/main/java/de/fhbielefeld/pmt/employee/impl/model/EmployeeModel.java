@@ -1,10 +1,12 @@
-package de.fhbielefeld.pmt.employee.impl.modelN;
+package de.fhbielefeld.pmt.employee.impl.model;
 
 import java.util.List;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
-import de.fhbielefeld.pmt.employeeN.IEmployeeModel;
+import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.JPAEntities.Team;
+import de.fhbielefeld.pmt.employee.IEmployeeModel;
 
 /**
  * Model Klasse regelt DB Zugriffe und gibt Daten von der DB an Controller Klassen weiter
@@ -40,6 +42,34 @@ public class EmployeeModel implements IEmployeeModel {
 	@Override
 	public boolean isReadSuccessfull() {
 		if(this.getEmployeeListFromDatabase()!=null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public List<Project> getActiveProjectListFromDatabase() {
+		return dbService.readActiveProjects();
+	}
+
+	@Override
+	public List<Team> getActiveTeamListFromDatabase() {
+		return dbService.readActiveTeams();
+	}
+
+	@Override
+	public boolean isReadActiveProjectSuccessfull() {
+		if(this.getActiveProjectListFromDatabase()!=null) {
+			return true;
+		} else {
+			return false;
+		}
+	}	
+	
+	@Override
+	public boolean isReadActiveTeamSuccessfull() {
+		if(this.getActiveTeamListFromDatabase()!=null) {
 			return true;
 		} else {
 			return false;

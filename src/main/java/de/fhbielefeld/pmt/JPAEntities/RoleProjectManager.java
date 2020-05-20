@@ -23,7 +23,7 @@ public class RoleProjectManager extends Role implements Serializable {
 	}
 	
 	public boolean hasType(String type) {
-		if (type.equalsIgnoreCase("manager")){
+		if (type.equalsIgnoreCase(this.DESIGNATION)){
 			return true;
 		} else {
 			return super.hasType(type);

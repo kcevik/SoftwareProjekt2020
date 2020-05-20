@@ -20,7 +20,7 @@ public class RoleCEO extends Role implements Serializable {
 	}
 
 	public boolean hasType(String type) {
-		if (type.equalsIgnoreCase("ceo")) {
+		if (type.equalsIgnoreCase(this.DESIGNATION)) {
 			return true;
 		} else {
 			return super.hasType(type);

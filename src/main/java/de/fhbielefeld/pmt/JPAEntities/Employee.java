@@ -66,6 +66,22 @@ public class Employee implements Serializable {
 	public Employee() {
 		super();
 	}
+	
+	public String getProjectIDsAsString() {
+		String projectIDs = "";
+		for (Project p : this.getProjectList()) {
+			projectIDs += p.getProjectID() + " ";
+		}
+		return projectIDs;
+	}
+	
+	public String getTeamIDsAsString() {
+		String teamIDs = "";
+		for (Team t : this.getTeamList()) {
+			teamIDs += t.getTeamID() + " ";
+		}
+		return teamIDs;
+	}
 
 	/**
 	 * Public constructor of Employee JPAentity class
@@ -193,6 +209,7 @@ public class Employee implements Serializable {
 	public void setSuitabilityProjectManager(boolean isSuitabilityProjectManager) {
 		this.isSuitabilityProjectManager = isSuitabilityProjectManager;
 	}
+	
 
 	/**
 	 * Public Methode um
@@ -212,6 +229,28 @@ public class Employee implements Serializable {
 	 */
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+
+	/**
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
+	 */
+	
+	public void setProjectList(Set<Project> projectList) {
+		this.projectList = projectList;
+	}
+	
+	/**
+	 * Public Methode um
+	 * 
+	 * @return
+	 * @param
+	 */
+	
+	public void setTeamList(Set<Team> teamList) {
+		this.teamList = teamList;
 	}
 
 	/**
