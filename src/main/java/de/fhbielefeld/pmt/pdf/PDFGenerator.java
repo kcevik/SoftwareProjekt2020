@@ -40,14 +40,14 @@ import de.fhbielefeld.pmt.project.impl.model.ProjectModel;
  */
 public class PDFGenerator {
 
-	public static void main(String[] args) {
-		Project proj1 = new Project("Hammer Projekt", null, null, "22.04.2020", "06.06.2020", 10000);
-		Costs cost1 = new Costs("Krise", "War nich nice", 50.0, proj1);
-		Costs cost2 = new Costs("Käse", "Der war nice", 150.0, proj1);
-		Costs cost3 = new Costs("Mitarbeiter", "so LALA gearbeitet", 250.0, proj1);
-		Costs cost4 = new Costs("Entwicklung", "Kosten der laufenden Entwicklung", 350.0, proj1);
-		new PDFGenerator().generateTotalCostsPdf(proj1);
-	}
+//	public static void main(String[] args) {
+//		Project proj1 = new Project("Hammer Projekt", null, null, "22.04.2020", "06.06.2020", 10000);
+//		Costs cost1 = new Costs("Krise", "War nich nice", 50.0, proj1);
+//		Costs cost2 = new Costs("Käse", "Der war nice", 150.0, proj1);
+//		Costs cost3 = new Costs("Mitarbeiter", "so LALA gearbeitet", 250.0, proj1);
+//		Costs cost4 = new Costs("Entwicklung", "Kosten der laufenden Entwicklung", 350.0, proj1);
+//		new PDFGenerator().generateTotalCostsPdf(null);
+//	}
 
 	/**
 	 * @param project
@@ -70,8 +70,8 @@ public class PDFGenerator {
 		FileOutputStream fos = null;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
 		LocalDateTime now = LocalDateTime.now();
-		String path = "PDFExport\\Gesamtkosten " + dtf.format(now) + ".pdf";
-
+		String path = "PDFExport/Gesamtkosten " + dtf.format(now) + ".pdf";
+		document.open();
 		try {
 			fos = new FileOutputStream(path);
 			PdfWriter.getInstance(document, fos);

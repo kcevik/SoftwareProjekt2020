@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.pdf.PDFGenerator;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
@@ -197,9 +199,10 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 	 * @author LucasEickmann
 	 */
 	private void downloadPDF() {
-		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
 		
-		File file = new File("PDFExport/test.pdf");
+		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+		PDFGenerator gen = new PDFGenerator();
+		File file = gen.generateTotalCostsPdf(null);
 		StreamResource res = new StreamResource(file.getName(), () ->  {
 			try {
 				return new FileInputStream(file);
