@@ -3,6 +3,7 @@ package de.fhbielefeld.pmt.project;
 import java.util.List;
 
 import de.fhbielefeld.pmt.JPAEntities.Client;
+import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
@@ -25,5 +26,7 @@ public interface IProjectModel  extends IModel{
 	public boolean isEmployeeReadSuccessfull();
 	public boolean isTeamReadSuccessfull();
 	public List<Team> getTeamListFromDatabase();
+	public List<Costs> getCostsOfProjectListFromDatabase(Project project);
+	public Project getSingleProjectFromDatabase(Long projectID);
 	
 }

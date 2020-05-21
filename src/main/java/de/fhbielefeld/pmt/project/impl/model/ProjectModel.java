@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Client;
+import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
@@ -144,4 +145,13 @@ public class ProjectModel implements IProjectModel {
 		}
 	}
 
+	@Override
+	public List<Costs> getCostsOfProjectListFromDatabase(Project project) {
+		return this.dbService.readCostsOfProject(project);
+	}
+
+	@Override
+	public Project getSingleProjectFromDatabase(Long projectID) {
+		return this.dbService.readSingleProject(projectID);
+	}
 }

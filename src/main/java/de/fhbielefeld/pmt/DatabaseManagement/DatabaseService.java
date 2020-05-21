@@ -205,6 +205,20 @@ public class DatabaseService {
 		List<Project> resultListProject = query.getResultList();
 		return resultListProject;
 	}
+	
+	/**
+	 * Gibt Liste aller Costs zu einem Project aus DB zurück
+	 * 
+	 * @param none
+	 * @return List<Costs>
+	 */
+	public List<Costs> readCostsOfProject(Project project) {
+
+		TypedQuery<Costs> query = em.createQuery("SELECT c FROM Costs c WHERE c.project = :project", Costs.class);
+		query.setParameter("project", project);
+		List<Costs> resultListCostsForProject = query.getResultList();
+		return resultListCostsForProject;
+	}
 
 	
 	/**
