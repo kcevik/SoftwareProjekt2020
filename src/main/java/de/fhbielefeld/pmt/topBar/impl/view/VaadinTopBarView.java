@@ -72,4 +72,5 @@ public class VaadinTopBarView extends HorizontalLayout {
 	public Icon getIconLogo() {
 		return iconLogo;
 	}
+	
 }
