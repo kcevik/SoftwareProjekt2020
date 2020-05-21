@@ -33,13 +33,18 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 	 * @param event
 	 */
 	@Subscribe
-	public void onReadAllProjectsEvent(ReadAllProjectsEvent event) {
+	public void onReadNonEditableProjectsEvent(ReadAllProjectsEvent event) {
 		if (event.getSource() == this.view) {
-			if (this.model.isReadSuccessfull()) {
-				this.view.setProjects(this.model.getProjectListFromDatabase(event.getUserID(), event.getUserRole()));
+			if (this.model.isNonEditableProjectListReadSuccessfull(event.getUserID(), event.getUserRole())) {
+				this.view.setNonEditableProjects(this.model.getNonEditableProjectListFromDatabase(event.getUserID(), event.getUserRole()));
+				if (this.model.isEditableProjectListReadSuccessfull(event.getUserID(), event.getUserRole())) {
+					this.view.setEditableProjects(this.model.getEditableProjectListFromDatabase(event.getUserID(), event.getUserRole()));
+				}	
 			}
 		}
 	}
+	
+	
 
 	@Subscribe
 	public void onSendProjectToDBEvent(SendProjectToDBEvent event) {

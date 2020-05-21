@@ -2,6 +2,7 @@
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -48,7 +49,9 @@ public class VaadinProjectViewLogic implements IProjectView{
 	private List<Team> teams;
 	private List<Client> clients;
 	private List<Employee> managers;
-	private List<Project> projects;
+	private List<Project> nonEditableProjects;
+	private List<Project> editableProjects;
+	private List<Project> projects = new ArrayList<Project>();
 	
 	
 
@@ -138,8 +141,13 @@ public class VaadinProjectViewLogic implements IProjectView{
 					this.view.getProjectForm().getCbSupProject().setItems(supProjects);
 				}
 				this.binder.setBean(this.selectedProject);
-				this.view.getProjectForm().closeEdit();
 				this.view.getProjectForm().setVisible(true);
+				this.view.getProjectForm().closeEdit();
+				if (this.editableProjects != null && this.editableProjects.contains(this.selectedProject)) {
+					this.view.getProjectForm().getBtnEdit().setVisible(true);
+				}else if (this.nonEditableProjects != null && this.nonEditableProjects.contains(this.selectedProject)) {
+					this.view.getProjectForm().getBtnEdit().setVisible(false);
+				}
 			} catch (NumberFormatException e) {
 				Notification.show("NumberFormatException");
 			}
@@ -232,14 +240,37 @@ public class VaadinProjectViewLogic implements IProjectView{
 		this.eventBus.post(new ReadAllProjectsEvent(this, VaadinSession.getCurrent().getAttribute("LOGIN_USER_ID").toString(), VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE").toString()));
 		this.eventBus.post(new ReadAllClientsEvent(this));
 		this.eventBus.post(new ReadAllManagersEvent(this));
+		this.mergeProjectLists();
 		this.updateGrid();
+	}
+	
+	
+	
+	private void mergeProjectLists() {
+		if (this.nonEditableProjects != null) {
+			for (Project p : nonEditableProjects) {
+				if (!this.projects.contains(p)) {
+					this.projects.add(p);
+				}
+			}
+		}
+		
+		if (this.editableProjects != null) {
+			for (Project p : editableProjects) {
+				if (!this.projects.contains(p)) {
+					this.projects.add(p);
+				}
+			}
+		}
 	}
 	
 	/**
 	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
 	 */
 	public void updateGrid() {
-		this.view.getProjectGrid().setItems(this.projects);
+		if (this.projects != null) {
+			this.view.getProjectGrid().setItems(this.projects);
+		}
 	}
 	
 	public void addProject(Project p) {
@@ -271,8 +302,13 @@ public class VaadinProjectViewLogic implements IProjectView{
 	}
 	
 	@Override
-	public void setProjects(List<Project> projects) {
-		this.projects = projects;
+	public void setNonEditableProjects(List<Project> nonEditableProjects) {
+		this.nonEditableProjects = nonEditableProjects;
+	}
+	
+	@Override
+	public void setEditableProjects(List<Project> editableProjects) {
+		this.editableProjects = editableProjects;
 	}
 	
 	@Override

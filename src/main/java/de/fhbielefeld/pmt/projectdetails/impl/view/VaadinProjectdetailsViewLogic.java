@@ -1,16 +1,28 @@
 package de.fhbielefeld.pmt.projectdetails.impl.view;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.base.GeneratorBase;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.helger.commons.io.resource.FileSystemResource;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
+import com.vaadin.flow.server.StreamResource;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Costs;
@@ -68,7 +80,8 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 		this.view.getCostForm().getBtnSave().addClickListener(event -> this.saveCostPosition());
 		this.view.getBtnCreateCostPosition().addClickListener(event ->  createNewCostPosition());
 		this.view.getBtnBackToProjectview().addClickListener(event -> this.view.getUI().ifPresent(ui -> ui.navigate("projectmanagement")));
-		
+		this.view.getBtnCreateCostPDF().addClickListener(event -> this.downloadPDF());
+		this.view.getBtnCreateCostPosition().setId("id");
 	}
 
 
@@ -176,17 +189,37 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 		this.selectedCost.setDescription(this.view.getCostForm().getTaDescription().getValue());
 		this.selectedCost.setIncurredCosts(Double.parseDouble(this.view.getCostForm().getTfIncurredCosts().getValue()));
 		this.selectedCost.setProject(this.project);
-		saveCostPosition();
+		//saveCostPosition(); = new 
 	}
-	/*
-	 * @Subscribe 
-	 * public void setSelectedProject(ProjectDetailsModuleChoosen event) {
-	 * 
-	 *  	if(event.getProject != null)
-	 *  		this.project = event.getProject();
-	 *  
-	 *  }
+	
+	
+	/**
+	 * @author LucasEickmann
 	 */
+	private void downloadPDF() {
+		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+		
+		File file = new File("PDFExport/test.pdf");
+		StreamResource res = new StreamResource(file.getName(), () ->  {
+			try {
+				return new FileInputStream(file);
+			} catch (FileNotFoundException e) {
+				Notification.show("Fehler beim erstellen der Datei");
+				return null;
+			}
+		});
+		
+		Anchor downloadLink = new Anchor(res, "Download");
+		this.view.add(downloadLink);
+		downloadLink.setId(timeStamp.toString());
+		downloadLink.getElement().getStyle().set("display", "none");
+		downloadLink.getElement().setAttribute( "download" , true );
+		
+	
+		Page page = UI.getCurrent().getPage();
+		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
+		
+	}
 
 	@Override
 	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {

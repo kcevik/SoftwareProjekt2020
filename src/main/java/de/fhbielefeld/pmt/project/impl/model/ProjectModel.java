@@ -40,13 +40,10 @@ public class ProjectModel implements IProjectModel {
 	 * Ließt über den DatabaseService Projekte aus, die einem User je nach Rolle in der Projektübersicht angezeigt werden sollen/dürfen.
 	 */
 	@Override
-	public List<Project> getProjectListFromDatabase(String userID, String userRole) {
-		if (userRole.equalsIgnoreCase("ceo") || userRole.equalsIgnoreCase("Projectmanager")) {
-			return dbService.readproject();
-		}else if (userRole.equalsIgnoreCase("employee")) {
+	public List<Project> getNonEditableProjectListFromDatabase(String userID, String userRole) {
+		if (userRole.equalsIgnoreCase("Employee") || userRole.equalsIgnoreCase("Projectmanager")) {
 			List<Project> listByEmployee = dbService.readProjectForUser(userID);
 			List<Project> listByTeam = dbService.readProjectForUserByTeam(userID);
-			
 			for (Project p : listByTeam) {
 				if (!listByEmployee.contains(p)) {
 					listByEmployee.add(p);
@@ -61,8 +58,34 @@ public class ProjectModel implements IProjectModel {
 	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
 	 */
 	@Override
-	public boolean isReadSuccessfull() {
-		if (this.getProjectListFromDatabase() != null) {
+	public boolean isNonEditableProjectListReadSuccessfull(String userID, String userRole) {
+		if (this.getNonEditableProjectListFromDatabase(userID, userRole) != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Ließt über den DatabaseService Projekte aus, die einem User je nach Rolle in der Projektübersicht angezeigt werden sollen/dürfen.
+	 */
+	@Override
+	public List<Project> getEditableProjectListFromDatabase(String userID, String userRole) {
+		if (userRole.equalsIgnoreCase("ceo")) {
+			return dbService.readproject();
+		}else if (userRole.equalsIgnoreCase("Projectmanager")) {
+			return dbService.readProjectForProjectmanager(userID);
+
+		}else return null;
+	}
+
+	
+	/**
+	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
+	 */
+	@Override
+	public boolean isEditableProjectListReadSuccessfull(String userID, String userRole) {
+		if (this.getEditableProjectListFromDatabase(userID, userRole) != null) {
 			return true;
 		} else {
 			return false;

@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Remark;
@@ -147,9 +148,9 @@ public class DatabaseService {
 	
 	/**
 	 * 
-	 * 
-	 * @param none
-	 * @return List<Project> List of projects
+	 * @author LucasEickmann
+	 * @param String userID Employee-ID des in der Session angemeldeten Benutzers.
+	 * @return List<Project> Liste von Projekten, die dem übergebenen User direkt zugeordnet sind. 
 	 */
 	public List<Project> readProjectForUser(String userID) {
 		
@@ -164,9 +165,9 @@ public class DatabaseService {
 	
 	/**
 	 * 
-	 * 
-	 * @param none
-	 * @return List<Project> List of projects
+	 * @author LucasEickmann
+	 * @param String userID Employee-ID des in der Session angemeldeten Benutzers.
+	 * @return List<Project> Liste von Projekten, die dem übergebenen User durch seine Mitgliedschaft in Teams zugehörig sind.
 	 */
 	public List<Project> readProjectForUserByTeam(String userID) {
 		
@@ -176,6 +177,19 @@ public class DatabaseService {
 		
 		return resultListProjectTeam;
 
+	}
+	
+	/**
+	 * @author LucasEickmann
+	 * @param String userID Employee-ID des in der Session angemeldeten Benutzers.
+	 * @return List<Project> Liste von Projekten, in denen 
+	 */
+	public List<Project> readProjectForProjectmanager(String userID) {
+		
+		Query query = em.createNativeQuery("SELECT DISTINCT * FROM project p START WITH p.projectmanager = " + userID +" CONNECT BY PRIOR p.projectid = p.supprojectid", Project.class);
+		@SuppressWarnings("unchecked")
+		List<Project> resultListProject = query.getResultList();
+		return resultListProject;
 	}
 
 	/** Gibt ein Project, identifiziert durch die ID, zurück
