@@ -31,6 +31,7 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.pdf.KostenPDFGenerator;
 import de.fhbielefeld.pmt.pdf.PDFGenerator;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
@@ -201,7 +202,7 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 	private void downloadPDF() {
 		
 		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
-		PDFGenerator gen = new PDFGenerator();
+		KostenPDFGenerator gen = new KostenPDFGenerator();
 		File file = gen.generateTotalCostsPdf(null);
 		StreamResource res = new StreamResource(file.getName(), () ->  {
 			try {
