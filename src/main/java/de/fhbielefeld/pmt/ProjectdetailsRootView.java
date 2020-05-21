@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
@@ -53,7 +54,7 @@ public class ProjectdetailsRootView extends VerticalLayout {
 	VaadinSession session = VaadinSession.getCurrent();
 
 	public ProjectdetailsRootView() {
-		if (rootViewLoginCheck()) {
+		//if (rootViewLoginCheck()) {
 			
 		    this.eventBus.register(this);
 			IProjectdetailsComponent projectdetailsComponent = this.createProjectdetailsComponent();
@@ -67,11 +68,25 @@ public class ProjectdetailsRootView extends VerticalLayout {
 			Component navBarView = navBarComponent.getViewAs(Component.class);
 			
 			
-			this.add(new HorizontalLayout(topBarView));
-			this.add(new HorizontalLayout(projectdetailsView, navBarView));
-			//this.add(navBarView);
-		}
-		
+			
+			/*Hotfix, damit das Layout nicht ganz verramscht ist.. 
+			 * HorizontalLayout macht nicht wie es soll  */
+			Div projectDiv = new Div(projectdetailsView);
+			Div navDiv = new Div(navBarView); 
+			
+			
+			
+			HorizontalLayout layout = new HorizontalLayout();
+			layout.add(projectDiv,navDiv);
+			layout.setFlexGrow(1, projectDiv);
+			layout.setFlexGrow(1, navDiv);
+			layout.setSizeFull();
+			layout.addClassName("content");
+			layout.setMaxHeight("75%");
+			
+			this.add(layout);
+			this.add(topBarView);
+		//}
 		this.setHeightFull();
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);

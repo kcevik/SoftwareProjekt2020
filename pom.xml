@@ -154,6 +154,13 @@
 		   <version>2.4.1</version>
 		</dependency>
 		
+		<!--  added new dependency to remove webpack error -->
+		<!--  @author: kerem cevik -->
+		<dependency>
+			<groupId>org.webjars.bowergithub.vaadin</groupId>
+			<artifactId>vaadin-combo-box</artifactId>
+			</dependency>
+		
 		
 	</dependencies>
 
