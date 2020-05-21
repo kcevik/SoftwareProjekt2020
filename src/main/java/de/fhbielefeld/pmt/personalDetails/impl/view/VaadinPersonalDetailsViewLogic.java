@@ -89,10 +89,9 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 				.bind(Employee::getLastName, Employee::setLastName);
 
 		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfOccupation(), "occupation");
-
-		this.binder.forField(this.view.getPERSONALDETAILSFORM().getPfPassword()).bind(Employee::getPassword,
-				Employee::setPassword);
-
+		
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getPfPassword()).withValidator(new RegexpValidator("Bitte ein Passwort mit mindestens 8 Zeichen eingeben", "(?=.{8,})")).bind(Employee::getPassword, Employee::setPassword);
+		
 		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfStreet())
 				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
 				.bind(Employee::getStreet, Employee::setStreet);

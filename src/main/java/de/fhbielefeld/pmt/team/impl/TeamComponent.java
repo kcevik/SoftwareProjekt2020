@@ -73,7 +73,11 @@ public class TeamComponent extends AbstractPresenter<ITeamModel, ITeamView> impl
 	
 	@Subscribe
 	public void onSendTeamToDBEvent(SendTeamToDBEvent event) {
+		if (event.getSelectedTeam()==(null)) {
+			System.out.println("kein Team drin");
+		} else {
 		this.model.persistTeam(event.getSelectedTeam());
+		}
 	}
 
 	/**

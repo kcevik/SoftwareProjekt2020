@@ -8,7 +8,7 @@ import de.fhbielefeld.pmt.team.ITeamView;
  * @author David Bistron
  *
  */
-public class SendTeamToDBEvent {
+public class SendTeamToDBEvent  {
 
 	private Team selectedTeam;
 	
@@ -18,14 +18,14 @@ public class SendTeamToDBEvent {
 	 */
 	public SendTeamToDBEvent(ITeamView view, Team selectedTeam) {
 		super();
+		System.out.println("Der SendTeamToDBEvent wird ausgeführt");
 		this.selectedTeam = selectedTeam;
 	}
 
 	public Team getSelectedTeam() {
-		return selectedTeam;
+		return this.selectedTeam;
 	}
 
-	
 	public void setSelectedTeam(Team selectedTeam) {
 		this.selectedTeam = selectedTeam;
 	}
