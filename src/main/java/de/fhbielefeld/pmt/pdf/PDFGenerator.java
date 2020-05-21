@@ -53,7 +53,7 @@ public class PDFGenerator {
 	 * @param project
 	 * @return
 	 */
-	public FileOutputStream generateTotalCostsPdf(Project project) {
+	public File generateTotalCostsPdf(Project project) {
 
 		ProjectModel model = new ProjectModel(DatabaseService.DatabaseServiceGetInstance());
 		Project ProjectID1 = model.getSingleProjectFromDatabase(Long.valueOf(1));
@@ -70,9 +70,10 @@ public class PDFGenerator {
 		FileOutputStream fos = null;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
 		LocalDateTime now = LocalDateTime.now();
+		String path = "PDFExport\\Gesamtkosten " + dtf.format(now) + ".pdf";
 
 		try {
-			fos = new FileOutputStream("PDFExport\\Gesamtkosten " + dtf.format(now) + ".pdf");
+			fos = new FileOutputStream(path);
 			PdfWriter.getInstance(document, fos);
 
 		} catch (DocumentException | NullPointerException | FileNotFoundException e) {
@@ -149,6 +150,7 @@ public class PDFGenerator {
 			e.printStackTrace();
 		}
 		document.close();
-		return fos;
+		File file = new File(path);
+		return file;
 	}
 }
