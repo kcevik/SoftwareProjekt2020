@@ -5,6 +5,7 @@ import de.fhbielefeld.pmt.client.IClientView;
 
 /**
  * Event, dass die Abfrage alle aktiven Projekte aus der Datenbank anstößt
+ * 
  * @author Sebastian Siegmann
  *
  */
@@ -16,4 +17,3 @@ public class ReadActiveProjectsEvent extends EventObject {
 		super(view);
 	}
 }
-

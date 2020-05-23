@@ -3,10 +3,11 @@ package de.fhbielefeld.pmt.topBar.impl.event;
 import java.util.EventObject;
 
 import de.fhbielefeld.pmt.topBar.ITopBarView;
+
 /**
  * 
  * @author Sebastian Siegmann
- *
+ * @version 1.0
  */
 public class TopBarLogoutEvent extends EventObject {
 
@@ -14,7 +15,6 @@ public class TopBarLogoutEvent extends EventObject {
 
 	public TopBarLogoutEvent(ITopBarView view) {
 		super(view);
-		// TODO Müssen da Daten rein? Eigentlich nicht?
 	}
 
 }

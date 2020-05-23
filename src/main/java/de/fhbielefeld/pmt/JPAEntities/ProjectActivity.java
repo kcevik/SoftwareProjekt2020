@@ -7,7 +7,7 @@ import javax.persistence.*;
  * Entity implementation class for Entity: ProjectActivity
  * 
  * @author Sebastian Siegmann
- * @version 1.0
+ * @version 1.1
  */
 @Entity
 
@@ -21,180 +21,111 @@ public class ProjectActivity implements Serializable {
 	private String description;
 	private int hoursAvailable;
 	private int hoursExpended;
+	private double hourlyRate;
 	private boolean isActive;
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "project")
 	private Project project;
 
 	/**
-	 * Public non-private zero-argument constructor for JPAentity class
-	 * ProjectActivity
-	 * 
-	 * @return none
+	 * Public non-private zero-argument Konstruktor. (Von JPA vorausgesetzt)
 	 */
 	public ProjectActivity() {
 		super();
 	}
 
 	/**
-	 * Public constructor of Comment JPAentity class
+	 * Public Konstruktor der ProjectActivity JPAentity Klasse
 	 * 
-	 * @return none
+	 * @param category
+	 * @param description
+	 * @param hoursAvailable
+	 * @param hoursExpended
+	 * @param hourlyRate
+	 * @param project
 	 */
 	public ProjectActivity(String category, String description, int hoursAvailable, int hoursExpended,
-			Project project) {
+			double hourlyRate, Project project) {
 		super();
 		this.category = category;
 		this.description = description;
 		this.hoursAvailable = hoursAvailable;
 		this.hoursExpended = hoursExpended;
+		this.hourlyRate = hourlyRate;
 		this.project = project;
 		this.isActive = true;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden
 	public long getProjectActivityID() {
 		return projectActivityID;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public String getCategory() {
 		return category;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setCategory(String category) {
 		this.category = category;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public String getDescription() {
 		return description;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public int getHoursAvailable() {
 		return hoursAvailable;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setHoursAvailable(int hoursAvailable) {
 		this.hoursAvailable = hoursAvailable;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public int getHoursExpended() {
 		return hoursExpended;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setHoursExpended(int hoursExpended) {
 		this.hoursExpended = hoursExpended;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
+	public double getHourlyRate() {
+		return hourlyRate;
+	}
+
+	public void setHourlyRate(double hourlyRate) {
+		this.hourlyRate = hourlyRate;
+	}
+
 	public boolean isActive() {
 		return isActive;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public Project getProject() {
 		return project;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setProject(Project project) {
 		this.project = project;
 	}
 
-	@Override
-	public String toString() {
-		return "(" + this.projectActivityID + ") " + this.description;
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
+	 * Gibt die ID in Klammern gefolgt von der Beschreibung wieder
 	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	@Override
+	public String toString() {
+		return "(" + this.projectActivityID + ") " + this.description;
 	}
 }
