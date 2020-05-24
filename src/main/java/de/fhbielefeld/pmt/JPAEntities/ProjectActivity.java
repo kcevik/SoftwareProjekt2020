@@ -10,7 +10,7 @@ import javax.persistence.*;
  * @version 1.1
  */
 @Entity
-
+@Cacheable(false)
 public class ProjectActivity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
