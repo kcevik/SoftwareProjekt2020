@@ -197,15 +197,15 @@ public class Project implements Serializable {
 		if (this.teamList != null) {
 			for (Team t : this.teamList) {
 				if (!teamSet.contains(t)) {
+					this.removeTeam(t);
 					t.removeProject(this);
 				}
 			}
-			teamList.clear();
 		}
 
 		if (teamSet != null) {
 			for (Team t : teamSet) {
-				this.teamList.add(t);
+				this.addTeam(t);;
 				t.addProject(this);
 			}
 		}
