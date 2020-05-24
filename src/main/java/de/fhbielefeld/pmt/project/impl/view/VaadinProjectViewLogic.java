@@ -23,13 +23,9 @@ import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
-<<<<<<< HEAD
 import com.vaadin.flow.data.validator.StringLengthValidator;
-=======
 import com.vaadin.flow.server.StreamResource;
->>>>>>> master
 import com.vaadin.flow.server.VaadinSession;
-
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
@@ -48,11 +44,8 @@ import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.project.impl.event.SendProjectToDBEvent;
-<<<<<<< HEAD
 import de.fhbielefeld.pmt.validator.StartEndValidator;
-=======
 import de.fhbielefeld.pmt.project.impl.event.SendStreamResourceInvoiceEvent;
->>>>>>> master
 
 /**
  * 
