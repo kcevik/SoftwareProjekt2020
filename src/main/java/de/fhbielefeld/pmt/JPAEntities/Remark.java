@@ -11,7 +11,7 @@ import javax.persistence.*;
  * @version 1.1
  */
 @Entity
-
+@Cacheable(false)
 public class Remark implements Serializable {
 
 	@Id

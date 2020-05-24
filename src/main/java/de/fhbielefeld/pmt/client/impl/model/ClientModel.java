@@ -34,12 +34,29 @@ public class ClientModel implements IClientModel {
 
 	/**
 	 * Schreibt den übergenen Client in die DB
-	 * 
+	 * TODO: Wieso wird das Projekt nicht aktualisiert?
 	 * @param Client
 	 */
 	@Override
 	public void persistClient(Client client) {
+		for(Project p : client.getProjectList()) {
+			this.dbService.readSingleProject(p.getProjectID()).setClient(client);
+		}
 		this.dbService.persistClient(client);
+//		for (Project p : client.getProjectList()) {
+//			System.out.println("Prüfe: " + p);
+//			if (p.getClient() == client ) { 
+//				this.dbService.persistClient(client);
+//				System.out.println(
+//						"Gespeichert! " + p + " Hat " + client + " schon als Client");
+//			} else if (p.getClient() == null)  {
+//				this.dbService.persistClient(client);
+//				System.out.println(
+//						"Gespeichert! Client von " + p + " ist null");
+//			} else {
+//				System.out.println("NICHT Gespeichert");
+//			}
+//		}
 	}
 
 	/**
@@ -70,7 +87,7 @@ public class ClientModel implements IClientModel {
 	public List<Project> getActiveProjectListFromDatabase() {
 		return dbService.readActiveProjects();
 	}
-	
+
 	/**
 	 * Bestätigt ob alle Projekte aus der DB ausgelesen wurden oder null
 	 */

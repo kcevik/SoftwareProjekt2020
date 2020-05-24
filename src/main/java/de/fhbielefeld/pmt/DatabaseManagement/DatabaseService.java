@@ -31,7 +31,7 @@ public class DatabaseService {
 	/**
 	 * Privater Konstruktor von DatabaseService
 	 */
-	private DatabaseService() {
+	public DatabaseService() {
 
 		emf = Persistence.createEntityManagerFactory("SoftwareProjekt2020");
 		em = emf.createEntityManager();
@@ -47,6 +47,7 @@ public class DatabaseService {
 		if (databaseService == null) {
 			databaseService = new DatabaseService();
 		}
+		//TODO: ToFix: Braucht new DatabaseService falls SQL Aktualisierungen durchkommen sollen!
 		return databaseService;
 	}
 
@@ -63,7 +64,8 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(client);
-			em.getTransaction().commit();
+			em.flush();
+			em.getTransaction().commit();			
 		}
 	}
 
@@ -120,7 +122,9 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(project);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
@@ -243,7 +247,9 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(team);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
@@ -300,7 +306,9 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(employee);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
@@ -359,7 +367,9 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(costs);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
@@ -403,7 +413,9 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(projectActivity);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
@@ -449,7 +461,9 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(Remark);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
@@ -493,7 +507,9 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(role);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 

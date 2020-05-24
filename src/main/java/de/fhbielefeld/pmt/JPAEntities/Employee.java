@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
  * @version 1.2
  */
 @Entity
+@Cacheable(false)
 public class Employee implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

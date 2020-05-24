@@ -17,7 +17,7 @@ import de.fhbielefeld.pmt.ToStringHashSet;
  * @version 1.2
  */
 @Entity
-
+@Cacheable(false)
 public class Project implements Serializable {
 
 	private static final long serialVersionUID = 1L;

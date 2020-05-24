@@ -3,6 +3,7 @@ package de.fhbielefeld.pmt.JPAEntities;
 import de.fhbielefeld.pmt.JPAEntities.Role;
 import java.io.Serializable;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 
 /**
@@ -12,6 +13,7 @@ import javax.persistence.Entity;
  * @version 1.2
  */
 @Entity
+@Cacheable(false)
 public class RoleCEO extends Role implements Serializable {
 
 	private static final long serialVersionUID = 1L;
