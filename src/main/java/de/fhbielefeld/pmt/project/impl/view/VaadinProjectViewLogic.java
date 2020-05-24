@@ -15,6 +15,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
+import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
@@ -33,6 +34,7 @@ import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.project.impl.event.SendProjectToDBEvent;
+import de.fhbielefeld.pmt.validator.StartEndValidator;
 
 /**
  * 
@@ -83,7 +85,10 @@ public class VaadinProjectViewLogic implements IProjectView{
 		this.binder.bind(this.view.getProjectForm().getCbClient(), "client");
 		this.binder.forField(this.view.getProjectForm().getdPStartDate());
 		this.binder.bind(this.view.getProjectForm().getdPStartDate(), "startDate");
-		this.binder.bind(this.view.getProjectForm().getdPDueDate(), "dueDate");
+		//this.binder.bind(this.view.getProjectForm().getdPDueDate(), "dueDate");
+		this.binder.forField(this.view.getProjectForm().getdPDueDate())
+			.withValidator(new StartEndValidator("Darf nicht vor dem Startdatum liegen", this.view.getProjectForm().getdPStartDate(), this.view.getProjectForm().getdPDueDate()))
+			.bind(Project::getDueDate, Project::setDueDate);
 		this.binder.bind(this.view.getProjectForm().getCbSupProject(), "supProject");
 		this.binder.forField(this.view.getProjectForm().getTfBudget())
 			.withValidator(new RegexpValidator("Bitte positive Zahl eingeben. Bsp.: 1234,56", "\\d+\\,?\\d+"))
@@ -136,7 +141,7 @@ public class VaadinProjectViewLogic implements IProjectView{
 					this.view.getProjectForm().getCbProjectManager().setItems(this.managers);
 				}
 				if (this.projects != null) {
-					List<Project> supProjects = new ArrayList(this.projects);
+					List<Project> supProjects = new ArrayList<Project>(this.projects);
 					supProjects.remove(this.selectedProject);
 					this.view.getProjectForm().getCbSupProject().setItems(supProjects);
 				}

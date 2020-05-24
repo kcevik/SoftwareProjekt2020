@@ -76,7 +76,7 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 	public void onReadAllManagersEvent(ReadAllManagersEvent event) {
 		if (event.getSource() == this.view) {
 			if (this.model.isManagerReadSuccessfull()) {
-				if(this.model.getManagerListFromDatabase().isEmpty())
+				if(!this.model.getManagerListFromDatabase().isEmpty())
 				this.view.setManagers(this.model.getManagerListFromDatabase());
 			}
 		}

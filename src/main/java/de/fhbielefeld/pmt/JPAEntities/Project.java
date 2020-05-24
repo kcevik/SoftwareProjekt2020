@@ -367,16 +367,20 @@ public class Project implements Serializable {
 	public void setTeamList(Set<Team> teamSet) {
 		// Entfernt dieses Projekt aus allen Teams, die laut dem neuen übergebenen Setz
 		// nicht mehr zu diesem Projekt gehören.
-		for (Team t : this.teamList) {
-			if (!teamSet.contains(t)) {
-				t.removeProject(this);
+		if (this.teamList != null) {
+			for (Team t : this.teamList) {
+				if (!teamSet.contains(t)) {
+					t.removeProject(this);
+				}
 			}
+			teamList.clear();
 		}
 
-		teamList.clear();
-		for (Team t : teamSet) {
-			this.teamList.add(t);
-			t.addProject(this);
+		if (teamSet != null) {
+			for (Team t : teamSet) {
+				this.teamList.add(t);
+				t.addProject(this);
+			}
 		}
 	}
 
@@ -429,16 +433,20 @@ public class Project implements Serializable {
 	public void setEmployeeList(Set<Employee> employeeSet) {
 		// Entfernt dieses Projekt aus allen Employee, die laut dem neuen übergebenen
 		// Setz nicht mehr zu diesem Projekt gehören.
-		for (Employee e : this.employeeList) {
-			if (!employeeSet.contains(e)) {
-				e.removeProject(this);
+		if (employeeList != null) {
+			for (Employee e : this.employeeList) {
+				if (!employeeSet.contains(e)) {
+					e.removeProject(this);
+				}
 			}
+			employeeList.clear();
 		}
 
-		employeeList.clear();
-		for (Employee e : employeeSet) {
-			this.employeeList.add(e);
-			e.addProject(this);
+		if (employeeSet != null) {
+			for (Employee e : employeeSet) {
+				this.employeeList.add(e);
+				e.addProject(this);
+			}
 		}
 	}
 

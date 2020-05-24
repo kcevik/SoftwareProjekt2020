@@ -1,8 +1,10 @@
 package de.fhbielefeld.pmt.pdf;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -17,6 +19,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.codec.Base64.OutputStream;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
@@ -39,7 +42,6 @@ public class KostenPDFGenerator {
 		for (Costs c : model.getCostsOfProjectListFromDatabase(ProjectID1)) {
 			System.out.println(c);
 		}
-
 		// model.getCostsOfProjectListFromDatabase(project);
 		// TODO: Lucas fragen ob wir nen Model übergeben kriegen oder
 

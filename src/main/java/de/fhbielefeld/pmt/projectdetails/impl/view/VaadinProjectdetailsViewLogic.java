@@ -198,6 +198,7 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 	
 	/**
 	 * @author LucasEickmann
+	 * 
 	 */
 	private void downloadPDF() {
 		
@@ -222,7 +223,7 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 	
 		Page page = UI.getCurrent().getPage();
 		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
-		
+	
 	}
 
 	@Override
