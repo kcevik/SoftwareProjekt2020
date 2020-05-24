@@ -38,11 +38,11 @@ public class Project implements Serializable {
 	@JoinColumn(name = "client")
 	@NotNull
 	private Client client;
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinTable(name = "Project_Team", joinColumns = { @JoinColumn(name = "ProjectID") }, inverseJoinColumns = {
 			@JoinColumn(name = "TeamID") })
 	private ToStringHashSet<Team> teamList;
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	@JoinTable(name = "Project_Employee", joinColumns = { @JoinColumn(name = "ProjectID") }, inverseJoinColumns = {
 			@JoinColumn(name = "EmployeeID") })
 	private ToStringHashSet<Employee> employeeList;
