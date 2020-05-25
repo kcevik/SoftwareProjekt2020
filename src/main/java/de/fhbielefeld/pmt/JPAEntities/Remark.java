@@ -8,10 +8,10 @@ import javax.persistence.*;
  * Entity implementation class for Entity: Entity
  * 
  * @author Sebastian Siegmann
- * @version 1.0
+ * @version 1.1
  */
 @Entity
-
+@Cacheable(false)
 public class Remark implements Serializable {
 
 	@Id
@@ -25,16 +25,17 @@ public class Remark implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Public non-private zero-argument constructor for JPAentity class Comment
-	 * @return none
+	 * Public non-private zero-argument Konstruktor. (Von JPA vorausgesetzt)
 	 */
 	public Remark() {
 		super();
 	}
 	
 	/**
-	 * Public constructor of Comment JPAentity class
-	 * @return none
+	 * Public Konstruktor der Remark JPAentity Klasse
+	 * @param project
+	 * @param commentText
+	 * @param date
 	 */
 	public Remark(Project project, String commentText, String date) {
 		super();
@@ -43,84 +44,44 @@ public class Remark implements Serializable {
 		this.postedDate = date;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public Project getProject() {
 		return project;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void setProject(Project project) {
 		this.project = project;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public String getCommentText() {
 		return remarkText;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void setCommentText(String commentText) {
 		this.remarkText = commentText;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public String getDate() {
 		return postedDate;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void setDate(String date) {
 		this.postedDate = date;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden 
 	public long getCommentID() {
 		return remarkID;
 	}
 	
-	
-
+	/**
+	 * Gibt die ID in Klammern gefolgt von dem Text wieder
+	 */
 	@Override
 	public String toString() {
 		return "(" + this.remarkID + ") " + this.remarkText;
 	}
-
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
- 
 }

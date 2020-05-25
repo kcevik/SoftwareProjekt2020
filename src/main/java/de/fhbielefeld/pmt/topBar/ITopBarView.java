@@ -7,6 +7,6 @@ import de.fhbielefeld.pmt.IViewAccessor;
  * @author Sebastian Siegmann
  *
  */
-public interface ITopBarView extends IViewAccessor{
-
+public interface ITopBarView extends IViewAccessor {
+	// Noch keine Methoden benoetigt
 }
