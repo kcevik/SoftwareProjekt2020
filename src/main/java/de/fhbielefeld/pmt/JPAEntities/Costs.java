@@ -1,6 +1,5 @@
 package de.fhbielefeld.pmt.JPAEntities;
 
-
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -8,10 +7,10 @@ import javax.persistence.*;
  * Entity implementation class for Entity: Costs
  * 
  * @author Sebastian Siegmann
- * @version 1.0
+ * @version 1.1
  */
 @Entity
-
+@Cacheable(false)
 public class Costs implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -24,18 +23,21 @@ public class Costs implements Serializable {
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "project")
 	private Project project;
-	
+
 	/**
-	 * Public non-private zero-argument constructor for JPAentity class Costs
-	 * @return none
+	 * Public non-private zero-argument Konstruktor. (Von JPA vorausgesetzt)
 	 */
 	public Costs() {
 		super();
 	}
 
 	/**
-	 * Public constructor of Costs JPAentity class
-	 * @return none
+	 * Public Konstruktor der Costs JPAentity Klasse
+	 * 
+	 * @param costType
+	 * @param description
+	 * @param incurredCosts
+	 * @param project
 	 */
 	public Costs(String costType, String description, double incurredCosts, Project project) {
 		super();
@@ -44,95 +46,53 @@ public class Costs implements Serializable {
 		this.incurredCosts = incurredCosts;
 		this.project = project;
 	}
-	
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
-	// Set-Methode nicht vorhanden, soll nicht veraendert werden 
+
+	// Set-Methode nicht vorhanden, soll nicht veraendert werden
 	public long getCostsID() {
 		return costsID;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public String getCostType() {
 		return costType;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void setCostType(String costType) {
 		this.costType = costType;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public String getDescription() {
 		return description;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public double getIncurredCosts() {
 		return incurredCosts;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void setIncurredCosts(double incurredCosts) {
 		this.incurredCosts = incurredCosts;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public Project getProject() {
 		return project;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void setProject(Project project) {
 		this.project = project;
 	}
-
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
+	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	/**
+	 * Gibt die ID in Klammern gefolgt von der Beschreibung wieder
+	 */
+	@Override
+	public String toString() {
+		return "(" + this.costsID + ") " + this.description;
 	}
 }

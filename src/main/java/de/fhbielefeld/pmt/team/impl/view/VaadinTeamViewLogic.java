@@ -53,7 +53,8 @@ public class VaadinTeamViewLogic implements ITeamView{
 	
 	/**
 	 *  Fügt den Komponenten der View die entsprechenden Listener hinzu. 
-	 *  Erster Listener sorgt dafür, dass wenn in dem TeamGrid ein Wert angeklickt wird, die TeamForm "ausfährt"
+	 *  Erster Listener sorgt dafür, dass wenn in dem TeamGrid ein Wert angeklickt wird, die TeamForm "ausfährt" und die
+	 *  Teamdaten in der TeamForm angezeigt werden 
 	 */
 	private void registerViewListeners() {
 		this.view.getTeamGrid().asSingleSelect().addValueChangeListener(event -> {
@@ -82,29 +83,24 @@ public class VaadinTeamViewLogic implements ITeamView{
 		this.binderT.forField(this.view.getTeamForm().getTfTeamName()).asRequired().withValidator(new RegexpValidator
 				("Bitte wählen Sie einen Teamnamen zwischen 1 und 50 Zeichen", ".{1,50}")).bind(Team::getTeamName, Team::setTeamName);
 		this.binderT.bind(this.view.getTeamForm().getIsActive(), "active");
+<<<<<<< HEAD
 		
 		this.binderT.bind(this.view.getTeamForm().getCbTeamEmployee(), "employeeList");
+=======
+>>>>>>> master
 		
 		// TODO: Hinweis, dass mind. 1 Projekt und Mitarbeiter ausgewählt werden muss!
-		//this.binderT.bind(this.view.getTeamForm().getMscbTeamEmployee(), "employeeList");
-		// this.binderT.bind(this.view.getTeamForm().getMscbTeamProject(), "projectList");
 	
 		this.binderT.forField(this.view.getTeamForm().getMscbTeamProject()).asRequired().
 		withValidator((string -> string != null && !string.isEmpty()), "Bitte wählen Sie mindestens ein Projekt aus!")
 		.bind(Team::getProjectList, Team::setProjectList);
 		
-		/*
-		this.binderT.forField(this.view.getTeamForm().getMscbTeamProject()).asRequired().
-		withValidator((string -> string != null && !string.isEmpty()), "Bitte wählen Sie mindestens ein Projekt aus!")
-		.bind(Team::setProjectList, null);
-		*/
 		this.binderT.forField(this.view.getTeamForm().getMscbTeamEmployee()).asRequired().
 		withValidator((string -> string != null && !string.isEmpty()), "Bitte wählen Sie mindestens einen Mitarbeiter aus!")
 		.bind(Team::getEmployeeList, Team::setEmployeeList);
 		
 	}
 	
-	// TODO: Filter nach zugehörigen Projekten und Mitarbeitern
 	// TODO: Cast Exception
 	private void filterList(String filter) {
 		List<Team> filtered = new ArrayList<>();
@@ -114,14 +110,12 @@ public class VaadinTeamViewLogic implements ITeamView{
 				filtered.add(t);
 			} else if (String.valueOf(t.getTeamID()).contains(filter)) {
 				filtered.add(t);
-				// TODO: bestimmt nicht ganz richtig
 			} else if (t.getEmployeeList() != null && t.getEmployeeList().toString().contains(filter)) {
 				filtered.add(t);
 			} else if (t.getProjectList() != null && t.getProjectList().toString().contains(filter)) {
 				filtered.add(t);
 			}
 		}
-
 		this.view.getTeamGrid().setItems(filtered);
 	}
 	
@@ -130,12 +124,12 @@ public class VaadinTeamViewLogic implements ITeamView{
 	}
 	
 	/**
-	 * Methode, die dafür sorgt, dass die TeamForm ohne Werte eingezeigt wird
+	 * Methode, die dafür sorgt, dass die TeamForm ohne Werte angezeigt wird
 	 * Wird benötigt, wenn ein neues Team erfasst werden soll
 	 */
 	private void createNewTeam() {
-		//resetSelectedTeam();
-		// displayTeam();
+		this.selectedTeam = new Team();
+		displayTeam();
 		this.view.getTeamGrid().deselectAll();
 		this.view.getTeamForm().resetTeamForm();
 		this.view.getTeamForm().prepareTeamFormFields();
@@ -164,37 +158,29 @@ public class VaadinTeamViewLogic implements ITeamView{
 		if (this.selectedTeam != null) {
 			try {
 				if (this.projects != null) {
-					// doppelter Code List<Project> projects = new ArrayList(this.projects);
-					this.view.getTeamForm().getCbTeamProject().setItems(this.projects);
-				}
-				if (this.employees != null) {
-					// doppelter Code List<Employee> employees = new ArrayList(this.employees);
-					this.view.getTeamForm().getCbTeamEmployee().setItems(this.employees);
-				}
-				if (this.projects != null) {
-					// doppelter Code List<Project> projects = new ArrayList(this.projects);
 					this.view.getTeamForm().getMscbTeamProject().setItems(this.projects);
 				}
 				if (this.employees != null) {
-					// doppelter Code List<Employee> employees = new ArrayList(this.employees);
 					this.view.getTeamForm().getMscbTeamEmployee().setItems(this.employees);
 				}
 				this.binderT.setBean(this.selectedTeam);
 				this.view.getTeamForm().closeTeamFormFields();
 				this.view.getTeamForm().setVisible(true);
+			
 				// TODO: Kann das weg?			
-				ArrayList<String> projects = new ArrayList<String>();
+				/*ArrayList<String> projects = new ArrayList<String>();
 				for (Project p : this.selectedTeam.getProjectList()) {
 					projects.add(String.valueOf(p.getProjectID()));
 				}
-				
+				*/
 				} catch (NumberFormatException nfe) {
 					this.view.getTeamForm().resetTeamForm();
 					Notification.show("NumberFormatException");
 			}
+			 
 		} else {
 			this.view.getTeamForm().setVisible(false);
-		}
+	}
 	}
 	
 	/**
@@ -232,6 +218,7 @@ public class VaadinTeamViewLogic implements ITeamView{
 	private void saveTeam() {
 		if (this.binderT.validate().isOk()) {
 			try {
+				System.out.println(this.selectedTeam);
 				this.eventBus.post(new SendTeamToDBEvent(this, this.selectedTeam));
 				this.view.getTeamForm().setVisible(false);
 				this.addTeam(selectedTeam);
@@ -307,6 +294,26 @@ public class VaadinTeamViewLogic implements ITeamView{
 	public void addTeam(Team t) {
 		if (!this.teams.contains(t)) {
 			this.teams.add(t);
+		}
+	}
+	
+	/**
+	 * brauche ich das überhaupt`?
+	 */
+	@Override
+	public void addProject(Project p) {
+		if (!this.projects.contains(p)) {
+			this.projects.add(p);
+		}
+	}
+	
+	/**
+	 * brauche ich das überhaupt`?
+	 */
+	@Override
+	public void addEmployee(Employee e) {
+		if (!this.employees.contains(e)) {
+			this.employees.add(e);
 		}
 	}
 	

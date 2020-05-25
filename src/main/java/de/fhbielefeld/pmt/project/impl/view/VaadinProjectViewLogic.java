@@ -1,43 +1,70 @@
   package de.fhbielefeld.pmt.project.impl.view;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
+import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
-import com.vaadin.flow.data.value.ValueChangeMode;
-
+import com.vaadin.flow.data.validator.StringLengthValidator;
+import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinSession;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
 import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
+import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.pdf.PDFGenerating;
 import de.fhbielefeld.pmt.project.IProjectView;
+import de.fhbielefeld.pmt.project.impl.event.GenerateInvoiceEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
+import de.fhbielefeld.pmt.project.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
+import de.fhbielefeld.pmt.project.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.project.impl.event.SendProjectToDBEvent;
+import de.fhbielefeld.pmt.validator.StartEndValidator;
+import de.fhbielefeld.pmt.project.impl.event.SendStreamResourceInvoiceEvent;
 
+/**
+ * 
+ * @author LucasEickmann
+ *
+ */
 public class VaadinProjectViewLogic implements IProjectView{
 	
 	BeanValidationBinder<Project> binder = new BeanValidationBinder<>(Project.class);
 	private final VaadinProjectView view;
 	private final EventBus eventBus;
 	private Project selectedProject;
+	private List<Employee> employees;
+	private List<Team> teams;
 	private List<Client> clients;
 	private List<Employee> managers;
-	private List<Project> projects;
+	private List<Project> nonEditableProjects;
+	private List<Project> editableProjects;
+	private List<Project> projects = new ArrayList<Project>();
 	
 	
 
@@ -60,14 +87,19 @@ public class VaadinProjectViewLogic implements IProjectView{
 
 	private void bindToFields() {
 		this.binder.forField(this.view.getProjectForm().getNfProjectId())
-			.withConverter(new plainStringToIntegerConverter(""))
+			.withConverter(new StringToLongConverter(""))
 			.bind(Project::getProjectID, null);
 		this.binder.bind(this.view.getProjectForm().getTfProjectName(), "projectName");
 		this.binder.bind(this.view.getProjectForm().getCbProjectManager(), "projectManager");
+		this.binder.bind(this.view.getProjectForm().getCbEmployees(), "employeeList");
+		this.binder.bind(this.view.getProjectForm().getCbTeams(), "teamList");
 		this.binder.bind(this.view.getProjectForm().getCbClient(), "client");
 		this.binder.forField(this.view.getProjectForm().getdPStartDate());
 		this.binder.bind(this.view.getProjectForm().getdPStartDate(), "startDate");
-		this.binder.bind(this.view.getProjectForm().getdPDueDate(), "dueDate");
+		//this.binder.bind(this.view.getProjectForm().getdPDueDate(), "dueDate");
+		this.binder.forField(this.view.getProjectForm().getdPDueDate())
+			.withValidator(new StartEndValidator("Darf nicht vor dem Startdatum liegen", this.view.getProjectForm().getdPStartDate(), this.view.getProjectForm().getdPDueDate()))
+			.bind(Project::getDueDate, Project::setDueDate);
 		this.binder.bind(this.view.getProjectForm().getCbSupProject(), "supProject");
 		this.binder.forField(this.view.getProjectForm().getTfBudget())
 			.withValidator(new RegexpValidator("Bitte positive Zahl eingeben. Bsp.: 1234,56", "\\d+\\,?\\d+"))
@@ -89,6 +121,8 @@ public class VaadinProjectViewLogic implements IProjectView{
 		this.view.getProjectForm().getBtnEdit().addClickListener(event -> this.view.getProjectForm().prepareEdit());
 		this.view.getProjectForm().getBtnClose().addClickListener(event -> cancelForm());
 		this.view.getTfFilter().addValueChangeListener(e -> filterList(this.view.getTfFilter().getValue()));
+		this.view.getProjectForm().getBtnExtendedOptions().addClickListener(event -> /**eventBus.post(new ProjectDetailsModuleChoosen())*/ System.out.println(""));
+		this.view.getBtnCreateInvoice().addClickListener(event -> eventBus.post(new GenerateInvoiceEvent(this, this.selectedProject)));
 	}
 
 	
@@ -97,8 +131,7 @@ public class VaadinProjectViewLogic implements IProjectView{
 	 */
 	private void cancelForm() {
 		resetSelectedProject();
-		System.out.println("Client is null weil form zurückgesetzt");
-		this.view.clearGridAndForm();
+		this.view.getProjectForm().setVisible(false);
 	}
 
 
@@ -107,6 +140,12 @@ public class VaadinProjectViewLogic implements IProjectView{
 	private void displayProject() {
 		if (this.selectedProject != null ) {
 			try {
+				if (this.employees != null) {
+					this.view.getProjectForm().getCbEmployees().setItems(this.employees);
+				}
+				if (this.teams != null) {
+					this.view.getProjectForm().getCbTeams().setItems(this.teams);
+				}
 				if (this.clients != null) {
 					this.view.getProjectForm().getCbClient().setItems(this.clients);
 				}
@@ -114,18 +153,25 @@ public class VaadinProjectViewLogic implements IProjectView{
 					this.view.getProjectForm().getCbProjectManager().setItems(this.managers);
 				}
 				if (this.projects != null) {
-					List<Project> supProjects = new ArrayList(this.projects);
+					List<Project> supProjects = new ArrayList<Project>(this.projects);
 					supProjects.remove(this.selectedProject);
 					this.view.getProjectForm().getCbSupProject().setItems(supProjects);
 				}
 				this.binder.setBean(this.selectedProject);
-				this.view.getProjectForm().closeEdit();
 				this.view.getProjectForm().setVisible(true);
+				this.view.getProjectForm().closeEdit();
+				this.view.getBtnCreateInvoice().setVisible(true);
+				if (this.editableProjects != null && this.editableProjects.contains(this.selectedProject)) {
+					this.view.getProjectForm().getBtnEdit().setVisible(true);
+				}else if (this.nonEditableProjects != null && this.nonEditableProjects.contains(this.selectedProject)) {
+					this.view.getProjectForm().getBtnEdit().setVisible(false);
+				}
 			} catch (NumberFormatException e) {
 				Notification.show("NumberFormatException");
 			}
 		} else {
 			this.view.getProjectForm().setVisible(false);
+			this.view.getBtnCreateInvoice().setVisible(false);
 		}
 	}
 	
@@ -208,23 +254,93 @@ public class VaadinProjectViewLogic implements IProjectView{
 	 * Wird von der RootView aufgerufen.
 	 */
 	public void initReadFromDB() {
-		this.eventBus.post(new ReadAllProjectsEvent(this));
+		this.eventBus.post(new ReadAllEmployeesEvent(this));
+		this.eventBus.post(new ReadAllTeamsEvent(this));
+		this.eventBus.post(new ReadAllProjectsEvent(this, VaadinSession.getCurrent().getAttribute("LOGIN_USER_ID").toString(), VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE").toString()));
 		this.eventBus.post(new ReadAllClientsEvent(this));
 		this.eventBus.post(new ReadAllManagersEvent(this));
+		this.mergeProjectLists();
 		this.updateGrid();
+	}
+	
+	
+	
+	private void mergeProjectLists() {
+		if (this.nonEditableProjects != null) {
+			for (Project p : nonEditableProjects) {
+				if (!this.projects.contains(p)) {
+					this.projects.add(p);
+				}
+			}
+		}
+		
+		if (this.editableProjects != null) {
+			for (Project p : editableProjects) {
+				if (!this.projects.contains(p)) {
+					this.projects.add(p);
+				}
+			}
+		}
 	}
 	
 	/**
 	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
 	 */
 	public void updateGrid() {
-		this.view.getProjectGrid().setItems(this.projects);
+		if (this.projects != null) {
+			this.view.getProjectGrid().setItems(this.projects);
+		}
 	}
 	
 	public void addProject(Project p) {
 		if (!this.projects.contains(p)) {
 			this.projects.add(p);
 		}
+	}
+	
+//	/**
+//	 * @author LucasEickmann
+//	 */
+//	private void downloadPDF() {
+//		
+//		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+//		PDFGenerating gen = new PDFGenerating();
+//		//TODO: In Component umziehen um model zu nutzen! Braucht aktuelles Projekt statt null
+//		File file = gen.generateInvoicePdf(null);
+//		StreamResource res = new StreamResource(file.getName(), () ->  {
+//			try {
+//				return new FileInputStream(file);
+//			} catch (FileNotFoundException e) {
+//				Notification.show("Fehler beim erstellen der Datei");
+//				return null;
+//			}
+//		});
+//		
+//		Anchor downloadLink = new Anchor(res, "Download");
+//		this.view.add(downloadLink);
+//		downloadLink.setId(timeStamp.toString());
+//		downloadLink.getElement().getStyle().set("display", "none");
+//		downloadLink.getElement().setAttribute( "download" , true );
+//		
+//	
+//		Page page = UI.getCurrent().getPage();
+//		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
+//		
+//	}
+	
+	/**
+	 * @author Sebastian Siegmann, Lucas Eickmann
+	 * @param event
+	 */
+	@Subscribe
+	public void onSendStreamResourceInvoiceEvent (SendStreamResourceInvoiceEvent event) {
+		Anchor downloadLink = new Anchor(event.getRes(), "Download");
+		this.view.add(downloadLink);
+		downloadLink.setId(event.getTimeStamp().toString());
+		downloadLink.getElement().getStyle().set("display", "none");
+		downloadLink.getElement().setAttribute( "download" , true );
+		Page page = UI.getCurrent().getPage();
+		page.executeJs("document.getElementById('" + event.getTimeStamp().toString() + "').click()");
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -250,8 +366,23 @@ public class VaadinProjectViewLogic implements IProjectView{
 	}
 	
 	@Override
-	public void setProjects(List<Project> projects) {
-		this.projects = projects;
+	public void setNonEditableProjects(List<Project> nonEditableProjects) {
+		this.nonEditableProjects = nonEditableProjects;
+	}
+	
+	@Override
+	public void setEditableProjects(List<Project> editableProjects) {
+		this.editableProjects = editableProjects;
+	}
+	
+	@Override
+	public void setEmployees(List<Employee> employees) {
+		this.employees = employees;
+	}
+	
+	@Override
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
 	}
 
 }

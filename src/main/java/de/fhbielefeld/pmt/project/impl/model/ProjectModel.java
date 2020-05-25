@@ -1,11 +1,14 @@
 package de.fhbielefeld.pmt.project.impl.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Client;
+import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.project.IProjectModel;
 
 /**
@@ -26,7 +29,7 @@ public class ProjectModel implements IProjectModel {
 	}
 
 	/**
-	 * Ließt über DatabaseService alle Clients aus
+	 * Ließt über den DatabaseService alle Projekte aus.
 	 */
 	@Override
 	public List<Project> getProjectListFromDatabase() {
@@ -34,11 +37,55 @@ public class ProjectModel implements IProjectModel {
 	}
 
 	/**
+	 * Ließt über den DatabaseService Projekte aus, die einem User je nach Rolle in der Projektübersicht angezeigt werden sollen/dürfen.
+	 */
+	@Override
+	public List<Project> getNonEditableProjectListFromDatabase(String userID, String userRole) {
+		if (userRole.equalsIgnoreCase("Employee") || userRole.equalsIgnoreCase("Projectmanager")) {
+			List<Project> listByEmployee = dbService.readProjectForUser(userID);
+			List<Project> listByTeam = dbService.readProjectForUserByTeam(userID);
+			for (Project p : listByTeam) {
+				if (!listByEmployee.contains(p)) {
+					listByEmployee.add(p);
+				}
+			}
+			return listByEmployee;
+		}else return null;
+	}
+
+	
+	/**
 	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
 	 */
 	@Override
-	public boolean isReadSuccessfull() {
-		if (this.getProjectListFromDatabase() != null) {
+	public boolean isNonEditableProjectListReadSuccessfull(String userID, String userRole) {
+		if (this.getNonEditableProjectListFromDatabase(userID, userRole) != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Ließt über den DatabaseService Projekte aus, die einem User je nach Rolle in der Projektübersicht angezeigt werden sollen/dürfen.
+	 */
+	@Override
+	public List<Project> getEditableProjectListFromDatabase(String userID, String userRole) {
+		if (userRole.equalsIgnoreCase("ceo")) {
+			return dbService.readproject();
+		}else if (userRole.equalsIgnoreCase("Projectmanager")) {
+			return dbService.readProjectForProjectmanager(userID);
+
+		}else return null;
+	}
+
+	
+	/**
+	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
+	 */
+	@Override
+	public boolean isEditableProjectListReadSuccessfull(String userID, String userRole) {
+		if (this.getEditableProjectListFromDatabase(userID, userRole) != null) {
 			return true;
 		} else {
 			return false;
@@ -69,8 +116,44 @@ public class ProjectModel implements IProjectModel {
 		} else {
 			return false;
 		}
+	}	
+	
+	
+	/**
+	 * Ließt über DatabaseService alle Employees aus
+	 */
+	@Override
+	public List<Employee> getEmployeeListFromDatabase() {
+		return dbService.readEmployee();
 	}
-
+	
+	@Override
+	public boolean isEmployeeReadSuccessfull() {
+		if(this.getEmployeeListFromDatabase()!=null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	/**
+	 * Ließt über DatabaseService alle Teams aus
+	 */
+	@Override
+	public List<Team> getTeamListFromDatabase() {
+		return dbService.readTeam();
+	}
+	
+	@Override
+	public boolean isTeamReadSuccessfull() {
+		if(this.getTeamListFromDatabase()!=null) {
+			return true;
+		} else {
+			return false;
+		}
+	}	
+	
 	@Override
 	public List<Employee> getManagerListFromDatabase() {
 		return dbService.readManagerRole();
@@ -85,4 +168,13 @@ public class ProjectModel implements IProjectModel {
 		}
 	}
 
+	@Override
+	public List<Costs> getCostsOfProjectListFromDatabase(Project project) {
+		return this.dbService.readCostsOfProject(project);
+	}
+
+	@Override
+	public Project getSingleProjectFromDatabase(Long projectID) {
+		return this.dbService.readSingleProject(projectID);
+	}
 }

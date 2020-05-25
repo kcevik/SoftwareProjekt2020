@@ -11,53 +11,44 @@ import javax.validation.constraints.NotNull;
  * Entity implementation class for Entity: Client
  * 
  * @author Sebastian Siegmann
- * @version 1.1
+ * @version 1.2
  */
 @Entity
-
+@Cacheable(false)
 public class Client implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long clientID;
-
 	@NotNull
 	private String name;
-
 	private String telephoneNumber;
-
 	private String street;
-
-//	@Range(min = 1, max = 5)
 	@Min(0)
 	private int houseNumber;
-
-//	@Range(min = 4, max = 5)
-//	@Min(1000)
-//	@Max(99999)
 	private int zipCode;
-
 	private String town;
-
 	private boolean isActive;
-
 	@OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST)
 	private Set<Project> projectList;
 
 	/**
-	 * Public non-private zero-argument constructor for JPAentity class Client
-	 * 
-	 * @return none
+	 * Public non-private zero-argument Konstruktor. (Von JPA vorausgesetzt)
 	 */
 	public Client() {
 		super();
 	}
 
 	/**
-	 * Public constructor of Client JPAentity class
-	 * 
-	 * @return none
+	 * Public Konstruktor der Client JPAentity Klasse
+	 * @param name
+	 * @param street
+	 * @param housenumber
+	 * @param town
+	 * @param zipCode
+	 * @param telephoneNumber
 	 */
 	public Client(String name, String street, int housenumber, String town, int zipCode, String telephoneNumber) {
 		super();
@@ -71,199 +62,100 @@ public class Client implements Serializable {
 		this.isActive = true;
 	}
 
-	/**
-	 * Public Methode um die ClientId zur�ckzugeben
-	 * 
-	 * @return Integer clientId
-	 * @param None
-	 */
+	//Getter und Setter Methoden
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden
 	public long getClientID() {
 		return clientID;
 	}
 
-	/**
-	 * Public Methode die ein Projekt der ProjectList hinzuzuf�gen
-	 * 
-	 * @return None
-	 * @param Project
-	 */
 	public void addProject(Project project) {
 		this.projectList.add(project);
 	}
-	
+
 	/**
 	 * @author David Bistron
-	 * @param projectList
-	 * setter-Methode wird benötigt und von der Klasse VaadinTeamViewLogic aufgerufen, damit in der MultiselectComboBox
-	 * neue Projekte hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
-	 * bearbeitet werden
+	 * @param projectList setter-Methode wird benötigt und von der Klasse
+	 *                    VaadinTeamViewLogic aufgerufen, damit in der
+	 *                    MultiselectComboBox neue Projekte hinzugefügt werden
+	 *                    können! Ohne die setter-Methode ist das Feld "gebindet",
+	 *                    kann aber nicht bearbeitet werden
 	 */
 	public void setProjectList(Set<Project> projectList) {
 		this.projectList = projectList;
 	}
 
-	/**
-	 * Public Methode um ein Projekt aus der ProjectList zu entfernen
-	 * 
-	 * @return None
-	 * @param Project
-	 */
 	public void removeProject(Project project) {
 		this.projectList.remove(project);
 	}
 
-	/**
-	 * Public Methode um gesamte ProjectList zur�ckzugeben
-	 * 
-	 * @return Set<Project>
-	 * @param
-	 */
 	public Set<Project> getProjectList() {
 		return this.projectList;
 	}
-	// SetProjektListe gibts nich weil man die nich aus der Hand geben soll
 
-	/**
-	 * Public Methode um den Client Namen zur�ckzugeben
-	 * 
-	 * @return String name
-	 * @param None
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * Public Methode um den Client Namen festzulegen
-	 * 
-	 * @return None
-	 * @param String name
-	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * Public Methode um das street Attribut zur�ckzugeben
-	 * 
-	 * @return String street
-	 * @param None
-	 */
 	public String getStreet() {
 		return street;
 	}
 
-	/**
-	 * Public Methode um das Attribut street festzulegen
-	 * 
-	 * @return None
-	 * @param String street
-	 */
 	public void setStreet(String street) {
 		this.street = street;
 	}
 
-	/**
-	 * Public Methode um das housenumber Attribut zur�ckzugeben
-	 * 
-	 * @return String housenumber
-	 * @param None
-	 */
 	public int getHouseNumber() {
 		return houseNumber;
 	}
 
-	/**
-	 * Public Methode um das Attribut housenumber festzulegen
-	 * 
-	 * @return None
-	 * @param String housenumber
-	 */
 	public void setHouseNumber(int housenumber) {
 		this.houseNumber = housenumber;
 	}
 
-	/**
-	 * Public Methode um das town Attribut zur�ckzugeben
-	 * 
-	 * @return String town
-	 * @param None
-	 */
 	public String getTown() {
 		return town;
 	}
 
-	/**
-	 * Public Methode um das Attribut town festzulegen
-	 * 
-	 * @return None
-	 * @param String town
-	 */
 	public void setTown(String town) {
 		this.town = town;
 	}
 
-	/**
-	 * Public Methode um das zipCode Attribut zur�ckzugeben
-	 * 
-	 * @return Integer zipCode
-	 * @param None
-	 */
 	public int getZipCode() {
 		return zipCode;
 	}
 
-	/**
-	 * Public Methode um das Attribut zipCode festzulegen
-	 * 
-	 * @return None
-	 * @param String zipCode
-	 */
 	public void setZipCode(int zipCode) {
 		this.zipCode = zipCode;
 	}
 
-	/**
-	 * Public Methode um das telephoneNumber Attribut zur�ckzugeben
-	 * 
-	 * @return Integer telephoneNumber
-	 * @param None
-	 */
 	public String getTelephoneNumber() {
 		return telephoneNumber;
 	}
 
-	/**
-	 * Public Methode um das Attribut telphoneNumber festzulegen
-	 * 
-	 * @return None
-	 * @param String telephoneNumber
-	 */
 	public void setTelephoneNumber(String telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
 
-	/**
-	 * Public Methode um das isActive Attribut zur�ckzugeben
-	 * 
-	 * @return boolean isActive
-	 * @param None
-	 */
 	public boolean isActive() {
 		return isActive;
 	}
 
-	/**
-	 * Public Methode um das Attribut isActive festzulegen
-	 * 
-	 * @return None
-	 * @param boolean isActive
-	 */
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
+	/**
+	 * Gibt alle zugehörigen Projekt IDs als zusammenhängenden String zurück
+	 * @return String projectIDs
+	 */
 	public String getProjectIDsAsString() {
 		String projectIDs = "";
 		for (Project p : this.getProjectList()) {
@@ -273,17 +165,10 @@ public class Client implements Serializable {
 	}
 
 	/**
-	 * Public Methode um das serialVersionUID Attribut zur�ckzugeben
-	 * 
-	 * @return long serialVersionUID
-	 * @param None
+	 * Gibt die ID in Klammern gefolgt vom Namen wieder
 	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	@Override
 	public String toString() {
-		return this.getName();
+		return "(" + this.clientID + ") " + this.getName();
 	}
 }

@@ -8,11 +8,11 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.modelViewComponent.IModel;
 
 /**
- * 
+ * Interface für das ProjectModel
  * @author David Bistron
  * 
  */
-public interface ITeamModel  extends IModel{
+public interface ITeamModel extends IModel{
 
 	List<Team> getTeamListFromDatabase();
 	boolean isReadSuccessfull();
@@ -23,4 +23,9 @@ public interface ITeamModel  extends IModel{
 	
 	List<Employee> getEmployeeListFromDatabase();
 	boolean isEmployeeReadSuccessfull();
+<<<<<<< HEAD
+=======
+	
+	
+>>>>>>> master
 }

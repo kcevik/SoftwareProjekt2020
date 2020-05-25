@@ -22,11 +22,11 @@
 	height: 1080px;
 }
 
-.list-view, .client-grid, .team-grid, .employee-grid, .personalDetails-grid {
+.list-view, .client-grid, .team-grid, .employee-grid, .personalDetails-grid, .projectActivity-grid {
 	flex: 3;
 }
 
-.list-view, .client-form, .team-form, .employee-form, .personalDetails-form {
+.list-view, .client-form, .team-form, .employee-form, .personalDetails-form, .projectActivity-form {
 	flex: 1;
 	padding: var(--lumo-space-m);
 }
@@ -90,4 +90,6 @@ html {
   .list-view {
   	padding-top: 75px;
 }
+
+
 }

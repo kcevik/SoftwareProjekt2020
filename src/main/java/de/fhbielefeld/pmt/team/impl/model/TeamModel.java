@@ -47,6 +47,8 @@ public class TeamModel implements ITeamModel {
 	public List<Project> getProjectListFromDatabase() {
 		return dbService.readproject();
 	}
+	
+	
 
 	@Override
 	public boolean isReadProjectSuccessfull() {

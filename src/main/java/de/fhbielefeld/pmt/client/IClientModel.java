@@ -6,15 +6,20 @@ import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.modelViewComponent.IModel;
 
-/** Interfacedefinition für das ClientModel
+/**
+ * Interfacedefinition für das ClientModel
+ * 
  * @author Sebastian Siegmann
  */
-public interface IClientModel extends IModel{
-	
+public interface IClientModel extends IModel {
+
 	List<Client> getClientListFromDatabase();
+
 	boolean isReadSuccessfull();
+
 	public void persistClient(Client client);
-	
+
 	List<Project> getActiveProjectListFromDatabase();
+
 	boolean isReadActiveProjectSuccessfull();
 }

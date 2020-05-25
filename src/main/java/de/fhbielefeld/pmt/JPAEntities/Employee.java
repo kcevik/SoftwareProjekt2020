@@ -11,29 +11,23 @@ import javax.validation.constraints.NotNull;
  * Entity implementation class for Entity: Mitarbeiter
  * 
  * @author Sebastian Siegmann
- * @version 1.1
+ * @version 1.2
  */
 @Entity
-
+@Cacheable(false)
 public class Employee implements Serializable {
-//TODO:Methodenbeschreibungen schreiben
-	private static final long serialVersionUID = 1L;
-	// TODO: Rollen attribut hinzuf�gen
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long employeeID;
-	
 	private String password;
-	
 	@NotNull
 	private String firstName;
-	
 	@NotNull
 	private String lastName;
-	
 	private String occupation;
-	
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private Role role;
 	private boolean isSuitabilityProjectManager;
@@ -41,14 +35,8 @@ public class Employee implements Serializable {
 	private String telephoneNumber;
 	private boolean isActive;
 	private String street;
-
-//	@Range(min = 1, max = 5)
 	@Min(0)
 	private int houseNumber;
-	
-//	@Range(min = 4, max = 5)
-//	@Min(1000)
-//	@Max(99999)
 	private int zipCode;
 	private String town;
 	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "employeeList")
@@ -59,18 +47,25 @@ public class Employee implements Serializable {
 	private Set<Team> teamList;
 
 	/**
-	 * Public non-private zero-argument constructor for JPAentity class Employee
-	 * 
-	 * @return none
+	 * Public non-private zero-argument Konstruktor. (Von JPA vorausgesetzt)
 	 */
 	public Employee() {
 		super();
 	}
 
 	/**
-	 * Public constructor of Employee JPAentity class
-	 * 
-	 * @return none
+	 * Public Konstruktor der Employee JPAentity Klasse
+	 * @param password
+	 * @param firstName
+	 * @param lastName
+	 * @param occupation
+	 * @param isSuitabilityProjectManager
+	 * @param room
+	 * @param telephoneNumber
+	 * @param street
+	 * @param houseNumber
+	 * @param zipCode
+	 * @param town
 	 */
 	public Employee(String password, String firstName, String lastName, String occupation,
 			boolean isSuitabilityProjectManager, String room, String telephoneNumber, String street, int houseNumber,
@@ -94,383 +89,160 @@ public class Employee implements Serializable {
 	}
 
 	/**
-	 * Public Methode um die EmployeeId zur�ckzugeben
+	 * Getter und Setter Methoden
 	 * 
-	 * @return Integer employeeId
-	 * @param None
-	 */
-	// Set-Methode nicht vorhanden, soll nicht veraendert werden
-	public long getEmployeeID() {
-		return employeeID;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
 	 */
 	public String getPassword() {
 		return password;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public String getOccupation() {
-		return occupation;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public void setOccupation(String occupation) {
-		this.occupation = occupation;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public Role getRole() {
-		return role;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public Set<Project> getProjectList() {
-		return projectList;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public boolean isSuitabilityProjectManager() {
-		return isSuitabilityProjectManager;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public void setSuitabilityProjectManager(boolean isSuitabilityProjectManager) {
-		this.isSuitabilityProjectManager = isSuitabilityProjectManager;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public boolean isActive() {
-		return isActive;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public String getStreet() {
-		return street;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public int getHouseNumber() {
-		return houseNumber;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public void setHouseNumber(int houseNumber) {
-		this.houseNumber = houseNumber;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public int getZipCode() {
-		return zipCode;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public void setZipCode(int zipCode) {
-		this.zipCode = zipCode;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public String getTown() {
-		return town;
-	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
-	public void setTown(String town) {
-		this.town = town;
-	}
-
-	/**
-	 * Public Methode um den Vornamen zur�ckzugeben
-	 * 
-	 * @return String firstName
-	 * @param None
-	 */
 	public String getFirstName() {
 		return firstName;
 	}
 
-	/**
-	 * Public Methode um den Vorname festzulegen
-	 * 
-	 * @return None
-	 * @param String firstName
-	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	/**
-	 * Public Methode um den Nachnamen zur�ckzugeben
-	 * 
-	 * @return String lastName
-	 * @param None
-	 */
 	public String getLastName() {
 		return lastName;
 	}
 
-	/**
-	 * Public Methode um den Nachname festzulegen
-	 * 
-	 * @return None
-	 * @param String lastName
-	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-	/**
-	 * Public Methode um die gesamte Projektliste zur�ckzugeben
-	 * 
-	 * @return Set<Project> projectList
-	 * @param None
-	 */
-	public Set<Project> getProjecteList() {
-		return projectList;
+	public String getOccupation() {
+		return occupation;
 	}
 
-	/**
-	 * Public Methode um ein Projekt der projectList hinzuzuf�gen
-	 * 
-	 * @return None
-	 * @param Project project
-	 */
-	public void addProject(Project project) {
-		this.projectList.add(project);
+	public void setOccupation(String occupation) {
+		this.occupation = occupation;
 	}
 
-	/**
-	 * Public Methode um ein Projekt aus der projectList wieder zu entfernen
-	 * 
-	 * @return None
-	 * @param Project project
-	 */
-	public void removeProject(Project project) {
-		this.projectList.remove(project);
-	}
-	// Mehtode f�r addProjectList nicht vorhanden, es soll keine ganze Liste
-	// �bergeben werden k�nnen
-
-	/**
-	 * Public Methode um die gesamte Projektliste zur�ckzugeben
-	 * 
-	 * @return Set<Project> projectList
-	 * @param None
-	 */
-	public Set<Team> getTeamList() {
-		return teamList;
+	public Role getRole() {
+		return role;
 	}
 
-	/**
-	 * Public Methode um ein Team der teamtList hinzuzuf�gen
-	 * 
-	 * @return None
-	 * @param Team team
-	 */
-	public void addTeam(Team Team) {
-		this.teamList.add(Team);
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
-	/**
-	 * Public Methode um ein Team aus der teamList wieder zu entfernen
-	 * 
-	 * @return None
-	 * @param Team team
-	 */
-	public void removeTeam(Team team) {
-		this.teamList.remove(team);
+	public boolean isSuitabilityProjectManager() {
+		return isSuitabilityProjectManager;
 	}
-	// Mehtode f�r addTeamList nicht vorhanden, es soll keine ganze Liste �bergeben
-	// werden k�nnen
 
-	/**
-	 * Public Methode um das room Attribut zur�ckzugeben
-	 * 
-	 * @return String room
-	 * @param None
-	 */
+	public void setSuitabilityProjectManager(boolean isSuitabilityProjectManager) {
+		this.isSuitabilityProjectManager = isSuitabilityProjectManager;
+	}
+
 	public String getRoom() {
 		return room;
 	}
 
-	/**
-	 * Public Methode um das room Attribut festzulegen
-	 * 
-	 * @return None
-	 * @param String room
-	 */
 	public void setRoom(String room) {
 		this.room = room;
 	}
 
-	/**
-	 * Public Methode um das Attribut telephoneNumber zur�ckzugeben
-	 * 
-	 * @return Integer telephoneNumber
-	 * @param None
-	 */
 	public String getTelephoneNumber() {
 		return telephoneNumber;
 	}
 
-	/**
-	 * Public Methode um das Attribut telephoneNumber festzulegen
-	 * 
-	 * @return None
-	 * @param Integer telephoneNumber
-	 */
 	public void setTelephoneNumber(String telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
 
-	/**
-	 * Public Methode um isSuitabilityProjectManager Attribut zur�ckzugeben
-	 * 
-	 * @return Boolean isSuitabilityProjectManager
-	 * @param None
-	 */
-	public boolean isProjectManager() {
-		return isSuitabilityProjectManager;
+	public boolean isActive() {
+		return isActive;
 	}
 
-	/**
-	 * Public Methode um das isSuitabilityProjectManager Attribut festzulegen
-	 * 
-	 * @return None
-	 * @param Boolean isSuitabilityProjectManager
-	 */
-	public void setProjectManager(boolean isSuitabilityProjectManager) {
-		this.isSuitabilityProjectManager = isSuitabilityProjectManager;
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
-	/**
-	 * Public Methode um das serialVersionUID Attribut zur�ckzugeben
-	 * 
-	 * @return long serialVersionUID
-	 * @param None
-	 */
+	public String getStreet() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public int getHouseNumber() {
+		return houseNumber;
+	}
+
+	public void setHouseNumber(int houseNumber) {
+		this.houseNumber = houseNumber;
+	}
+
+	public int getZipCode() {
+		return zipCode;
+	}
+
+	public void setZipCode(int zipCode) {
+		this.zipCode = zipCode;
+	}
+
+	public String getTown() {
+		return town;
+	}
+
+	public void setTown(String town) {
+		this.town = town;
+	}
+
+	public Set<Project> getProjectList() {
+		return projectList;
+	}
+	
+	public void addProject(Project project) {
+		this.projectList.add(project);
+	}
+
+
+	public void removeProject(Project project) {
+		this.projectList.remove(project);
+	}
+
+	public void setProjectList(Set<Project> projectList) {
+		this.projectList = projectList;
+	}
+
+	public Set<Team> getTeamList() {
+		return teamList;
+	}
+
+	public void setTeamList(Set<Team> teamList) {
+		this.teamList = teamList;
+	}
+	
+	public void addTeam(Team Team) {
+		this.teamList.add(Team);
+	}
+
+	public void removeTeam(Team team) {
+		this.teamList.remove(team);
+	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
-	@Override
-	public String toString() {
-		return this.getFirstName() + " " + this.getLastName() + " " + this.getEmployeeID();
+	//setEmployeeID nicht vorhanden, soll nicht veränderbar sein.
+	public long getEmployeeID() {
+		return employeeID;
 	}
 
+	/**
+	 * Gibt die ID in Klammern gefolgt vom Vor- und Nachnamen aus
+	 */
+	@Override
+	public String toString() {
+		return "(" + this.employeeID + ") " + this.getFirstName() + " " + this.getLastName();
+	}
 }

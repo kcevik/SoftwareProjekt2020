@@ -33,6 +33,7 @@ public class VaadinProjectView extends VerticalLayout {
 	private final TextField tfFilter = new TextField();
 	private final Button btnBackToMainMenu = new Button();
 	private final Button btnCreateProject = new Button();
+	private final Button btnCreateInvoice = new Button();
 	private final VaadinProjectViewForm projectForm = new VaadinProjectViewForm();
 	
 	public VaadinProjectView() {
@@ -49,7 +50,7 @@ public class VaadinProjectView extends VerticalLayout {
 		Div content = new Div(projectGrid, projectForm);
 		content.addClassName("content");
 		content.setSizeFull();
-		this.add(new HorizontalLayout(tfFilter, btnCreateProject), content, btnBackToMainMenu);
+		this.add(new HorizontalLayout(tfFilter, btnCreateProject, btnCreateInvoice), content, btnBackToMainMenu);
 
 	}
 	
@@ -61,7 +62,9 @@ public class VaadinProjectView extends VerticalLayout {
 		addClassName("list-view");
 		setSizeFull();
 		this.btnCreateProject.setText("Neues Projekt anlegen");
+		this.btnCreateInvoice.setText("Rechnung erstellen");
 		this.projectForm.setVisible(false);
+		this.btnCreateInvoice.setVisible(false);
 		this.btnBackToMainMenu.setText("Zurück zur Aufgabenauswahl");
 		
 		this.tfFilter.setPlaceholder("Filter");
@@ -73,13 +76,13 @@ public class VaadinProjectView extends VerticalLayout {
 	}
 	
 	
-	/**
-	 * Setzt die Tabelle und das Forular zurück
-	 */
-	public void clearGridAndForm() {
-		this.projectGrid.deselectAll();
-		this.projectForm.clearProjectForm();
-	}
+//	/**
+//	 * Setzt die Tabelle und das Forular zurück
+//	 */
+//	public void clearGridAndForm() {
+//		this.projectGrid.deselectAll();
+//		this.projectForm.clearProjectForm();
+//	}
 	
 	
 	/**
@@ -133,9 +136,8 @@ public class VaadinProjectView extends VerticalLayout {
 		public VaadinProjectViewForm getProjectForm() {
 			return this.projectForm;
 		}
-		
-		
 
-
-	
+		public Button getBtnCreateInvoice() {
+			return btnCreateInvoice;
+		}	
 }
