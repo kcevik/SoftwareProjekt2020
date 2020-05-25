@@ -9,7 +9,7 @@ import de.fhbielefeld.pmt.topBar.ITopBarView;
 /**
  * 
  * @author Sebastian Siegmann
- *
+ * @version 1.1
  */
 public class VaadinTopBarViewLogic implements ITopBarView {
 
@@ -29,8 +29,10 @@ public class VaadinTopBarViewLogic implements ITopBarView {
 		this.registerViewListeners();
 	}
 
+	/**
+	 * Fügt den Komponenten der View die entsprechenden Listener hinzu.
+	 */
 	private void registerViewListeners() {
-
 		this.view.getBtnLogout().addClickListener(event -> {
 			this.eventBus.post(new LogoutAttemptEvent(this));
 		});
@@ -44,5 +46,4 @@ public class VaadinTopBarViewLogic implements ITopBarView {
 		}
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
-
 }

@@ -21,10 +21,11 @@ import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
+import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
+import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
-
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
@@ -36,12 +37,15 @@ import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.pdf.PDFGenerating;
 import de.fhbielefeld.pmt.project.IProjectView;
+import de.fhbielefeld.pmt.project.impl.event.GenerateInvoiceEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.project.impl.event.SendProjectToDBEvent;
+import de.fhbielefeld.pmt.validator.StartEndValidator;
+import de.fhbielefeld.pmt.project.impl.event.SendStreamResourceInvoiceEvent;
 
 /**
  * 
@@ -83,7 +87,7 @@ public class VaadinProjectViewLogic implements IProjectView{
 
 	private void bindToFields() {
 		this.binder.forField(this.view.getProjectForm().getNfProjectId())
-			.withConverter(new plainStringToIntegerConverter(""))
+			.withConverter(new StringToLongConverter(""))
 			.bind(Project::getProjectID, null);
 		this.binder.bind(this.view.getProjectForm().getTfProjectName(), "projectName");
 		this.binder.bind(this.view.getProjectForm().getCbProjectManager(), "projectManager");
@@ -92,7 +96,10 @@ public class VaadinProjectViewLogic implements IProjectView{
 		this.binder.bind(this.view.getProjectForm().getCbClient(), "client");
 		this.binder.forField(this.view.getProjectForm().getdPStartDate());
 		this.binder.bind(this.view.getProjectForm().getdPStartDate(), "startDate");
-		this.binder.bind(this.view.getProjectForm().getdPDueDate(), "dueDate");
+		//this.binder.bind(this.view.getProjectForm().getdPDueDate(), "dueDate");
+		this.binder.forField(this.view.getProjectForm().getdPDueDate())
+			.withValidator(new StartEndValidator("Darf nicht vor dem Startdatum liegen", this.view.getProjectForm().getdPStartDate(), this.view.getProjectForm().getdPDueDate()))
+			.bind(Project::getDueDate, Project::setDueDate);
 		this.binder.bind(this.view.getProjectForm().getCbSupProject(), "supProject");
 		this.binder.forField(this.view.getProjectForm().getTfBudget())
 			.withValidator(new RegexpValidator("Bitte positive Zahl eingeben. Bsp.: 1234,56", "\\d+\\,?\\d+"))
@@ -115,7 +122,7 @@ public class VaadinProjectViewLogic implements IProjectView{
 		this.view.getProjectForm().getBtnClose().addClickListener(event -> cancelForm());
 		this.view.getTfFilter().addValueChangeListener(e -> filterList(this.view.getTfFilter().getValue()));
 		this.view.getProjectForm().getBtnExtendedOptions().addClickListener(event -> /**eventBus.post(new ProjectDetailsModuleChoosen())*/ System.out.println(""));
-		this.view.getBtnCreateInvoice().addClickListener(event -> this.downloadPDF());
+		this.view.getBtnCreateInvoice().addClickListener(event -> eventBus.post(new GenerateInvoiceEvent(this, this.selectedProject)));
 	}
 
 	
@@ -146,13 +153,14 @@ public class VaadinProjectViewLogic implements IProjectView{
 					this.view.getProjectForm().getCbProjectManager().setItems(this.managers);
 				}
 				if (this.projects != null) {
-					List<Project> supProjects = new ArrayList(this.projects);
+					List<Project> supProjects = new ArrayList<Project>(this.projects);
 					supProjects.remove(this.selectedProject);
 					this.view.getProjectForm().getCbSupProject().setItems(supProjects);
 				}
 				this.binder.setBean(this.selectedProject);
 				this.view.getProjectForm().setVisible(true);
 				this.view.getProjectForm().closeEdit();
+				this.view.getBtnCreateInvoice().setVisible(true);
 				if (this.editableProjects != null && this.editableProjects.contains(this.selectedProject)) {
 					this.view.getProjectForm().getBtnEdit().setVisible(true);
 				}else if (this.nonEditableProjects != null && this.nonEditableProjects.contains(this.selectedProject)) {
@@ -163,6 +171,7 @@ public class VaadinProjectViewLogic implements IProjectView{
 			}
 		} else {
 			this.view.getProjectForm().setVisible(false);
+			this.view.getBtnCreateInvoice().setVisible(false);
 		}
 	}
 	
@@ -289,34 +298,49 @@ public class VaadinProjectViewLogic implements IProjectView{
 		}
 	}
 	
+//	/**
+//	 * @author LucasEickmann
+//	 */
+//	private void downloadPDF() {
+//		
+//		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+//		PDFGenerating gen = new PDFGenerating();
+//		//TODO: In Component umziehen um model zu nutzen! Braucht aktuelles Projekt statt null
+//		File file = gen.generateInvoicePdf(null);
+//		StreamResource res = new StreamResource(file.getName(), () ->  {
+//			try {
+//				return new FileInputStream(file);
+//			} catch (FileNotFoundException e) {
+//				Notification.show("Fehler beim erstellen der Datei");
+//				return null;
+//			}
+//		});
+//		
+//		Anchor downloadLink = new Anchor(res, "Download");
+//		this.view.add(downloadLink);
+//		downloadLink.setId(timeStamp.toString());
+//		downloadLink.getElement().getStyle().set("display", "none");
+//		downloadLink.getElement().setAttribute( "download" , true );
+//		
+//	
+//		Page page = UI.getCurrent().getPage();
+//		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
+//		
+//	}
+	
 	/**
-	 * @author LucasEickmann
+	 * @author Sebastian Siegmann, Lucas Eickmann
+	 * @param event
 	 */
-	private void downloadPDF() {
-		
-		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
-		PDFGenerating gen = new PDFGenerating();
-		//TODO: In Component umziehen um model zu nutzen! Braucht aktuelles Projekt statt null
-		File file = gen.generateInvoicePdf(null);
-		StreamResource res = new StreamResource(file.getName(), () ->  {
-			try {
-				return new FileInputStream(file);
-			} catch (FileNotFoundException e) {
-				Notification.show("Fehler beim erstellen der Datei");
-				return null;
-			}
-		});
-		
-		Anchor downloadLink = new Anchor(res, "Download");
+	@Subscribe
+	public void onSendStreamResourceInvoiceEvent (SendStreamResourceInvoiceEvent event) {
+		Anchor downloadLink = new Anchor(event.getRes(), "Download");
 		this.view.add(downloadLink);
-		downloadLink.setId(timeStamp.toString());
+		downloadLink.setId(event.getTimeStamp().toString());
 		downloadLink.getElement().getStyle().set("display", "none");
 		downloadLink.getElement().setAttribute( "download" , true );
-		
-	
 		Page page = UI.getCurrent().getPage();
-		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
-		
+		page.executeJs("document.getElementById('" + event.getTimeStamp().toString() + "').click()");
 	}
 	
 	@SuppressWarnings("unchecked")

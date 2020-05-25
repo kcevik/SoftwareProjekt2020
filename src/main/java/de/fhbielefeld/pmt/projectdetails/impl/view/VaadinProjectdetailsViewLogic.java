@@ -32,12 +32,16 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.pdf.PDFGenerating;
+import de.fhbielefeld.pmt.project.impl.event.GenerateInvoiceEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
+import de.fhbielefeld.pmt.project.impl.event.SendStreamResourceInvoiceEvent;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
+import de.fhbielefeld.pmt.projectdetails.impl.event.GenerateTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.ReadAllCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendCostToDBEvent;
+import de.fhbielefeld.pmt.projectdetails.impl.event.SendStreamResourceTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.TransportAllCostsEvent;
 import de.fhbielefeld.pmt.team.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.team.impl.event.SendTeamToDBEvent;
@@ -79,23 +83,13 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 			this.selectedCost = event.getValue();
 			this.displayCost();
 		});
-		this.view.getCostForm().getBtnEdit().addClickListener(event -> {
-			newCost = false;
-			view.getCostForm().prepareCostFormFields();
-		});
-		this.view.getCostForm().getBtnSave().addClickListener(event -> {
-			if (newCost)
-				createNewCostPosition();
-			this.saveCostPosition();
-			newCost = false;
-		});
-		this.view.getBtnCreateCostPosition().addClickListener(event -> {
-			newCost = true;
-			this.view.getCostForm().prepareCostFormFields();
-		});// createNewCostPosition());
-		this.view.getBtnBackToProjectview()
-				.addClickListener(event -> this.view.getUI().ifPresent(ui -> ui.navigate("projectmanagement")));
-
+		this.view.getCostForm().getBtnEdit().addClickListener(event -> view.getCostForm().prepareCostFormFields());
+		this.view.getCostForm().getBtnSave().addClickListener(event -> this.saveCostPosition());
+		this.view.getBtnCreateCostPosition().addClickListener(event ->  createNewCostPosition());
+		this.view.getBtnBackToProjectview().addClickListener(event -> this.view.getUI().ifPresent(ui -> ui.navigate("projectmanagement")));
+		//TODO: Error legt sich sobald selectedProject richtig implementiert ist
+		this.view.getBtnCreateCostPDF().addClickListener(event -> eventBus.post(new GenerateTotalCostsEvent(this, this.selectedProject)));
+		this.view.getBtnCreateCostPosition().setId("id");
 	}
 
 	public void resetForm() {
@@ -155,7 +149,6 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 				Notification.show("NumberFormatException");
 			}
 		}
-
 	}
 
 	@Subscribe
@@ -209,38 +202,61 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 		}
 		// saveCostPosition();
 	}
-	/*
-	 * @Subscribe public void setSelectedProject(ProjectDetailsModuleChoosen event)
-	 * {
+	
+	
+//	/**
+//	 * @author LucasEickmann
+//	 */
+//	private void downloadPDF() {
+//		
+//		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+//		PDFGenerating gen = new PDFGenerating();
+//		File file = gen.generateTotalCostsPdf(null);
+//		StreamResource res = new StreamResource(file.getName(), () ->  {
+//			try {
+//				return new FileInputStream(file);
+//			} catch (FileNotFoundException e) {
+//				Notification.show("Fehler beim erstellen der Datei");
+//				return null;
+//			}
+//		});
+//		
+//		Anchor downloadLink = new Anchor(res, "Download");
+//		this.view.add(downloadLink);
+//		downloadLink.setId(timeStamp.toString());
+//		downloadLink.getElement().getStyle().set("display", "none");
+//		downloadLink.getElement().setAttribute( "download" , true );
+//		
+//	
+//		Page page = UI.getCurrent().getPage();
+//		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
+//		
+//	}
+	
+	
+	/**
+<<<<<<< HEAD
+	 * @author LucasEickmann
 	 * 
-	 * if(event.getProject != null) this.project = event.getProject();
-	 * 
-	 * }
+=======
+	 * @author Sebastian Siegmann, Lucas Eickmann
+	 * @param event
+>>>>>>> master
 	 */
-	private void downloadPDF() {
-		
-		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
-		PDFGenerating gen = new PDFGenerating();
-		File file = gen.generateTotalCostsPdf(null);
-		StreamResource res = new StreamResource(file.getName(), () ->  {
-			try {
-				return new FileInputStream(file);
-			} catch (FileNotFoundException e) {
-				Notification.show("Fehler beim erstellen der Datei");
-				return null;
-			}
-		});
-		
-		Anchor downloadLink = new Anchor(res, "Download");
+	@Subscribe
+	public void onSendStreamResourceTotalCostsEvent (SendStreamResourceTotalCostsEvent event) {
+		Anchor downloadLink = new Anchor(event.getRes(), "Download");
 		this.view.add(downloadLink);
-		downloadLink.setId(timeStamp.toString());
+		downloadLink.setId(event.getTimeStamp().toString());
 		downloadLink.getElement().getStyle().set("display", "none");
 		downloadLink.getElement().setAttribute( "download" , true );
-		
-	
 		Page page = UI.getCurrent().getPage();
+<<<<<<< HEAD
 		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
-		
+	
+=======
+		page.executeJs("document.getElementById('" + event.getTimeStamp().toString() + "').click()");
+>>>>>>> master
 	}
 
 	@Override
