@@ -108,6 +108,7 @@ public class VaadinEmployeeViewForm extends FormLayout {
 		this.cbOccupation.clear();
 		this.mscbProjects.clear();
 		this.mscbTeams.clear();
+		this.cbOccupation.clear();
 		this.closeEdit();
 	}
 

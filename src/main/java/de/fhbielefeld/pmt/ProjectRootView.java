@@ -11,6 +11,7 @@ import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.client.impl.model.ClientModel;
+import de.fhbielefeld.pmt.employee.impl.view.VaadinEmployeeViewLogic;
 import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.error.LoginChecker;
 import de.fhbielefeld.pmt.error.impl.view.NotAuthorizedError;
@@ -28,6 +29,10 @@ import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
+import de.fhbielefeld.pmt.trafficLight.ITrafficLightComponent;
+import de.fhbielefeld.pmt.trafficLight.impl.TrafficLightComponent;
+import de.fhbielefeld.pmt.trafficLight.impl.view.VaadinTrafficLightView;
+import de.fhbielefeld.pmt.trafficLight.impl.view.VaadinTrafficLightViewLogic;
 
 /**
  * Grundaufbau der Vaadin Seite. Startpunkt für das Erstellen einer neuen Browserseite.
@@ -55,6 +60,11 @@ public class ProjectRootView extends VerticalLayout {
 			
 			Component topBarView = topBarComponent.getViewAs(Component.class);
 			Component projectView = projectComponent.getViewAs(Component.class);
+//			
+//			ITrafficLightComponent trafficLightComponent = this.createTrafficLightComponent();
+//			Component trafficLightView = trafficLightComponent.getViewAs(Component.class);
+//			this.add(trafficLightView);
+//			
 			
 			this.add(topBarView);
 			this.add(projectView);
@@ -89,6 +99,15 @@ public class ProjectRootView extends VerticalLayout {
 				new VaadinTopBarViewLogic(vaadinTopBarView, this.eventBus), this.eventBus);
 		return topBarComponent;
 	}
+	
+
+//	private ITrafficLightComponent createTrafficLightComponent() {
+//		VaadinTrafficLightView view = new VaadinTrafficLightView();
+//		TrafficLightComponent component = new TrafficLightComponent(new ProjectModel(DatabaseService.DatabaseServiceGetInstance()),
+//																					new VaadinTrafficLightViewLogic(view,this.eventBus), this.eventBus);
+//	
+//		return 	component;
+//	}
 	
 	
 	@Subscribe

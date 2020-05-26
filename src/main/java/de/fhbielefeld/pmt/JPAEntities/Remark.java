@@ -16,7 +16,7 @@ public class Remark implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long remarkID;
+	private long commentID;
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "project")
 	private Project project;
@@ -37,10 +37,10 @@ public class Remark implements Serializable {
 	 * @param commentText
 	 * @param date
 	 */
-	public Remark(Project project, String commentText, String date) {
+	public Remark(Project project, String remarkText, String date) {
 		super();
 		this.project = project;
-		this.remarkText = commentText;
+		this.remarkText = remarkText;
 		this.postedDate = date;
 	}
 
@@ -56,8 +56,13 @@ public class Remark implements Serializable {
 		return remarkText;
 	}
 
-	public void setCommentText(String commentText) {
-		this.remarkText = commentText;
+	/**
+	 * Public Methode um  
+	 * @return 
+	 * @param 
+	 */
+	public void setCommentText(String remarkText) {
+		this.remarkText = remarkText;
 	}
 
 	public String getDate() {

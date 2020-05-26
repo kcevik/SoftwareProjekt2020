@@ -111,6 +111,7 @@ public class ModuleChooserRootView extends VerticalLayout {
 		this.getUI().ifPresent(ui -> ui.navigate("personalDetails"));
 	}
 	
+	
 	@Subscribe
 	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
 		session.setAttribute("LOGIN_USER_ID", null);

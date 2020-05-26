@@ -118,6 +118,8 @@ public class Project implements Serializable {
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
 	}
+	
+	
 
 	public Employee getProjectManager() {
 		return projectManager;

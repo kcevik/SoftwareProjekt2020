@@ -21,6 +21,10 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.error.AuthorizationChecker;
+import de.fhbielefeld.pmt.project.impl.model.ProjectModel;
+import de.fhbielefeld.pmt.projectActivity.impl.model.ProjectActivityModel;
+import de.fhbielefeld.pmt.trafficLight.impl.TrafficLightComponent;
+import de.fhbielefeld.pmt.trafficLight.impl.view.VaadinTrafficLightView;
 
 public class VaadinProjectViewForm extends FormLayout{
 	
@@ -37,7 +41,7 @@ public class VaadinProjectViewForm extends FormLayout{
 	private final ComboBox<Project> cbSupProject = new ComboBox<Project>("Unterprojekt von:");
 	private final TextField tfBudget = new TextField("Gesamtbudget:");
 	private final Checkbox ckIsActive = new Checkbox("Aktives Projekt:");
-
+	
 	
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
