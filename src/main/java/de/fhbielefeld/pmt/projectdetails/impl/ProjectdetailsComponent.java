@@ -92,7 +92,7 @@ public class ProjectdetailsComponent extends AbstractPresenter<IProjectdetailsMo
 	public void onGenerateTotalCostsPDF(GenerateTotalCostsEvent event) {
 		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
 		PDFGenerating gen = new PDFGenerating();
-		File file = gen.generateInvoicePdf(event.getSelectedProject(), model.getCostListFromDatabase(event.getSelectedProject()));
+		File file = gen.generateTotalCostsPdf(event.getSelectedProject(), model.getCostListFromDatabase(event.getSelectedProject()));
 		
 		StreamResource res = new StreamResource(file.getName(), () -> {
 			try {
