@@ -1,5 +1,10 @@
 package de.fhbielefeld.pmt.employee.impl.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.vaadin.gatanaso.MultiselectComboBox;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
@@ -11,23 +16,30 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.JPAEntities.Team;
+
 /**
  * VaadinView Klasse, welche das Formular erstellt
  * 
- * @author Fabian Oermann
+ * @author Sebastian Siegmann
  *
  */
 public class VaadinEmployeeViewForm extends FormLayout {
 
 	private static final long serialVersionUID = 1L;
 	private final Label lblBeschreibung = new Label();
-	private final TextField lastName = new TextField("Vorname:");
-	private final TextField firstName = new TextField("Nachname:");
-	private final ComboBox<String> occupation = new ComboBox<String>("Tätigkeit:");
-	private final TextField employeeID = new TextField("Personalnummer:");
-	private final Checkbox isSuitabilityProjectManager = new Checkbox("Eignung als Projektleiter?");
-	private final Checkbox isActive = new Checkbox("Aktiver Mitarbeiter?");
-
+	private final TextField lblLastName = new TextField("Nachname:");
+	private final TextField lblFirstName = new TextField("Vorname:");
+	private final ComboBox<String> cbOccupation = new ComboBox<String>("Tätigkeit:");
+	private final TextField tfEmployeeID = new TextField("Personalnummer:");
+	private final Checkbox ckIsSuitabilityProjectManager = new Checkbox("geeignet als Projektleiter:");
+	private final Checkbox ckIsActive = new Checkbox("Aktiv:");
+	private final MultiselectComboBox<Project> mscbProjects = new MultiselectComboBox<Project>("Projekte:");
+	private final MultiselectComboBox<Team> mscbTeams = new MultiselectComboBox<Team>("Teams:");
+	private List<String> occupations = new ArrayList<String>();
+	
+	
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
 	private final Button btnClose = new Button("Abbrechen");
@@ -35,20 +47,34 @@ public class VaadinEmployeeViewForm extends FormLayout {
 	public VaadinEmployeeViewForm() {
 		addClassName("employee-form");
 		configureTextFields();
-		//occupation.isReadOnly();
+		configureCbOccupation();
 		lblBeschreibung.add("Anlegen/Bearbeiten");
 		lblBeschreibung.addClassName("lbl-heading-form");
-		add(lblBeschreibung, lastName, firstName, employeeID, isSuitabilityProjectManager,
-				isActive, occupation, configureButtons());
+		add(lblBeschreibung, lblLastName, lblFirstName, tfEmployeeID, cbOccupation, mscbProjects, mscbTeams,
+				ckIsSuitabilityProjectManager, ckIsActive, configureButtons());
 	}
 
 	private void configureTextFields() {
-		this.lastName.setEnabled(false);
-		this.firstName.setEnabled(false);
-		this.employeeID.setEnabled(false);
-		this.isSuitabilityProjectManager.setEnabled(false);
-		this.isActive.setEnabled(false);
-		this.occupation.setEnabled(false);
+		this.lblLastName.setEnabled(false);
+		this.lblFirstName.setEnabled(false);
+		this.tfEmployeeID.setEnabled(false);
+		this.ckIsSuitabilityProjectManager.setEnabled(false);
+		this.ckIsActive.setEnabled(false);
+		this.cbOccupation.setEnabled(false);
+		this.mscbProjects.setEnabled(false);
+		this.mscbTeams.setEnabled(false);
+	}
+
+	public void configureCbOccupation() {
+		cbOccupation.isReadOnly();
+		fillOccupationsList();
+		cbOccupation.setItems(occupations);
+	}
+
+	private void fillOccupationsList() {
+		this.occupations.add("SW-Entwickler");
+		this.occupations.add("Personalmanager");
+		this.occupations.add("Reinigungskraft");
 	}
 
 	/**
@@ -74,89 +100,75 @@ public class VaadinEmployeeViewForm extends FormLayout {
 	 */
 	public void clearEmployeeForm() {
 		this.setVisible(false);
-		this.lastName.clear();
-		this.firstName.clear();
-		this.employeeID.clear();
-		this.isSuitabilityProjectManager.clear();
-		this.isActive.clear();
-		this.occupation.clear();
+		this.lblLastName.clear();
+		this.lblFirstName.clear();
+		this.tfEmployeeID.clear();
+		this.ckIsSuitabilityProjectManager.clear();
+		this.ckIsActive.clear();
+		this.cbOccupation.clear();
+		this.mscbProjects.clear();
+		this.mscbTeams.clear();
+		this.cbOccupation.clear();
 		this.closeEdit();
 	}
-	
+
 	public void prepareEdit() {
-		this.lastName.setEnabled(true);
-		this.firstName.setEnabled(true);
-		this.employeeID.setEnabled(false);
-		this.isSuitabilityProjectManager.setEnabled(true);
-		this.isActive.setEnabled(true);
-		this.occupation.setEnabled(true);
+		this.lblLastName.setEnabled(true);
+		this.lblFirstName.setEnabled(true);
+		this.ckIsSuitabilityProjectManager.setEnabled(true);
+		this.ckIsActive.setEnabled(true);
+		this.cbOccupation.setEnabled(true);
+		this.mscbProjects.setEnabled(true);
+		this.mscbTeams.setEnabled(true);
 		this.btnSave.setVisible(true);
 		this.btnEdit.setVisible(false);
 	}
-	
+
 	public void closeEdit() {
-		this.lastName.setEnabled(false);
-		this.firstName.setEnabled(false);
-		this.employeeID.setEnabled(false);
-		this.isSuitabilityProjectManager.setEnabled(false);
-		this.isActive.setEnabled(false);
-		this.occupation.setEnabled(false);
+		this.lblLastName.setEnabled(false);
+		this.lblFirstName.setEnabled(false);
+		this.ckIsSuitabilityProjectManager.setEnabled(false);
+		this.ckIsActive.setEnabled(false);
+		this.cbOccupation.setEnabled(false);
+		this.mscbProjects.setEnabled(false);
+		this.mscbTeams.setEnabled(false);
 		this.btnSave.setVisible(false);
 		this.btnEdit.setVisible(true);
 	}
 
-	public TextField getLastName() {
-		return lastName;
+	public TextField getLblLastName() {
+		return lblLastName;
 	}
 
-	public TextField getFirstName() {
-		return firstName;
+	public TextField getLblFirstName() {
+		return lblFirstName;
 	}
 
-	public ComboBox<String> getOccupation() {
-		return occupation;
+	public ComboBox<String> getCbOccupation() {
+		return cbOccupation;
 	}
 
-	public TextField getEmployeeID() {
-		return employeeID;
+	public TextField getTfEmployeeID() {
+		return tfEmployeeID;
 	}
 
-	public Checkbox getIsSuitabilityProjectManager() {
-		return isSuitabilityProjectManager;
+	public Checkbox getCkIsSuitabilityProjectManager() {
+		;
+		return ckIsSuitabilityProjectManager;
 	}
 
-	public Checkbox getIsActive() {
-		return isActive;
+	public Checkbox getckIsActive() {
+		return ckIsActive;
 	}
-	
-//
-//	public TextField getTfEmployeeID() {
-//		return lastName;
-//	}
-//
-//	public TextField getTfName() {
-//		return firstName;
-//	}
-//
-//	public TextField getTfTelephonenumber() {
-//		return employeeID;
-//	}
-//
-//
-//	public Checkbox getTfHouseNumber() {
-//		return isSuitabilityProjectManager;
-//	
-//	}
-//
-//
-//	public Checkbox getCkIsActive() {
-//		return isActive;
-//	}
-//
-//	public ComboBox<String> getCbProjects() {
-//		return occupation;
-//	}
-//
+
+	public MultiselectComboBox<Project> getMscbProjects() {
+		return mscbProjects;
+	}
+
+	public MultiselectComboBox<Team> getMscbTeams() {
+		return mscbTeams;
+	}
+
 	public Button getBtnSave() {
 		return btnSave;
 	}

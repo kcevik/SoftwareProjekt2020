@@ -12,6 +12,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
+import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.JPAEntities.Team;
 
 /**
  * VaadinView Klasse die den Inhalt des RootViews darstellt
@@ -26,18 +28,15 @@ public class VaadinEmployeeView extends VerticalLayout {
 
 	private final Grid<Employee> employeeGrid = new Grid<>(Employee.class);
 	private final List<Employee> employeeList = new ArrayList<Employee>();
-	private final TextField filterText = new TextField();
+	private final TextField tfFilter = new TextField();
 	private final Button btnBackToMainMenu = new Button();
 	private final Button btnCreateEmployee = new Button();
-	private final VaadinEmployeeViewForm EMPLOYEEFORM = new VaadinEmployeeViewForm();
+	private final VaadinEmployeeViewForm employeeViewForm = new VaadinEmployeeViewForm();
 
 	public VaadinEmployeeView() {
 
-		System.out.println("Test 5");
 		this.initUI();
-		System.out.println("Test Worked!");
 		this.buitUI();
-		System.out.println("Test Worked!");
 	}
 
 	/**
@@ -45,12 +44,10 @@ public class VaadinEmployeeView extends VerticalLayout {
 	 * 
 	 */
 	private void buitUI() {
-		Div content = new Div(employeeGrid, EMPLOYEEFORM);
-		System.out.println("Test");
+		Div content = new Div(employeeGrid, employeeViewForm);
 		content.addClassName("content");
 		content.setSizeFull();
-		this.add(new HorizontalLayout(filterText, btnCreateEmployee), content, btnBackToMainMenu);
-		System.out.println("Test");
+		this.add(new HorizontalLayout(tfFilter, btnCreateEmployee), content, btnBackToMainMenu);
 	}
 
 	/**
@@ -61,31 +58,29 @@ public class VaadinEmployeeView extends VerticalLayout {
 		addClassName("list-view");
 		setSizeFull();
 		this.btnCreateEmployee.setText("Neuen Mitarbeiter anlegen");
-		this.EMPLOYEEFORM.setVisible(false);
+		this.employeeViewForm.setVisible(false);
 		this.btnBackToMainMenu.setText("Zurück zur Aufgabenauswahl");
-		System.out.println("Test 6");
 		configureGrid();
-		System.out.println("Test worked!");
 		configureFilter();
 
 	}
-	
+
 	/**
 	 * Setzt die Tabelle und das Forular zurück
 	 */
 	public void clearGridAndForm() {
 		this.employeeGrid.deselectAll();
-		this.EMPLOYEEFORM.clearEmployeeForm();
+		this.employeeViewForm.clearEmployeeForm();
 	}
 
 	/**
 	 * Setzt Eigenschaften für den Filter fest
 	 */
 	private void configureFilter() {
-		this.filterText.setPlaceholder("Filter nach Namen");
-		this.filterText.setClearButtonVisible(true);
-		this.filterText.setValueChangeMode(ValueChangeMode.LAZY);
-		this.filterText.addValueChangeListener(e -> filterList(filterText.getValue()));
+		this.tfFilter.setPlaceholder("Filter nach Namen");
+		this.tfFilter.setClearButtonVisible(true);
+		this.tfFilter.setValueChangeMode(ValueChangeMode.LAZY);
+	//	this.filterText.addValueChangeListener(e -> filterList(filterText.getValue()));
 	}
 
 	/**
@@ -97,7 +92,7 @@ public class VaadinEmployeeView extends VerticalLayout {
 	private void filterList(String filter) {
 		ArrayList<Employee> filtered = new ArrayList<Employee>();
 		for (Employee e : this.employeeList) {
-			//Statt get FistName stand hier getName
+			// Statt get FistName stand hier getName
 			if (e.getLastName().contains(filter)) {
 				filtered.add(e);
 			} else if (e.getFirstName().contains(filter)) {
@@ -121,20 +116,37 @@ public class VaadinEmployeeView extends VerticalLayout {
 	 */
 	private void configureGrid() {
 		this.employeeGrid.addClassName("employee-grid");
-		System.out.println("Test 7");
 		this.employeeGrid.removeColumnByKey("employeeID");
-		System.out.println("Test 8");
 		this.employeeGrid.setColumns("lastName", "firstName", "employeeID", "occupation");
-		System.out.println("Test 9");
 		this.employeeGrid.getColumnByKey("lastName").setHeader("Nachname");
 		this.employeeGrid.getColumnByKey("firstName").setHeader("Vorname");
 		this.employeeGrid.getColumnByKey("employeeID").setHeader("Personalnummer");
 		this.employeeGrid.getColumnByKey("occupation").setHeader("Tätigkeit");
-		System.out.println("Test 10");
+		this.employeeGrid.addColumn(employee -> {
+			String projectString = "";
+			for (Project p : employee.getProjectList()) {
+					projectString += p.getProjectID() + ", ";
+			}
+			if (projectString.length() > 2) {
+				projectString = projectString.substring(0, projectString.length() - 2);
+			}
+			return projectString;
+		}).setHeader("Projekte");
+		
+		this.employeeGrid.addColumn(employee -> {
+			String teamString = "";
+			for (Team t : employee.getTeamList()) {
+					teamString += t.getTeamID() + ", ";
+			}
+			if (teamString.length() > 2) {
+				teamString = teamString.substring(0, teamString.length() - 2);
+			}
+			return teamString;
+		}).setHeader("Teams");
+
 		this.employeeGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.employeeGrid.setHeightFull();
 		this.employeeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
-		System.out.println("Test 11");
 	}
 
 	public Grid<Employee> getEmployeeGrid() {
@@ -142,7 +154,7 @@ public class VaadinEmployeeView extends VerticalLayout {
 	}
 
 	public VaadinEmployeeViewForm getEMPLOYEEFORM() {
-		return EMPLOYEEFORM;
+		return employeeViewForm;
 	}
 
 	public Button getBtnBackToMainMenu() {
@@ -165,4 +177,14 @@ public class VaadinEmployeeView extends VerticalLayout {
 	public void updateGrid() {
 		this.employeeGrid.setItems(this.employeeList);
 	}
+
+	public List<Employee> getEmployeeList() {
+		return employeeList;
+	}
+
+	public TextField getFilterText() {
+		return tfFilter;
+	}
+	
+	
 }
