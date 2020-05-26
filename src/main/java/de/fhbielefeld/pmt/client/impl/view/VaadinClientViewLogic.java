@@ -68,7 +68,8 @@ public class VaadinClientViewLogic implements IClientView {
 	}
 
 	/**
-	 * Nutzt Binder um eine Verbindung zwischen einem Client Objekt und den Textfeldern herzustellen
+	 * Nutzt Binder um eine Verbindung zwischen einem Client Objekt und den
+	 * Textfeldern herzustellen
 	 */
 	private void bindToFields() {
 		this.binder.forField(this.view.getCLIENTFORM().getTfClientID()).asRequired()
@@ -106,15 +107,14 @@ public class VaadinClientViewLogic implements IClientView {
 	/**
 	 * Zeigt Daten des aktuell Ausgewählten Clients im Bearbeitungsformular an
 	 */
+	//TODO: Klappt das überhaut so? MSCB Bug fix
 	private void displayClient() {
 		if (this.selectedClient != null) {
 			try {
-				if (this.projects != null) {
-					this.view.getCLIENTFORM().getMscbProjects().setItems(this.projects);
-				}
 				this.binder.setBean(this.selectedClient);
 				this.view.getCLIENTFORM().closeEdit();
 				this.view.getCLIENTFORM().setVisible(true);
+
 			} catch (NumberFormatException e) {
 				Notification.show("NumberFormatException");
 			}
@@ -200,6 +200,9 @@ public class VaadinClientViewLogic implements IClientView {
 	public void initReadFromDB() {
 		this.eventBus.post(new ReadAllClientsEvent(this));
 		this.eventBus.post(new ReadActiveProjectsEvent(this));
+		if (this.projects != null) {
+			this.view.getCLIENTFORM().getMscbProjects().setItems(this.projects);
+		}
 		this.updateGrid();
 	}
 
@@ -210,7 +213,6 @@ public class VaadinClientViewLogic implements IClientView {
 		this.view.getClientGrid().setItems(this.clients);
 	}
 
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {
@@ -220,7 +222,7 @@ public class VaadinClientViewLogic implements IClientView {
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
 
-	//Getter und Setter
+	// Getter und Setter
 	@Override
 	public void setClients(List<Client> clients) {
 		this.clients = clients;
@@ -237,7 +239,7 @@ public class VaadinClientViewLogic implements IClientView {
 			this.projects.add(project);
 		}
 	}
-	
+
 	@Override
 	public void addClient(Client c) {
 		if (!this.clients.contains(c)) {
