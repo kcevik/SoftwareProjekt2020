@@ -52,6 +52,4 @@ public class ProjectdetailsModel implements IProjectdetailsModel{
 		return false;
 	}
 
-
-
 }

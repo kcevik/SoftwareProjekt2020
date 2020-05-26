@@ -15,7 +15,7 @@ import de.fhbielefeld.pmt.personalDetails.impl.event.ReadEmployeeDataFromDBEvent
  * 
  * @author David Bistron, Sebastian Siegmann
  * @version 1.0
- */
+ */ 
 public class PersonalDetailsComponent extends AbstractPresenter<IPersonalDetailsModel, IPersonalDetailsView> implements IPersonalDetailsComponent {
 
 	public PersonalDetailsComponent(IPersonalDetailsModel model, IPersonalDetailsView view, EventBus eventBus) {

@@ -3,11 +3,15 @@ package de.fhbielefeld.pmt.JPAEntities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.eclipse.persistence.annotations.Cache;
+
 import de.fhbielefeld.pmt.ToStringHashSet;
 
 /**
@@ -38,14 +42,14 @@ public class Project implements Serializable {
 	@JoinColumn(name = "client")
 	@NotNull
 	private Client client;
-	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "Project_Team", joinColumns = { @JoinColumn(name = "ProjectID") }, inverseJoinColumns = {
 			@JoinColumn(name = "TeamID") })
-	private ToStringHashSet<Team> teamList;
-	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	private HashSet<Team> teamList;
+	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "Project_Employee", joinColumns = { @JoinColumn(name = "ProjectID") }, inverseJoinColumns = {
 			@JoinColumn(name = "EmployeeID") })
-	private ToStringHashSet<Employee> employeeList;
+	private HashSet<Employee> employeeList;
 	@NotNull
 	private String startDate;
 	@NotNull
@@ -84,8 +88,8 @@ public class Project implements Serializable {
 		this.dueDate = dueDate;
 		this.budget = budget;
 		this.isActive = true;
-		this.employeeList = new ToStringHashSet<Employee>();
-		this.teamList = new ToStringHashSet<Team>();
+		this.employeeList = new HashSet<Employee>();
+		this.teamList = new HashSet<Team>();
 	}
 	// DegreesOfFullfilment ggf spaeter hinzufuegen wenn wir das Ampelsystem haben,
 	// oder mit Default Values initialisieren wie isActive
@@ -194,23 +198,10 @@ public class Project implements Serializable {
 	public void setTeamList(Set<Team> teamSet) {
 		// Entfernt dieses Projekt aus allen Teams, die laut dem neuen übergebenen Setz
 		// nicht mehr zu diesem Projekt gehören.
-		if (this.teamList != null) {
-			for (Team t : this.teamList) {
-				if (!teamSet.contains(t)) {
-					this.removeTeam(t);
-					t.removeProject(this);
-				}
-			}
-		}
-
 		if (teamSet != null) {
-			for (Team t : teamSet) {
-				this.addTeam(t);;
-				t.addProject(this);
-			}
+			this.teamList = (HashSet<Team>) teamSet;
 		}
 	}
-
 
 	public void addTeam(Team team) {
 		this.teamList.add(team);
