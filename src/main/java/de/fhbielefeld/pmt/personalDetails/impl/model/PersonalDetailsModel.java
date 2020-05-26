@@ -1,6 +1,7 @@
 package de.fhbielefeld.pmt.personalDetails.impl.model;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
+import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsModel;
 
 /**
@@ -21,5 +22,17 @@ public class PersonalDetailsModel implements IPersonalDetailsModel {
 		this.dbService = dbService;
 	}
 
-	//TODO: Auslesen und änderungen zurück schreiben
+	@Override
+	public Employee getSingleEmployeeFromDatabase(long employeeID) {
+		return dbService.readSingleEmployee(employeeID);
+	}
+
+	@Override
+	public boolean isSingleEmployeeReadSuccessfull(long employeeID) {
+		if (this.getSingleEmployeeFromDatabase(employeeID) != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

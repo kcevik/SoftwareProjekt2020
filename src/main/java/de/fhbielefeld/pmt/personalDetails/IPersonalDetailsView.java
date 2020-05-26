@@ -1,6 +1,7 @@
 package de.fhbielefeld.pmt.personalDetails;
 
 import de.fhbielefeld.pmt.IViewAccessor;
+import de.fhbielefeld.pmt.JPAEntities.Employee;
 
 /**
  * Die Interfacedefinition für die View der Clientkomponente.
