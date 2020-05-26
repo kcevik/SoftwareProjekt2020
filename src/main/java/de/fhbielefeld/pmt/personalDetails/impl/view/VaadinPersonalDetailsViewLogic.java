@@ -9,12 +9,15 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
+import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsView;
+<<<<<<< HEAD
+=======
 import de.fhbielefeld.pmt.personalDetails.impl.event.ReadEmployeeDataFromDBEvent;
 import de.fhbielefeld.pmt.personalDetails.impl.event.SendEmployeeDataToDBEvent;
 
@@ -28,6 +31,7 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 	BeanValidationBinder<Employee> binder = new BeanValidationBinder<>(Employee.class);
 	private final VaadinPersonalDetailsView view;
 	private final EventBus eventBus;
+	private List<Employee> employees;
 	private Employee selectedEmployee;
 	private List<Employee> employees = new ArrayList<Employee>();
 	private List<Project> projects = new ArrayList<Project>();
@@ -61,6 +65,7 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 		this.view.getPERSONALDETAILSFORM().getBtnEdit()
 				.addClickListener(event -> this.view.getPERSONALDETAILSFORM().prepareEdit());
 		this.view.getPERSONALDETAILSFORM().getBtnClose().addClickListener(event -> cancelForm());
+		this.view.getTfFilter().addValueChangeListener(event -> filterList(this.view.getTfFilter().getValue()));
 	}
 
 	/**
@@ -119,7 +124,8 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 	 * setzt das zuvor selektierte Project beim verlassen des formViews zurück
 	 */
 	private void cancelForm() {
-		resetSelectedEmployee();
+		resetselectedEmployee();
+		System.out.println("Client is null weil form zurückgesetzt");
 		this.view.clearGridAndForm();
 	}
 
@@ -130,7 +136,9 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 		if (this.selectedEmployee != null) {
 			try {
 				if (this.projects != null) {
-					this.view.getPERSONALDETAILSFORM().getMscbEmployeeProject().setItems(this.projects);
+					@SuppressWarnings("unchecked")
+					List<Project> projects = new ArrayList(this.projects);
+					this.view.getPERSONALDETAILSFORM().getCbProjects().setItems(projects);
 				}
 				if (this.employees != null) {
 					this.view.getPERSONALDETAILSFORM().getMscbEmployeeTeam().setItems(this.teams);
@@ -140,7 +148,6 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 				this.view.getPERSONALDETAILSFORM().closeEdit();
 				this.view.getPERSONALDETAILSFORM().setVisible(true);
 			} catch (NumberFormatException e) {
-				this.view.getPERSONALDETAILSFORM().clearPersonalDetailsForm();
 				Notification.show("NumberFormatException");
 			}
 		} else {
@@ -152,11 +159,11 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 	 * Aktualisiert die Client Instanzvariable mit den aktuellen werten aus den
 	 * Formularfeldern und verschickt den das Client Objekt mit einem Bus
 	 */
-	private void saveEmployee() {
+	private void saveClient() {
 
 		if (this.binder.validate().isOk()) {
 			try {
-				this.eventBus.post(new SendEmployeeDataToDBEvent(this, this.selectedEmployee));
+				this.eventBus.post(new SendEmployeetToDBEvent(this, this.selectedEmployee));
 				this.view.getPERSONALDETAILSFORM().setVisible(false);
 
 				this.updateGrid();
@@ -166,7 +173,7 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
-				resetSelectedEmployee();
+				resetselectedEmployee();
 			}
 		}
 	}
@@ -174,8 +181,45 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 	/**
 	 * Setzt den zwischengespeicherten Clienten auf null
 	 */
-	private void resetSelectedEmployee() {
+	private void resetselectedEmployee() {
 		this.selectedEmployee = null;
+	}
+
+	private void newClient() {
+		this.selectedEmployee = new Employee();
+		displayEmployee();
+		this.view.getPERSONALDETAILSFORM().prepareEdit();
+	}
+
+	/**
+	 * Filterfunktion für das Textfeld. Fügt einen Datensatz der Liste hinzu, falls
+	 * der String parameter enthalten ist.
+	 * 
+	 * @param filter
+	 */
+	private void filterList(String filter) {
+		// TODO: Cast Exception
+		ArrayList<Employee> filtered = new ArrayList<Employee>();
+		for (Employee e : this.view.getEmployeeList()) {
+			if (e.getFirstName() != null && e.getFirstName().contains(filter)) {
+				filtered.add(e);
+			} else if (e.getLastName() != null && e.getLastName().contains(filter)) {
+				filtered.add(e);
+			} else if (e.getStreet() != null && e.getStreet().contains(filter)) {
+				filtered.add(e);
+			} else if (String.valueOf(e.getClientID()).contains(filter)) {
+				filtered.add(e);
+			} else if (String.valueOf(e.getHouseNumber()).contains(filter)) {
+				filtered.add(e);
+			} else if (String.valueOf(e.getTelephoneNumber()).contains(filter)) {
+				filtered.add(e);
+			} else if (String.valueOf(e.getZipCode()).contains(filter)) {
+				filtered.add(e);
+			} else if (e.getProjectIDsAsString() != null && e.getProjectIDsAsString().contains(filter)) {
+				filtered.add(e);
+			}
+		}
+		this.view.getPersonalOverviewGrid().setItems(filtered);
 	}
 
 	/**

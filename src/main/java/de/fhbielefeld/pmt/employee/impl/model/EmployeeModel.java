@@ -1,10 +1,10 @@
-package de.fhbielefeld.pmt.employee.impl.modelN;
+package de.fhbielefeld.pmt.employee.impl.model;
 
 import java.util.List;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
-import de.fhbielefeld.pmt.employeeN.IEmployeeModel;
+import de.fhbielefeld.pmt.employee.IEmployeeModel;
 
 /**
  * Model Klasse regelt DB Zugriffe und gibt Daten von der DB an Controller Klassen weiter

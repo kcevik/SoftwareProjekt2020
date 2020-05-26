@@ -1,4 +1,4 @@
-package de.fhbielefeld.pmt.employee.impl.eventN;
+package de.fhbielefeld.pmt.employee.impl.event;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 
 public class SendEmployeeToDBEvent {

@@ -1,9 +1,9 @@
-package de.fhbielefeld.pmt.employee.impl.eventN;
+package de.fhbielefeld.pmt.employee.impl.event;
 
 import java.util.EventObject;
 import java.util.List;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
-import de.fhbielefeld.pmt.employeeN.IEmployeeView;
+import de.fhbielefeld.pmt.employee.IEmployeeView;
 /**
  * 
  * @author Sebastian Siegmann

@@ -1,16 +1,16 @@
-package de.fhbielefeld.pmt.employee.implN;
+package de.fhbielefeld.pmt.employee.impl;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import de.fhbielefeld.pmt.AbstractPresenter;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
-import de.fhbielefeld.pmt.employeeN.IEmployeeComponent;
-import de.fhbielefeld.pmt.employeeN.IEmployeeModel;
-import de.fhbielefeld.pmt.employeeN.IEmployeeView;
-import de.fhbielefeld.pmt.employee.impl.eventN.ReadAllEmployeesEvent;
-import de.fhbielefeld.pmt.employee.impl.eventN.SendEmployeeToDBEvent;
-import de.fhbielefeld.pmt.employee.impl.eventN.TransportAllEmployeesEvent;
+import de.fhbielefeld.pmt.employee.IEmployeeComponent;
+import de.fhbielefeld.pmt.employee.IEmployeeModel;
+import de.fhbielefeld.pmt.employee.IEmployeeView;
+import de.fhbielefeld.pmt.employee.impl.event.ReadAllEmployeesEvent;
+import de.fhbielefeld.pmt.employee.impl.event.SendEmployeeToDBEvent;
+import de.fhbielefeld.pmt.employee.impl.event.TransportAllEmployeesEvent;
 
 
 /**

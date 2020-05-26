@@ -8,7 +8,8 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import de.fhbielefeld.pmt.JPAEntities.Employee;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 
 /**
  * VaadinView Klasse die den Inhalt des RootViews darstellt
@@ -22,6 +23,7 @@ public class VaadinPersonalDetailsView extends VerticalLayout {
 	private static final long serialVersionUID = 1L;
 	private final List<Employee> employeeList = new ArrayList<Employee>();
 	private final Grid<Employee> personalDetailsGrid = new Grid<>(Employee.class);
+	private final TextField tfFilter = new TextField();
 	private final Button btnBackToMainMenu = new Button();
 
 	private final VaadinPersonalDetailsViewForm PERSONALDETAILSFORM = new VaadinPersonalDetailsViewForm();
@@ -40,7 +42,7 @@ public class VaadinPersonalDetailsView extends VerticalLayout {
 		Div content = new Div(personalDetailsGrid, PERSONALDETAILSFORM);
 		content.addClassName("content");
 		content.setSizeFull();
-		this.add(content, btnBackToMainMenu);
+		this.add(new HorizontalLayout(tfFilter), content, btnBackToMainMenu);
 	}
 
 	/**
@@ -53,6 +55,7 @@ public class VaadinPersonalDetailsView extends VerticalLayout {
 		this.PERSONALDETAILSFORM.setVisible(false);
 		this.btnBackToMainMenu.setText("Zurück zur Aufgabenauswahl");
 		configureGrid();
+		configureFilter();
 
 	}
 
@@ -61,7 +64,16 @@ public class VaadinPersonalDetailsView extends VerticalLayout {
 	 */
 	public void clearGridAndForm() {
 		this.personalDetailsGrid.deselectAll();
-		this.PERSONALDETAILSFORM.clearPersonalDetailsForm();
+		this.PERSONALDETAILSFORM.clearClientForm();
+	}
+	
+	/**
+	 * Setzt Eigenschaften für den Filter fest
+	 */
+	private void configureFilter() {
+		this.tfFilter.setPlaceholder("Filter nach Namen");
+		this.tfFilter.setClearButtonVisible(true);
+		this.tfFilter.setValueChangeMode(ValueChangeMode.LAZY);
 	}
 
 	/**
@@ -74,11 +86,14 @@ public class VaadinPersonalDetailsView extends VerticalLayout {
 		this.personalDetailsGrid.getColumnByKey("employeeID").setHeader("Mitarbeit-ID:");
 		this.personalDetailsGrid.getColumnByKey("firstName").setHeader("Vorname:");
 		this.personalDetailsGrid.getColumnByKey("lastName").setHeader("Nachname:");
-		this.personalDetailsGrid.getColumnByKey("occupation").setHeader("Tätigkeit:");
-		this.personalDetailsGrid.getColumnByKey("street").setHeader("Straße:");
-		this.personalDetailsGrid.getColumnByKey("houseNumber").setHeader("Hausnummer:");
-		this.personalDetailsGrid.getColumnByKey("zipCode").setHeader("Postleitzahl:");
-		this.personalDetailsGrid.getColumnByKey("town").setHeader("Ort:");
+		this.personalDetailsGrid.getColumnByKey("occupation").setHeader("Beschäftigung:");
+//		this.personalDetailsGrid.getColumnByKey("role").setHeader("Rolle:");
+//		this.personalDetailsGrid.getColumnByKey("room").setHeader("Raum:");
+//		this.personalDetailsGrid.getColumnByKey("telephoneNumber").setHeader("Telefonnummer:");
+//		this.personalDetailsGrid.getColumnByKey("street").setHeader("Straße:");
+//		this.personalDetailsGrid.getColumnByKey("houseNumber").setHeader("Hausnummer:");
+//		this.personalDetailsGrid.getColumnByKey("zipCode").setHeader("Postleitzahl:");
+//		this.personalDetailsGrid.getColumnByKey("town").setHeader("Ort:");
 
 		// TODO: der Employee braucht 2 Listen, einmal Projekte und einmal Teams, damit
 		// diese im Grid dargestellt werden können
