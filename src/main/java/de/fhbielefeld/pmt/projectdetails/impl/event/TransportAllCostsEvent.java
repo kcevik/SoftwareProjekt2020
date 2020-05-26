@@ -12,9 +12,9 @@ public class TransportAllCostsEvent extends EventObject{
 
 	private List <Costs> costList;
 
-	public TransportAllCostsEvent(IProjectdetailsView view) {
+	public TransportAllCostsEvent(IProjectdetailsView view,List <Costs> costList ) {
 		super(view);
-		// TODO Auto-generated constructor stub
+		this.costList = costList;
 	}
 
 	public List<Costs> getCostList() {
