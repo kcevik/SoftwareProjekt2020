@@ -34,7 +34,7 @@ public class Remark implements Serializable {
 	/**
 	 * Public Konstruktor der Remark JPAentity Klasse
 	 * @param project
-	 * @param commentText
+	 * @param remarkText
 	 * @param date
 	 */
 	public Remark(Project project, String remarkText, String date) {
@@ -52,16 +52,11 @@ public class Remark implements Serializable {
 		this.project = project;
 	}
 
-	public String getCommentText() {
+	public String getRemarkText() {
 		return remarkText;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
-	public void setCommentText(String remarkText) {
+	public void setRemarkText(String remarkText) {
 		this.remarkText = remarkText;
 	}
 
@@ -78,7 +73,7 @@ public class Remark implements Serializable {
 	}
 	
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden 
-	public long getCommentID() {
+	public long getRemarkID() {
 		return remarkID;
 	}
 	
