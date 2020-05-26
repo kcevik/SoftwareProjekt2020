@@ -95,13 +95,13 @@ public class VaadinProjectView extends VerticalLayout {
 		this.projectGrid.removeColumnByKey("degreeOfFulfillmentCosts");
 		this.projectGrid.removeColumnByKey("degreeOfFulfillmentTime");
 		this.projectGrid.removeColumnByKey("employeeList");
-		this.projectGrid.setColumns("projectID", "supProject", "projectName", "projectManager", "client", "teamList", "startDate", "dueDate");
+		this.projectGrid.removeColumnByKey("teamList");
+		this.projectGrid.setColumns("projectID", "supProject", "projectName", "projectManager", "client", "startDate", "dueDate");
 		this.projectGrid.getColumnByKey("projectID").setHeader("Projektnummer");
 		this.projectGrid.getColumnByKey("supProject").setHeader("Unterprojet von");
 		this.projectGrid.getColumnByKey("projectName").setHeader("Projektname");
 		this.projectGrid.getColumnByKey("projectManager").setHeader("Projektleiter");
 		this.projectGrid.getColumnByKey("client").setHeader("Kunde");
-		this.projectGrid.getColumnByKey("teamList").setHeader("Teams");
 		this.projectGrid.getColumnByKey("startDate").setHeader("Startdatum");
 		this.projectGrid.getColumnByKey("dueDate").setHeader("Enddatum");
 

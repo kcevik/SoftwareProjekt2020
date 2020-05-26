@@ -87,14 +87,12 @@ public class ProjectdetailsComponent extends AbstractPresenter<IProjectdetailsMo
 	 * @author Sebastian Siegmann, Lucas Eickmann
 	 * @param event
 	 * TODO: Errors legen sich sobald das model richtig implementiert ist
-	 *//*
+	 */
 	@Subscribe
 	public void onGenerateTotalCostsPDF(GenerateTotalCostsEvent event) {
 		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
 		PDFGenerating gen = new PDFGenerating();
-		Project temp = this.model.getProject();
-        Project temp = this.model.getSingleProjectFromDatabase(Long.valueOf(event.getSelectedProject().getProjectID()));
-		File file = gen.generateInvoicePdf(temp, model.getCostsOfProjectListFromDatabase(temp));
+		File file = gen.generateInvoicePdf(event.getSelectedProject(), model.getCostListFromDatabase(event.getSelectedProject()));
 		
 		StreamResource res = new StreamResource(file.getName(), () -> {
 			try {
@@ -105,7 +103,7 @@ public class ProjectdetailsComponent extends AbstractPresenter<IProjectdetailsMo
 			}
 		});
 		this.eventBus.post(new SendStreamResourceTotalCostsEvent(this.view, res, timeStamp));
-	}*/
+	}
 	
 	@Subscribe
 	public void onSendCostToDBEvent(SendCostToDBEvent event) {

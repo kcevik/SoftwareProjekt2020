@@ -14,4 +14,6 @@ public interface IProjectdetailsModel {
 	void setProject(Project project);
 	
 	Project getProject();
+
+
 }

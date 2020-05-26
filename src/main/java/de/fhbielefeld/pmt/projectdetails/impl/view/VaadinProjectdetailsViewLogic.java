@@ -86,16 +86,21 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 			this.selectedCost = event.getValue();
 			this.displayCost();
 		});
-		this.view.getCostForm().getBtnEdit().addClickListener(event ->{ newCost = false; 
-																	    view.getCostForm().prepareCostFormFields();});
-		this.view.getCostForm().getBtnSave().addClickListener(event ->{ if (newCost)
-																		 this.createNewCostPosition();
-																	    this.saveCostPosition();
-																	    newCost = false; });
-		this.view.getBtnCreateCostPosition().addClickListener(event ->  newCost = true);//createNewCostPosition());
-		this.view.getBtnBackToProjectview().addClickListener(event -> this.view.getUI().ifPresent(ui -> ui.navigate("projectmanagement")));
-		//TODO: Error legt sich sobald selectedProject richtig implementiert ist
-		this.view.getBtnCreateCostPDF().addClickListener(event -> eventBus.post(new GenerateTotalCostsEvent(this, this.project)));
+		this.view.getCostForm().getBtnEdit().addClickListener(event -> {
+			newCost = false;
+			view.getCostForm().prepareCostFormFields();
+		});
+		this.view.getCostForm().getBtnSave().addClickListener(event -> {
+			if (newCost)
+				this.createNewCostPosition();
+			this.saveCostPosition();
+			newCost = false;
+		});
+		this.view.getBtnCreateCostPosition().addClickListener(event -> newCost = true);// createNewCostPosition());
+		this.view.getBtnBackToProjectview()
+				.addClickListener(event -> this.view.getUI().ifPresent(ui -> ui.navigate("projectmanagement")));
+		this.view.getBtnCreateCostPDF()
+				.addClickListener(event -> eventBus.post(new GenerateTotalCostsEvent(this, this.project)));
 		this.view.getBtnCreateCostPosition().setId("id");
 	}
 
@@ -108,9 +113,9 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 	public void initReadFromDB(Project project) {
 		this.project = project;
 		System.out.println("upper gehts");
-		this.eventBus.post(new ReadCurrentProjectEvent(this, project));	
-		//this.eventBus.post(new ReadAllCostsEvent(thist));*/
-		
+		this.eventBus.post(new ReadCurrentProjectEvent(this, project));
+		// this.eventBus.post(new ReadAllCostsEvent(thist));*/
+
 		this.updateGrid();
 	}
 
@@ -127,7 +132,7 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	}
 
-	void bindToFields() {  
+	void bindToFields() {
 
 		this.binderT.forField(this.view.getCostForm().getCbCostType()).asRequired()
 				.withValidator((string -> string != null && !string.isEmpty()),
@@ -163,22 +168,21 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	@Subscribe
 	public void setCostItems(TransportAllCostsEvent event) {
-		System.out.println("PRojekt " +this.project.getProjectID());
-		/*List<Costs> list = event.getCostList();
-		for (Costs t : list) {
-			if (t.getProject().getProjectID() == (this.project.getProjectID())) {
-				this.costs.add(t);
-			}
-		}*/
+		System.out.println("PRojekt " + this.project.getProjectID());
+		/*
+		 * List<Costs> list = event.getCostList(); for (Costs t : list) { if
+		 * (t.getProject().getProjectID() == (this.project.getProjectID())) {
+		 * this.costs.add(t); } }
+		 */
 		this.costs = event.getCostList();
 		this.calculateForAllCostInfo(this.costs);
 		this.updateGrid();
-		
+
 	}
 
 	private void saveCostPosition() {
-		if (this.binderT.validate().isOk()) {   
-			try { 
+		if (this.binderT.validate().isOk()) {
+			try {
 				this.eventBus.post(new SendCostToDBEvent(this, this.selectedCost));
 				this.view.getCostForm().setVisible(false);
 				this.addCost(selectedCost);
@@ -203,32 +207,32 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 			this.costs.add(c);
 		}
 	}
-	
+
 	@Override
 	public void setSelectedProject(Project selectedproject) {
 		this.project = selectedproject;
 	}
-	
+
 	@Subscribe
-	public void onTransportProjectEvent( TransportProjectEvent event) {
-		
+	public void onTransportProjectEvent(TransportProjectEvent event) {
+
 		this.project = event.getProject();
 	}
-	
+
 	private void createNewCostPosition() {
 		try {
 			this.selectedCost = new Costs();
 			this.selectedCost.setCostType(this.view.getCostForm().getCbCostType().getValue());
 			this.selectedCost.setDescription(this.view.getCostForm().getTaDescription().getValue());
-			this.selectedCost.setIncurredCosts(Double.parseDouble(this.view.getCostForm().getTfIncurredCosts().getValue()));
+			this.selectedCost
+					.setIncurredCosts(Double.parseDouble(this.view.getCostForm().getTfIncurredCosts().getValue()));
 			this.selectedCost.setProject(this.project);
 		} catch (NumberFormatException e) {
 			System.out.println("leeeere");
 		}
 		// saveCostPosition();
 	}
-	
-	
+
 //	/**
 //	 * @author LucasEickmann
 //	 */
@@ -257,31 +261,30 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 //		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
 //		
 //	}
-	
-	
+
 	/**
-<<<<<<< HEAD
+	 * <<<<<<< HEAD
+	 * 
 	 * @author LucasEickmann
 	 * 
-=======
+	 *         =======
 	 * @author Sebastian Siegmann, Lucas Eickmann
-	 * @param event
->>>>>>> master
+	 * @param event >>>>>>> master
 	 */
+
 	@Subscribe
-	public void onSendStreamResourceTotalCostsEvent (SendStreamResourceTotalCostsEvent event) {
+	public void onSendStreamResourceTotalCostsEvent(SendStreamResourceTotalCostsEvent event) {
 		Anchor downloadLink = new Anchor(event.getRes(), "Download");
 		this.view.add(downloadLink);
 		downloadLink.setId(event.getTimeStamp().toString());
 		downloadLink.getElement().getStyle().set("display", "none");
-		downloadLink.getElement().setAttribute( "download" , true );
+		downloadLink.getElement().setAttribute("download", true);
 		Page page = UI.getCurrent().getPage();
-/*<<<<<<< HEAD
-		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
-	
-=======
+
 		page.executeJs("document.getElementById('" + event.getTimeStamp().toString() + "').click()");
->>>>>>> master*/
+
+		page.executeJs("document.getElementById('" + event.getTimeStamp().toString() + "').click()");
+
 	}
 
 	@Override
