@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -88,7 +89,9 @@ public class VaadinProjectViewLogic implements IProjectView {
 		this.binder.bind(this.view.getProjectForm().getTfProjectName(), "projectName");
 		this.binder.bind(this.view.getProjectForm().getCbProjectManager(), "projectManager");
 		this.binder.bind(this.view.getProjectForm().getCbEmployees(), "employeeList");
-		this.binder.bind(this.view.getProjectForm().getCbTeams(), "teamList");
+		//this.binder.bind(this.view.getProjectForm().getCbTeams(), "teamList");
+		this.binder.forField(this.view.getProjectForm().getCbTeams())
+			.bind(Project::getTeamList, Project::setTeamList);
 		this.binder.bind(this.view.getProjectForm().getCbClient(), "client");
 		this.binder.forField(this.view.getProjectForm().getdPStartDate());
 		this.binder.bind(this.view.getProjectForm().getdPStartDate(), "startDate");
@@ -128,28 +131,28 @@ public class VaadinProjectViewLogic implements IProjectView {
 		this.view.getProjectForm().setVisible(false);
 	}
 
-	private void displayProject() {
-		if (this.selectedProject != null) {
+
+	
+	
+	private void displayProject(){
+		if (this.selectedProject != null ) {
+			
 			try {
-				if (this.employees != null) {
-					this.view.getProjectForm().getCbEmployees().setItems(this.employees);
-				}
-				if (this.teams != null) {
-					this.view.getProjectForm().getCbTeams().setItems(this.teams);
-				}
-				if (this.clients != null) {
-					this.view.getProjectForm().getCbClient().setItems(this.clients);
-				}
-				if (this.managers != null) {
-					this.view.getProjectForm().getCbProjectManager().setItems(this.managers);
-				}
-				if (this.projects != null) {
-					List<Project> supProjects = new ArrayList<Project>(this.projects);
-					supProjects.remove(this.selectedProject);
-					this.view.getProjectForm().getCbSupProject().setItems(supProjects);
-				}
+				
 				this.binder.setBean(this.selectedProject);
 				this.view.getProjectForm().setVisible(true);
+				System.out.println(this.selectedProject.getTeamList().toString());
+				System.out.println("---------------------");
+				Set<Team> ts = this.view.getProjectForm().getCbTeams().getValue();
+				for (Team t : ts) {
+					System.out.print(t.toString() + ", ");
+					
+				}
+				System.out.println();
+				if (this.selectedProject.getTeamList() == null) {
+					System.out.println(this.selectedProject.getTeamList());	
+				}
+			
 				this.view.getProjectForm().closeEdit();
 				this.view.getBtnCreateInvoice().setVisible(true);
 				if (this.editableProjects != null && this.editableProjects.contains(this.selectedProject)) {
@@ -247,6 +250,23 @@ public class VaadinProjectViewLogic implements IProjectView {
 		this.eventBus.post(new ReadAllClientsEvent(this));
 		this.eventBus.post(new ReadAllManagersEvent(this));
 		this.mergeProjectLists();
+		if (this.employees != null) {
+			this.view.getProjectForm().getCbEmployees().setItems(this.employees);
+		}
+		if (this.teams != null) {
+			this.view.getProjectForm().getCbTeams().setItems(this.teams);
+		}
+		if (this.clients != null) {
+			this.view.getProjectForm().getCbClient().setItems(this.clients);
+		}
+		if (this.managers != null) {
+			this.view.getProjectForm().getCbProjectManager().setItems(this.managers);
+		}
+		if (this.projects != null) {
+			List<Project> supProjects = new ArrayList<Project>(this.projects);
+			supProjects.remove(this.selectedProject);
+			this.view.getProjectForm().getCbSupProject().setItems(supProjects);
+		}
 		this.updateGrid();
 	}
 
