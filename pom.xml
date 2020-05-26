@@ -159,6 +159,13 @@
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.10</version>
 		</dependency>
+<!-- added new dependency for charts @author Kerem Cevik -->
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
