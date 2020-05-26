@@ -10,6 +10,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
+import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
@@ -24,6 +25,7 @@ import de.fhbielefeld.pmt.employee.IEmployeeView;
 import de.fhbielefeld.pmt.employee.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.employee.impl.event.SendEmployeeToDBEvent;
 import de.fhbielefeld.pmt.employee.impl.event.TransportAllEmployeesEvent;
+import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.JPAEntities.Role;
 
@@ -60,6 +62,14 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 
 //		if (selectedEmployeeDesignation.equals("CEO")) {
 //		if(selectedEmployee.getClass().equals(RoleCEO.class)) {
+		
+//		if(AuthorizationChecker.checkIsAuthorizedEmployee(VaadinSession.getCurrent(), selectedEmployee.getRole())) {
+//			this.occupations.add("Keine vergeben");
+//			this.occupations.add("SW-Entwickler");
+//			this.occupations.add("Personalmanager");
+//			this.occupations.add("Reinigungskraft");
+//		}
+		
 		if (checkRoleEmployeeFowler(selectedEmployeeRole) == true) {
 			this.occupations.add("Keine vergeben");
 			this.occupations.add("SW-Entwickler");
