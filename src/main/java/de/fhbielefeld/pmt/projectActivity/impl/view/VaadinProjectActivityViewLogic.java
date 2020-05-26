@@ -15,6 +15,7 @@ import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
+import de.fhbielefeld.pmt.JPAEntities.ProjectActivity.activityCategories;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
 import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
@@ -36,7 +37,7 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	private final EventBus eventBus;
 	private ProjectActivity selectedProjectActivity;
 	private List<ProjectActivity> projectActivities = new ArrayList<ProjectActivity>();
-
+	private List<activityCategories> cats = new ArrayList<activityCategories>();
 
 	public VaadinProjectActivityViewLogic(VaadinProjectActivityView view, EventBus eventBus) {
 		if (view == null) {
@@ -63,7 +64,7 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		});
 		this.view.getCreateNewProjectActivity().addClickListener(event -> {
 			createNewProjectActivity();
-		// TODO: newProjectActivityBinder();
+		    newProjectActivityBinder();
 		});
 		this.view.getProjectActivityViewForm().getBtnSave().addClickListener(event -> this.saveProjectActivity());
 		this.view.getProjectActivityViewForm().getBtnDelete().addClickListener(event -> this.view.getProjectActivityViewForm().prepareProjectActivityFormFields());
@@ -72,10 +73,19 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		
 	}
 	
+	private void newProjectActivityBinder() {
+		this.view.getProjectActivityViewForm().getCbActivityCategory().setItems(this.cats);
+		
+	}
+
 	public void bindToFields() {
 		
 		// TODO: Sobald es eine Liste mit ActivityCategories gibt, muss hier ne setCategory rein!
-		this.binder.forField(this.view.getProjectActivityViewForm().getTfCategory()).bind(ProjectActivity::getCategory, null);
+		this.binder.forField(this.view.getProjectActivityViewForm().getCbActivityCategory()).asRequired()
+		.bind(ProjectActivity::getCats, ProjectActivity::setCats);
+		
+		
+		this.binder.bind(this.view.getProjectActivityViewForm().getCbActivityCategory(), "cats");
 		
 		this.binder.forField(this.view.getProjectActivityViewForm().getTfDescription()).asRequired()
 			.withValidator(new RegexpValidator("Bitte geben Sie eine Beschreibung zwischen 1 und 50 Zeichen an", ".{1,50}"))
@@ -130,13 +140,6 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		this.view.getProjectActivityGrid(); // TODO: prepareProjectActivityForm
 		this.view.getProjectActivityGrid().setVisible(true);
 	}
-	
-	/*
-	private void newProjectActivityBinder() {
-		this.view.getProjectActivityGrid().getMscbTeamProject().setItems(this.projects);
-		this.view.getProjectActivityGrid().getMscbTeamEmployee().setItems(this.employees);
-		}
-	*/
 	
 	private void cancelForm() {
 		resetSelectedProjectActivity();

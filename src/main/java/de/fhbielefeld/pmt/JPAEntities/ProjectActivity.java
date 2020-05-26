@@ -1,6 +1,14 @@
 package de.fhbielefeld.pmt.JPAEntities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.persistence.*;
 
 /**
@@ -17,6 +25,28 @@ public class ProjectActivity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long projectActivityID;
+
+	/**
+	 * Neu hinzugefügt, damit Aktivitäten zur Verfügung stehen
+	 * @author David Bistron
+	 * TODO: Dat läuft, aber er will nicht binden!
+	 */
+	public enum activityCategories {Manager("Manager"), Koch("Koch"), IT("Systembetreuung"), Consulting("Consulting");
+		
+		private String category;
+		
+		activityCategories(String category) {
+			this.category = category;
+		}
+		
+		public  String getActivityCategories() {
+			return category;
+		}
+	
+	}
+	
+	private List<activityCategories> cats = new ArrayList<activityCategories>(Arrays.asList(activityCategories.values()));
+	
 	private String category;
 	private String description;
 	private int hoursAvailable;
@@ -47,6 +77,7 @@ public class ProjectActivity implements Serializable {
 	public ProjectActivity(String category, String description, int hoursAvailable, int hoursExpended,
 			double hourlyRate, Project project) {
 		super();
+		this.cats = cats;
 		this.category = category;
 		this.description = description;
 		this.hoursAvailable = hoursAvailable;
@@ -64,6 +95,7 @@ public class ProjectActivity implements Serializable {
 	public String getCategory() {
 		return category;
 	}
+	
 
 	public void setCategory(String category) {
 		this.category = category;
@@ -128,4 +160,13 @@ public class ProjectActivity implements Serializable {
 	public String toString() {
 		return "(" + this.projectActivityID + ") " + this.description;
 	}
+
+	public List<activityCategories> getCats() {
+		return cats;
+	}
+
+	public void setCats(List<activityCategories> cats) {
+		this.cats = cats;
+	}
+
 }

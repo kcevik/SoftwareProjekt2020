@@ -13,7 +13,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
-import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 
 /**
@@ -31,7 +30,6 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	 * projectActivityForm entspricht dem rechten Auswahl-/Eingabebereich in der View
 	 * teamList ist eine ArrayList mit allen vorhandenen Teams und einzelnen Mitarbeitern
 	 */
-	
 	private Grid<ProjectActivity> projectActivityGrid = new Grid<ProjectActivity>(ProjectActivity.class);
 	private List<ProjectActivity> projectActivityList = new ArrayList<ProjectActivity>();
 	private TextField tfFilterText = new TextField();
@@ -68,7 +66,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	private void initUI() {
 		
 		addClassName("list-view");
-		this.projectActivityForm.setVisible(false);
+		this.projectActivityForm.setVisible(true);
 		setSizeFull();
 		configureGrid();
 		configureFilter();
@@ -94,23 +92,6 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		this.projectActivityForm.resetProjectActivityForm();
 	}
 	
-	// TODO: Doppelter Code --> muss in die Logic!
-	/**
-	 * Methode, die die Filterung nach Teams steuert. Wird in der Methode configureFilter verwendet
-	private void filterList(String filter) {
-		List<Team> filtered = new ArrayList<Team>();
-		for (Team t : this.getTeamList()) {
-			if (t.getTeamName().contains(filter)) {
-				filtered.add(t);
-			} else if (String.valueOf(t.getTeamID()).contains(filter)) {
-				filtered.add(t);															
-			}
-		}
-		//this.getTeamGrid().setVisible(true);
-		this.getTeamGrid().setItems(filtered);
-		  
-	}
-	 */
 	/**
 	 * Methode, um das Grid zu erstellen. Beinhaltet die Spaltenüberschriften, die identisch mit der Datenbank sind
 	 * vgl. Klasse Team im Package JPAEntities
