@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
@@ -12,6 +13,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
+import de.fhbielefeld.pmt.JPAEntities.Project;
+import de.fhbielefeld.pmt.client.impl.model.ClientModel;
 import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.error.LoginChecker;
 import de.fhbielefeld.pmt.error.impl.view.NotAuthorizedError;
@@ -20,16 +23,19 @@ import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.project.IProjectComponent;
 import de.fhbielefeld.pmt.project.impl.ProjectComponent;
+import de.fhbielefeld.pmt.project.impl.event.ProjectDetailsModuleChoosenEvent;
 import de.fhbielefeld.pmt.project.impl.model.ProjectModel;
 import de.fhbielefeld.pmt.project.impl.view.VaadinProjectView;
 import de.fhbielefeld.pmt.project.impl.view.VaadinProjectViewLogic;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsComponent;
 import de.fhbielefeld.pmt.projectdetails.impl.ProjectdetailsComponent;
+import de.fhbielefeld.pmt.projectdetails.impl.event.TransportProjectEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.view.VaadinProjectdetailsView;
 import de.fhbielefeld.pmt.projectdetails.impl.view.VaadinProjectdetailsViewLogic;
 import de.fhbielefeld.pmt.projectdetails.model.ProjectdetailsModel;
 import de.fhbielefeld.pmt.projectdetailsNavBar.IProjectdetailsNavComponent;
 import de.fhbielefeld.pmt.projectdetailsNavBar.impl.ProjectdetailsNavBarComponent;
+import de.fhbielefeld.pmt.projectdetailsNavBar.impl.view.OpenProjectAnalyticsEvent;
 import de.fhbielefeld.pmt.projectdetailsNavBar.impl.view.VaadinProjectdetailsNavBarView;
 import de.fhbielefeld.pmt.projectdetailsNavBar.impl.view.VaadinProjectdetailsNavBarViewLogic;
 import de.fhbielefeld.pmt.team.impl.model.TeamModel;
@@ -53,7 +59,7 @@ public class ProjectdetailsRootView extends VerticalLayout {
 	VaadinSession session = VaadinSession.getCurrent();
 
 	public ProjectdetailsRootView() {
-		if (rootViewLoginCheck()) {
+		//if (rootViewLoginCheck()) {
 			
 		    this.eventBus.register(this);
 			IProjectdetailsComponent projectdetailsComponent = this.createProjectdetailsComponent();
@@ -67,11 +73,24 @@ public class ProjectdetailsRootView extends VerticalLayout {
 			Component navBarView = navBarComponent.getViewAs(Component.class);
 			
 			
-			this.add(new HorizontalLayout(topBarView));
-			this.add(new HorizontalLayout(projectdetailsView, navBarView));
-			//this.add(navBarView);
-		}
-		
+			
+			/*Hotfix, damit das Layout nicht ganz verramscht ist.. 
+			 * HorizontalLayout macht nicht wie es soll  */
+			Div projectDiv = new Div(projectdetailsView);
+			Div navDiv = new Div(navBarView); 
+			
+			
+			HorizontalLayout layout = new HorizontalLayout();
+			layout.add(projectDiv,navDiv);
+			layout.setFlexGrow(1, projectDiv);
+			layout.setFlexGrow(1, navDiv);
+			layout.setSizeFull();
+			layout.addClassName("content");
+			layout.setMaxHeight("75%");
+			
+			this.add(layout);
+			this.add(topBarView);
+		//}
 		this.setHeightFull();
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
@@ -81,7 +100,7 @@ public class ProjectdetailsRootView extends VerticalLayout {
 	
 	private IProjectdetailsNavComponent createNavBarComponent() {
 		VaadinProjectdetailsNavBarView view = new VaadinProjectdetailsNavBarView();
-		ProjectdetailsNavBarComponent component = new ProjectdetailsNavBarComponent(new TeamModel(DatabaseService.DatabaseServiceGetInstance()),
+		ProjectdetailsNavBarComponent component = new ProjectdetailsNavBarComponent(new ProjectdetailsModel(DatabaseService.DatabaseServiceGetInstance()),
 																					new VaadinProjectdetailsNavBarViewLogic(view,this.eventBus), this.eventBus);
 	
 		return 	component;
@@ -93,8 +112,8 @@ public class ProjectdetailsRootView extends VerticalLayout {
 				new VaadinProjectdetailsView(), this.eventBus);
 		IProjectdetailsComponent projectdetailsComponent = new ProjectdetailsComponent(
 				new ProjectdetailsModel(DatabaseService.DatabaseServiceGetInstance()), vaadinProjectdetailsViewLogic,
-				this.eventBus);
-		vaadinProjectdetailsViewLogic.initReadFromDB();
+				this.eventBus, (Project)session.getAttribute("PROJECT"));
+		vaadinProjectdetailsViewLogic.initReadFromDB((Project)session.getAttribute("PROJECT"));
 		return projectdetailsComponent;
 	}
 
@@ -103,18 +122,12 @@ public class ProjectdetailsRootView extends VerticalLayout {
 		VaadinTopBarView vaadinTopBarView = new VaadinTopBarView();
 		vaadinTopBarView.setLblHeadingText("Teamübersicht");
 		ITopBarComponent topBarComponent = new TopBarComponent(
-				new TeamModel(DatabaseService.DatabaseServiceGetInstance()),
+				new ClientModel(DatabaseService.DatabaseServiceGetInstance()),
 				new VaadinTopBarViewLogic(vaadinTopBarView, this.eventBus), this.eventBus);
 		return topBarComponent;
 
 	}
 	
-	@Subscribe
-	public void onModuleChoserChoosenEvent(ModuleChooserChosenEvent event) {
-		
-		this.getUI().ifPresent(UI -> UI.navigate("projectmanagement"));
-		
-	}
 	
 	/**
 	 * Methode, die die Rückkehr zum LogIn-Screen steuert, wenn der Button "Logout" gedrückt wird
@@ -159,6 +172,18 @@ public class ProjectdetailsRootView extends VerticalLayout {
 			this.add(NotAuthorizedError.getErrorSite(this.eventBus, this));
 			return false;
 		}
+	}
+	
+	@Subscribe
+	public void onOpenProjectAnalyticsEvent(OpenProjectAnalyticsEvent event) {
+		System.out.println("projektnummerrrr: " +session.getAttribute("PROJECT"));
+		
+		//session.setAttribute("PROJECT", event.getProject());
+		/*TransportProject dataEvent = new TransportProject(this , event.getProject());
+		System.out.println(dataEvent.getProject().getProjectName());
+		eventBus.post(dataEvent);*/
+		this.getUI().ifPresent(UI -> UI.navigate("projectanalytics"));
+		
 	}
 
 }

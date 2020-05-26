@@ -29,7 +29,7 @@ public class VaadinProjectdetailsNavBarViewLogic implements IProjectdetailsNavVi
 		this.view.getProjectActivities().addClickListener(event -> this.eventBus.post(new OpenProjectActivitiesEvent()));
 		this.view.getCommentaries().addClickListener(event -> this.eventBus.post(new OpenProjectCommentariesEvent()));
 		this.view.getCosts().addClickListener(event -> this.eventBus.post(new OpenProjectCostEvent()));
-		this.view.getAnalytics().addClickListener(event -> this.eventBus.post(new OpenProjectAnalyticsEvent()));;
+		this.view.getAnalytics().addClickListener(event -> this.eventBus.post(new OpenProjectAnalyticsEvent(this)));;
 	}
 	
 	

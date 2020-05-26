@@ -102,7 +102,7 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 //			System.out.println("new Employee erzeugt in saveEmployee");
 		}
 		try {
-			this.eventBus.post(new SendEmployeeToDBEvent(this, this.selectedEmployee));
+			this.eventBus.post(new SendEmployeeToDBEvent(this.selectedEmployee));
 			this.view.getEMPLOYEEFORM().setVisible(false);
 			this.addEmployee(selectedEmployee);
 			this.updateGrid();

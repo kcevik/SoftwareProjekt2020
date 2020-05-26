@@ -15,8 +15,10 @@ public class VaadinProjectdetailsNavBarView extends VerticalLayout {
 	Button costs = new Button(new Icon(VaadinIcon.CASH));
 
 	public VaadinProjectdetailsNavBarView() {
-		addClassName("cost-form");
-		setSizeFull();
+		//addClassName("cost-form");
+		//addClassName("nav-bar");
+		
+		//setSizeFull();
 
 		HorizontalLayout top = new HorizontalLayout(commentaries, projectActivities);
 		// top.addAndExpand(commentaries, projectActivities);

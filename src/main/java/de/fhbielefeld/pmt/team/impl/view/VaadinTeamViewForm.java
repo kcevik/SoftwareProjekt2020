@@ -18,7 +18,7 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
- * Klasse, die die TeamForm (rechts innerhalb der View) erstellt
+ * Klasse, die die TeamForm (links innerhalb der View) erstellt
  * @author David Bistron
  *
  */

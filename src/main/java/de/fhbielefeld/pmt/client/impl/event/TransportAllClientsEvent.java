@@ -4,13 +4,13 @@ import java.util.EventObject;
 import java.util.List;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.client.IClientView;
+
 /**
  * 
  * @author Sebastian Siegmann
  *
  */
 public class TransportAllClientsEvent extends EventObject {
-
 
 	private static final long serialVersionUID = 1L;
 
