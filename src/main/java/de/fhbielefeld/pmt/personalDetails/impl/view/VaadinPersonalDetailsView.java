@@ -11,20 +11,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
-import de.fhbielefeld.pmt.JPAEntities.Client;
-import de.fhbielefeld.pmt.JPAEntities.Project;
-import de.fhbielefeld.pmt.domain.Employee;
-
 /**
  * VaadinView Klasse die den Inhalt des RootViews darstellt
  * 
  * @author David Bistron, Sebastian Siegmann
- *
+ * @version 1.1
  */
 @CssImport("./styles/shared-styles.css")
 public class VaadinPersonalDetailsView extends VerticalLayout {
 
-	//TODO: Welche Werte brauchen wir? Was wollen wir hier im grid überhaupt Darstellen ?! 
 	private static final long serialVersionUID = 1L;
 	private final List<Employee> employeeList = new ArrayList<Employee>();
 	private final Grid<Employee> personalDetailsGrid = new Grid<>(Employee.class);
@@ -63,7 +58,7 @@ public class VaadinPersonalDetailsView extends VerticalLayout {
 		configureFilter();
 
 	}
-	
+
 	/**
 	 * Setzt die Tabelle und das Forular zurück
 	 */
@@ -84,12 +79,11 @@ public class VaadinPersonalDetailsView extends VerticalLayout {
 	/**
 	 * Setzt Eigenschaften für das Grid fest.
 	 */
-	//TODO: Welche Felder darstellen? kp Error is safe da #rip
 	private void configureGrid() {
 		this.personalDetailsGrid.addClassName("personalDetails-grid");
-		this.personalDetailsGrid.setColumns("employeeID", "password", "firstName", "lastName","occupation");
-		this.personalDetailsGrid.getColumnByKey("employeeID").setHeader("Mitarbeiternummer:");
-		this.personalDetailsGrid.getColumnByKey("password").setHeader("Passwort:");
+		this.personalDetailsGrid.setColumns("employeeID", "firstName", "lastName", "occupation", "street",
+				"houseNumber", "zipCode", "town");
+		this.personalDetailsGrid.getColumnByKey("employeeID").setHeader("Mitarbeit-ID:");
 		this.personalDetailsGrid.getColumnByKey("firstName").setHeader("Vorname:");
 		this.personalDetailsGrid.getColumnByKey("lastName").setHeader("Nachname:");
 		this.personalDetailsGrid.getColumnByKey("occupation").setHeader("Beschäftigung:");
@@ -101,17 +95,35 @@ public class VaadinPersonalDetailsView extends VerticalLayout {
 //		this.personalDetailsGrid.getColumnByKey("zipCode").setHeader("Postleitzahl:");
 //		this.personalDetailsGrid.getColumnByKey("town").setHeader("Ort:");
 
-		//TODO: Shit hier rein mit Team und so -> Was Überhaupt darstellen?!
-		
-		this.personalDetailsGrid.getColumns().forEach(col -> col.setAutoWidth(true));
-		this.personalDetailsGrid.setHeightFull();
-		this.personalDetailsGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		// TODO: der Employee braucht 2 Listen, einmal Projekte und einmal Teams, damit
+		// diese im Grid dargestellt werden können
+		// TODO: Lucas hat das irgendwie schöner gelöst?!
+		/*
+		 * this.personalDetailsGrid.addColumn(employee -> { String projectString = "";
+		 * for (Project e : employee.ProjectList()) { projectString += e.getProjectID()
+		 * + ", "; } if (projectString.length() > 2) { projectString =
+		 * projectString.substring(0, projectString.length() - 2); } return
+		 * projectString; }).setHeader("Meine Projekte");
+		 * 
+		 * this.personalDetailsGrid.addColumn(employee -> { String teamString = ""; for
+		 * (Team e : employee.getTeamList()) { teamString += e.getTeamID() + ", "; } if
+		 * (teamString.length() > 2) { teamString = teamString.substring(0,
+		 * teamString.length() - 2); } return teamString; }).setHeader("Meine Teams");
+		 * 
+		 * this.personalDetailsGrid.getColumns().forEach(col -> col.setAutoWidth(true));
+		 * this.personalDetailsGrid.setHeightFull();
+		 * this.personalDetailsGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+		 */
 	}
 
-	public TextField getTfFilter() {
-		return tfFilter;
+	/**
+	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
+	 */
+	public void updateGrid() {
+		this.personalDetailsGrid.setItems(this.employeeList);
 	}
 
+	// Getter und Setter
 	public Button getBtnBackToMainMenu() {
 		return btnBackToMainMenu;
 	}
@@ -127,12 +139,4 @@ public class VaadinPersonalDetailsView extends VerticalLayout {
 	public Grid<Employee> getPersonalDetailsGrid() {
 		return personalDetailsGrid;
 	}
-
-	/**
-	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
-	 */
-	public void updateGrid() {
-		this.personalDetailsGrid.setItems(this.employeeList);
-	}
 }
-

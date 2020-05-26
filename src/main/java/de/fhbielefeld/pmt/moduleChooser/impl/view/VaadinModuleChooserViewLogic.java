@@ -30,38 +30,14 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 
 	private void registerViewListener() {
 
-		if (AuthorizationChecker.checkIsAuthorizedManager(VaadinSession.getCurrent(),
-				VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE"))) {
-			this.view.getBtnSuperviseClients()
-					.addClickListener(e -> this.eventBus.post(new ClientModuleChosenEvent(this)));
-		} else {
-			this.view.getBtnSuperviseClients().setEnabled(false);
-			// this.view.getBtnSuperviseClients().setVisible(false);
-		}
-
-		if (AuthorizationChecker.checkIsAuthorizedManager(VaadinSession.getCurrent(),
-				VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE"))) {
-			this.view.getBtnSuperviseEmployees()
-					.addClickListener(e -> this.eventBus.post(new EmployeesModuleChosenEvent(this)));
-		} else {
-			this.view.getBtnSuperviseEmployees().setEnabled(false);
-			// this.view.getBtnSuperviseEmployees().setVisible(false);
-		}
-
-		// Erste Idee dazu... Geht schöner -> Vllt If Rolle = XY Dann führe methode
-		// buildManagerUI Oder so aus
-		// Der View dann die session variable übergeben und denn baut die das fertig?
-		//TODO: Für @Siggi
-		if (AuthorizationChecker.checkIsAuthorizedManager(VaadinSession.getCurrent(),
-				VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE"))) {
-			this.view.getBtnSuperviseProjects()
-					.addClickListener(e -> this.eventBus.post(new ProjectsModuleChosenEvent(this)));
-		} else {
-			this.view.getBtnSuperviseProjects().setEnabled(false);
-			// this.view.getBtnSuperviseProjects().setVisible(false);
-		}
+		this.view.getBtnSuperviseClients().addClickListener(e -> this.eventBus.post(new ClientModuleChosenEvent(this)));
+		this.view.getBtnSuperviseEmployees()
+				.addClickListener(e -> this.eventBus.post(new EmployeesModuleChosenEvent(this)));
+		this.view.getBtnSuperviseProjects()
+				.addClickListener(e -> this.eventBus.post(new ProjectsModuleChosenEvent(this)));
 		this.view.getBtnSuperviseTeams().addClickListener(e -> this.eventBus.post(new TeamsModuleChosenEvent(this)));
-		this.view.getBtnSupervisePersonalDetails().addClickListener(event -> this.eventBus.post(new PersonalDetailsChosenEvent(this)));
+		this.view.getBtnSupervisePersonalDetails()
+				.addClickListener(event -> this.eventBus.post(new PersonalDetailsChosenEvent(this)));
 		try {
 			this.view.getLblWelcome()
 					.setText("Willkommen zurück, " + VaadinSession.getCurrent().getAttribute("LOGIN_USER_FIRSTNAME")

@@ -33,7 +33,6 @@ public class VaadinTeamView extends VerticalLayout {
 	 * teamList ist eine ArrayList mit allen vorhandenen Teams und einzelnen Mitarbeitern
 	 */
 	
-	// TODO: Warum team.class?
 	private Grid<Team> teamGrid = new Grid<Team>(Team.class);
 	private List<Team> teamList = new ArrayList<Team>();
 	private TextField tfFilterText = new TextField();

@@ -52,8 +52,7 @@ public class VaadinClientViewLogic implements IClientView {
 	}
 
 	/**
-	 * Fügt den Komponenten der View die entsprechenden Listener hinzu. Noch unklar
-	 * welche Listener gebraucht werden
+	 * Fügt den Komponenten der View die entsprechenden Listener hinzu.
 	 */
 	private void registerViewListeners() {
 		this.view.getClientGrid().asSingleSelect().addValueChangeListener(event -> {
@@ -68,8 +67,10 @@ public class VaadinClientViewLogic implements IClientView {
 		this.view.getFilterText().addValueChangeListener(event -> filterList(this.view.getFilterText().getValue()));
 	}
 
+	/**
+	 * Nutzt Binder um eine Verbindung zwischen einem Client Objekt und den Textfeldern herzustellen
+	 */
 	private void bindToFields() {
-
 		this.binder.forField(this.view.getCLIENTFORM().getTfClientID()).asRequired()
 				.withConverter(new StringToLongConverter("")).bind(Client::getClientID, null);
 		this.binder.forField(this.view.getCLIENTFORM().getTfName()).asRequired()
@@ -90,8 +91,8 @@ public class VaadinClientViewLogic implements IClientView {
 				.withConverter(new plainStringToIntegerConverter("")).bind(Client::getZipCode, Client::setZipCode);
 		this.binder.bind(this.view.getCLIENTFORM().getTfTown(), "town");
 		this.binder.bind(this.view.getCLIENTFORM().getCkIsActive(), "active");
-		this.binder.forField(this.view.getCLIENTFORM().getMscbProjects())
-				.bind(Client::getProjectList, Client::setProjectList);
+		this.binder.forField(this.view.getCLIENTFORM().getMscbProjects()).bind(Client::getProjectList,
+				Client::setProjectList);
 	}
 
 	/**
@@ -102,6 +103,9 @@ public class VaadinClientViewLogic implements IClientView {
 		this.view.clearGridAndForm();
 	}
 
+	/**
+	 * Zeigt Daten des aktuell Ausgewählten Clients im Bearbeitungsformular an
+	 */
 	private void displayClient() {
 		if (this.selectedClient != null) {
 			try {
@@ -149,6 +153,9 @@ public class VaadinClientViewLogic implements IClientView {
 		this.selectedClient = null;
 	}
 
+	/**
+	 * Erstellt einen neuen Client und bereitet das Formular vor
+	 */
 	private void newClient() {
 		this.selectedClient = new Client();
 		displayClient();
@@ -202,12 +209,6 @@ public class VaadinClientViewLogic implements IClientView {
 	public void updateGrid() {
 		this.view.getClientGrid().setItems(this.clients);
 	}
- 
-	public void addClient(Client c) {
-		if (!this.clients.contains(c)) {
-			this.clients.add(c);
-		}
-	}
 
 
 	@SuppressWarnings("unchecked")
@@ -219,6 +220,7 @@ public class VaadinClientViewLogic implements IClientView {
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
 
+	//Getter und Setter
 	@Override
 	public void setClients(List<Client> clients) {
 		this.clients = clients;
@@ -233,6 +235,13 @@ public class VaadinClientViewLogic implements IClientView {
 	public void addProjects(Project project) {
 		if (!this.projects.contains(project)) {
 			this.projects.add(project);
+		}
+	}
+	
+	@Override
+	public void addClient(Client c) {
+		if (!this.clients.contains(c)) {
+			this.clients.add(c);
 		}
 	}
 }

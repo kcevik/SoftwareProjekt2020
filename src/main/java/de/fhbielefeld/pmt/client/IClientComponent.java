@@ -2,9 +2,11 @@ package de.fhbielefeld.pmt.client;
 
 import de.fhbielefeld.pmt.IViewAccessor;
 
-/** Interfacedefinition für die ClientComponent 
+/**
+ * Interfacedefinition für die ClientComponent
+ * 
  * @author Sebastian Siegmann
  */
 public interface IClientComponent extends IViewAccessor {
-	//Alle
+	// Noch keine speziellen Methoden benoetigt
 }

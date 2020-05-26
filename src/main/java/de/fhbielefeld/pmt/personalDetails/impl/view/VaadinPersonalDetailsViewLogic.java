@@ -1,27 +1,28 @@
 package de.fhbielefeld.pmt.personalDetails.impl.view;
-
-import java.text.NumberFormat;
+ 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
+import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsView;
+import de.fhbielefeld.pmt.personalDetails.impl.event.ReadEmployeeDataFromDBEvent;
+import de.fhbielefeld.pmt.personalDetails.impl.event.SendEmployeeDataToDBEvent;
+
 /**
  * 
  * @author David Bistron, Sebastian Siegmann
- *
+ * @version 1.1
  */
 public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 
@@ -30,7 +31,10 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 	private final EventBus eventBus;
 	private List<Employee> employees;
 	private Employee selectedEmployee;
-	
+	private List<Employee> employees = new ArrayList<Employee>();
+	private List<Project> projects = new ArrayList<Project>();
+	private List<Team> teams = new ArrayList<Team>();
+
 	public VaadinPersonalDetailsViewLogic(VaadinPersonalDetailsView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View");
@@ -44,7 +48,7 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 		this.registerViewListeners();
 		this.bindToFields();
 	}
-	
+
 	/**
 	 * Fügt den Komponenten der View die entsprechenden Listener hinzu. Noch unklar
 	 * welche Listener gebraucht werden
@@ -55,60 +59,63 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 			this.displayEmployee();
 		});
 		this.view.getBtnBackToMainMenu().addClickListener(event -> eventBus.post(new ModuleChooserChosenEvent(this)));
-		this.view.getPERSONALDETAILSFORM().getBtnSave().addClickListener(event -> this.saveClient());
-		this.view.getPERSONALDETAILSFORM().getBtnEdit().addClickListener(event -> this.view.getPERSONALDETAILSFORM().prepareEdit());
+		this.view.getPERSONALDETAILSFORM().getBtnSave().addClickListener(event -> this.saveEmployee());
+		this.view.getPERSONALDETAILSFORM().getBtnEdit()
+				.addClickListener(event -> this.view.getPERSONALDETAILSFORM().prepareEdit());
 		this.view.getPERSONALDETAILSFORM().getBtnClose().addClickListener(event -> cancelForm());
 		this.view.getTfFilter().addValueChangeListener(event -> filterList(this.view.getTfFilter().getValue()));
 	}
 
-/*   _____	_		  _	  _		                ____      
-    (  _  )( )       ( ) ( ) _                 (  _`\                      
-    | (_) || |_      | |_| |(_)   __   _ __    | ( (_)   _    _ _    _   _ 
-    |  _  || '_`\    |  _  || | /'__`\( '__)   | |  _  /'_`\ ( '_`\ ( ) ( )
-    | | | || |_) )   | | | || |(  ___/| |      | (_( )( (_) )| (_) )| (_) |
-    (_) (_)(_,__/'   (_) (_)(_)`\____)(_)      (____/'`\___/'| ,__/'`\__, |
-                                                             | |    ( )_| |
-                                                             (_)    `\___/'
-                         ___                _          
-                        (  _`\             ( )_        
-                        | |_) )  _ _   ___ | ,_)   __  
-                        | ,__/'/'_` )/',__)| |   /'__`\
-                        | |   ( (_| |\__, \| |_ (  ___/
-                        (_)   `\__,_)(____/`\__)`\____)
-                        
-                        Ich habe für heute kb mehr ©Siggi
+	/**
+	 * Stellt Verbindung zwischen Employee Objekt und den Feldern des Formulars her
 	 */
-	
-	
 	private void bindToFields() {
-		
-		StringToIntegerConverter plainIntegerConverter = new StringToIntegerConverter("") {
-			private static final long serialVersionUID = 1L;
-			protected java.text.NumberFormat getFormat(Locale locale) {
-		        NumberFormat format = super.getFormat(locale);
-		        format.setGroupingUsed(false);
-		        return format;
-		    };
-		};
-		
-		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfClientID()).withConverter(new StringToLongConverter(""))
-				.bind(Client::getClientID, null);
-		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfName())
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfEmployeeID())
+				.withConverter(new StringToLongConverter("")).bind(Employee::getEmployeeID, null);
+
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfFirstName())
 				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
-				.bind(Client::getName, Client::setName);
-		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfTelephonenumber(), "telephoneNumber");
-		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfStreet(), "street");
+				.bind(Employee::getFirstName, Employee::setFirstName);
+
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfLastName())
+				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
+				.bind(Employee::getLastName, Employee::setLastName);
+
+		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfOccupation(), "occupation");
+
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getPfPassword())
+				.withValidator(new RegexpValidator("Bitte ein Passwort mit mindestens 8 Zeichen eingeben", "/^.{7,}$/"))
+				.bind(Employee::getPassword, Employee::setPassword);
+
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfStreet())
+				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
+				.bind(Employee::getStreet, Employee::setStreet);
+
 		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfHouseNumber())
-				.withValidator(new RegexpValidator("Hausnummer korrekt angeben bitte", "([0-9]+)([^0-9]*)"))
-				.withConverter(plainIntegerConverter)
-				.bind(Client::getHouseNumber, Client::setHouseNumber);
+				.withValidator(new RegexpValidator("Bitte Hausnummer korrekt angeben!", "([0-9]+)([^0-9]*)"))
+				.withConverter(new plainStringToIntegerConverter(""))
+				.bind(Employee::getHouseNumber, Employee::setHouseNumber);
+
 		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfZipCode()).withValidator(new RegexpValidator(
 				"Bitte eine PLZ mit 4 oder 5 Zahlen eingeben",
 				"[1-8][0-9]{3}|9[0-8][0-9]{2}|99[0-8][0-9]|999[0-9]|[1-8][0-9]{4}|9[0-8][0-9]{3}|99[0-8][0-9]{2}|999[0-8][0-9]|9999[0-9]"))
-				.withConverter(plainIntegerConverter)
-				.bind(Client::getZipCode, Client::setZipCode);
-		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfTown(), "town");
+				.withConverter(new plainStringToIntegerConverter("")).bind(Employee::getZipCode, Employee::setZipCode);
+
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfTown())
+				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
+				.bind(Employee::getTown, Employee::setTown);
+
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getMscbEmployeeProject()).bind(Employee::getProjectList,
+				null);
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getMscbEmployeeTeam()).bind(Employee::getTeamList,
+				null);
+
+		this.binder.forField(this.view.getPERSONALDETAILSFORM().getCbRole()).bind(Employee::getRole, Employee::setRole);
+
+		this.binder.bind(this.view.getPERSONALDETAILSFORM().getCkIsSuitabilityProjectManager(),
+				"suitabilityProjectManager");
 		this.binder.bind(this.view.getPERSONALDETAILSFORM().getCkIsActive(), "active");
+
 	}
 
 	/**
@@ -120,6 +127,9 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 		this.view.clearGridAndForm();
 	}
 
+	/**
+	 * Zeigt den aktuellen selectedEmployee in dem Formular an
+	 */
 	private void displayEmployee() {
 		if (this.selectedEmployee != null) {
 			try {
@@ -128,7 +138,10 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 					List<Project> projects = new ArrayList(this.projects);
 					this.view.getPERSONALDETAILSFORM().getCbProjects().setItems(projects);
 				}
-				// TODO: DB Level Bidirektional Setter und Getter aufrufen
+				if (this.employees != null) {
+					this.view.getPERSONALDETAILSFORM().getMscbEmployeeTeam().setItems(this.teams);
+				}
+				// TODO: DB Level Bidirektional Setter und Getter aufrufen -> Is das bereits passiert? ©Siggi
 				this.binder.setBean(this.selectedEmployee);
 				this.view.getPERSONALDETAILSFORM().closeEdit();
 				this.view.getPERSONALDETAILSFORM().setVisible(true);
@@ -150,7 +163,7 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 			try {
 				this.eventBus.post(new SendEmployeetToDBEvent(this, this.selectedEmployee));
 				this.view.getPERSONALDETAILSFORM().setVisible(false);
-				this.addClient(selectedEmployee);
+
 				this.updateGrid();
 				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -211,7 +224,7 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 	 * Erstellt ein neues Event, welches die DB Abfrage anstößt
 	 */
 	public void initReadFromDB() {
-		this.eventBus.post(new ReadAllEmployeesEvent(this));
+		this.eventBus.post(new ReadEmployeeDataFromDBEvent(this));
 		this.updateGrid();
 	}
 
@@ -219,10 +232,11 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
 	 */
 	public void updateGrid() {
-		this.view.getPersonalOverviewGrid().setItems(this.employees);
+		this.view.getPersonalDetailsGrid().setItems(this.employees);
+
 	}
 
-	public void addClient(Employee e) {
+	public void addEmployee(Employee e) {
 		if (!this.employees.contains(e)) {
 			this.employees.add(e);
 		}

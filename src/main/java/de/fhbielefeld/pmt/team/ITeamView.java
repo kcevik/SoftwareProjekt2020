@@ -16,6 +16,9 @@ public interface ITeamView extends IViewAccessor {
 
 	public void setProjects(List<Project> projects);
 	public void setEmployees(List<Employee> employees);
+	
 	public void addTeam(Team t);
+	public void addProject(Project p);
+	public void addEmployee(Employee e);
 	
 }

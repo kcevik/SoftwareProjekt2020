@@ -10,11 +10,26 @@ import de.fhbielefeld.pmt.project.IProjectView;
  */
 public class ReadAllProjectsEvent extends EventObject {
 	
+	private String userID;
+	private String userRole;
+	
 	private static final long serialVersionUID = 1L;
 
 
-	public ReadAllProjectsEvent(IProjectView view) {
+	public ReadAllProjectsEvent(IProjectView view, String userID, String userRole) {
 		super(view);
+		this.userID = userID;
+		this.userRole = userRole;
+	}
+
+
+	public String getUserID() {
+		return userID;
+	}
+
+
+	public String getUserRole() {
+		return userRole;
 	}
 
 }

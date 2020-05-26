@@ -19,9 +19,11 @@ import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.project.IProjectComponent;
 import de.fhbielefeld.pmt.project.impl.ProjectComponent;
+import de.fhbielefeld.pmt.project.impl.event.ProjectDetailsModuleChoosenEvent;
 import de.fhbielefeld.pmt.project.impl.model.ProjectModel;
 import de.fhbielefeld.pmt.project.impl.view.VaadinProjectView;
 import de.fhbielefeld.pmt.project.impl.view.VaadinProjectViewLogic;
+import de.fhbielefeld.pmt.projectdetails.impl.event.TransportProjectEvent;
 import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
@@ -145,5 +147,17 @@ public class ProjectRootView extends VerticalLayout {
 			this.add(NotAuthorizedError.getErrorSite(this.eventBus, this));
 			return false;
 		}
+	}
+	
+	@Subscribe
+	public void onProjectDetailsModuleChoosenEvent(ProjectDetailsModuleChoosenEvent event) {
+		System.out.println("hallo bist du da?");
+		
+		session.setAttribute("PROJECT", event.getProject());
+		/*TransportProject dataEvent = new TransportProject(this , event.getProject());
+		System.out.println(dataEvent.getProject().getProjectName());
+		eventBus.post(dataEvent);*/
+		this.getUI().ifPresent(UI -> UI.navigate("projectdetails"));
+		
 	}
 }

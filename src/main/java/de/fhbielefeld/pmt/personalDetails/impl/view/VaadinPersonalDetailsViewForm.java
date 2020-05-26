@@ -11,9 +11,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
 /**
+ * Klasse, die die PersonalDetailsForm (rechts innerhalb der View) erstellt
  * 
  * @author David Bistron, Sebastian Siegmann
- *
+ * @version 1.1
  */
 public class VaadinPersonalDetailsViewForm extends FormLayout {
 
@@ -34,6 +35,10 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 	private final TextField tfZipCode = new TextField("Postleitzahl:");
 	private final TextField tfTown = new TextField("Ort:");
 
+	private final MultiselectComboBox<Project> mscbEmployeeProject = new MultiselectComboBox<Project>(
+			"zugehörige Projekte: ");
+	private final MultiselectComboBox<Team> mscbEmployeeTeam = new MultiselectComboBox<Team>("zugehörige Teams: ");
+
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
 	private final Button btnClose = new Button("Abbrechen");
@@ -43,9 +48,9 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 		configureTextFields();
 		lblBeschreibung.add("Anlegen/Bearbeiten");
 		lblBeschreibung.addClassName("lbl-heading-form");
-		add(lblBeschreibung, tfEmployeeID, tfEmployeeID, tfPassword, tfFirstName, tfLastName, tfOccupation, tfRole,
-				ckIsSuitabilityProjectManager, tfRoom, tfTelephoneNumber, ckIsActive, tfStreet, tfHouseNumber,
-				tfZipCode, tfTown, configureButtons());
+		add(lblBeschreibung, tfEmployeeID, pfPassword, tfFirstName, tfLastName, tfOccupation, cbRole,
+				ckIsSuitabilityProjectManager, ckIsActive, tfStreet, tfHouseNumber, tfZipCode, tfTown,
+				mscbEmployeeProject, mscbEmployeeTeam, configureButtons());
 	}
 
 	private void configureTextFields() {
@@ -213,6 +218,15 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 
 	public Button getBtnClose() {
 		return btnClose;
+	}
+
+	// DAVID
+	public MultiselectComboBox<Project> getMscbEmployeeProject() {
+		return mscbEmployeeProject;
+	}
+
+	public MultiselectComboBox<Team> getMscbEmployeeTeam() {
+		return mscbEmployeeTeam;
 	}
 
 }

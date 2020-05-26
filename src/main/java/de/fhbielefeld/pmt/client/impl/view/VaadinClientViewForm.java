@@ -47,6 +47,9 @@ public class VaadinClientViewForm extends FormLayout {
 				ckIsActive, mscbProjects, configureButtons());
 	}
 
+	/**
+	 * Nimmt Einstellungen an der Textfeldern vor
+	 */
 	private void configureTextFields() {
 		this.tfClientID.setEnabled(false);
 		this.tfName.setEnabled(false);
@@ -63,7 +66,7 @@ public class VaadinClientViewForm extends FormLayout {
 	 * Nimmt Einstellungen an den Buttons vor und gibt diese in einem neuen Layout
 	 * wieder.
 	 * 
-	 * @return
+	 * @return HorizontalLayout mit den drei Buttons
 	 */
 	public Component configureButtons() {
 		btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
@@ -93,7 +96,10 @@ public class VaadinClientViewForm extends FormLayout {
 		this.mscbProjects.clear();
 		this.closeEdit();
 	}
-	
+
+	/**
+	 * Aktiviert die Textfelder des Bearbeitenformulars und setzt den Bearbeiten Button unsichtbar
+	 */
 	public void prepareEdit() {
 		this.tfName.setEnabled(true);
 		this.tfTelephonenumber.setEnabled(true);
@@ -106,7 +112,10 @@ public class VaadinClientViewForm extends FormLayout {
 		this.btnSave.setVisible(true);
 		this.btnEdit.setVisible(false);
 	}
-	
+
+	/**
+	 * Gegenstück zu prepareEdit(). Formular unsichtbar, Button sichtbar
+	 */
 	public void closeEdit() {
 		this.tfName.setEnabled(false);
 		this.tfTelephonenumber.setEnabled(false);
@@ -119,8 +128,9 @@ public class VaadinClientViewForm extends FormLayout {
 		this.btnSave.setVisible(false);
 		this.btnEdit.setVisible(true);
 	}
-	
 
+	
+	//Getter und Setter
 	public TextField getTfClientID() {
 		return tfClientID;
 	}
@@ -167,6 +177,10 @@ public class VaadinClientViewForm extends FormLayout {
 
 	public Button getBtnClose() {
 		return btnClose;
+	}
+
+	public Label getLblBeschreibung() {
+		return lblBeschreibung;
 	}
 
 }
