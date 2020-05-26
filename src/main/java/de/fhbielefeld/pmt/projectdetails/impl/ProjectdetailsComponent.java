@@ -58,6 +58,11 @@ public class ProjectdetailsComponent extends AbstractPresenter<IProjectdetailsMo
 		//}
 	}
 	
+	/**
+	 * @author Sebastian Siegmann, Lucas Eickmann
+	 * @param event
+	 * TODO: Errors legen sich sobald das model richtig implementiert ist
+	 */
 	@Subscribe
 	public void onReadCurrentProjectEvent(ReadCurrentProjectEvent event) {
 		//if (event.getSource() == this.view) {
