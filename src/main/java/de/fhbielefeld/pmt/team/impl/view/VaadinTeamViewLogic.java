@@ -8,6 +8,7 @@ import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ErrorMessageProvider;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 
@@ -80,6 +81,8 @@ public class VaadinTeamViewLogic implements ITeamView{
 				
 		this.binderT.forField(this.view.getTeamForm().getTfTeamID())
 		.withConverter(new StringToLongConverter("")).bind(Team::getTeamID, null);
+		
+		// TODO: Hinweis erscheint nur, wenn > 50 Zeichen eingegeben werden, aber nicht bei < 1 Zeichen!
 		this.binderT.forField(this.view.getTeamForm().getTfTeamName()).asRequired().withValidator(new RegexpValidator
 				("Bitte wählen Sie einen Teamnamen zwischen 1 und 50 Zeichen", ".{1,50}")).bind(Team::getTeamName, Team::setTeamName);
 		this.binderT.bind(this.view.getTeamForm().getIsActive(), "active");
@@ -87,15 +90,15 @@ public class VaadinTeamViewLogic implements ITeamView{
 		// TODO: Hinweis, dass mind. 1 Projekt und Mitarbeiter ausgewählt werden muss!
 	
 		this.binderT.forField(this.view.getTeamForm().getMscbTeamProject()).asRequired().
-		withValidator((string -> string != null && !string.isEmpty()), "Bitte wählen Sie mindestens ein Projekt aus!")
+		withValidator((string -> string != null && !string.isEmpty()), ("Bitte wählen Sie mindestens ein Projekt aus!"))
 		.bind(Team::getProjectList, Team::setProjectList);
 		
 		this.binderT.forField(this.view.getTeamForm().getMscbTeamEmployee()).asRequired().
-		withValidator((string -> string != null && !string.isEmpty()), "Bitte wählen Sie mindestens einen Mitarbeiter aus!")
+		withValidator((string -> string != null && !string.isEmpty()), ("Bitte wählen Sie mindestens einen Mitarbeiter aus!"))
 		.bind(Team::getEmployeeList, Team::setEmployeeList);
 		
 	}
-	
+	 
 	// TODO: Cast Exception
 	private void filterList(String filter) {
 		List<Team> filtered = new ArrayList<>();
@@ -161,59 +164,18 @@ public class VaadinTeamViewLogic implements ITeamView{
 				this.binderT.setBean(this.selectedTeam);
 				this.view.getTeamForm().closeTeamFormFields();
 				this.view.getTeamForm().setVisible(true);
-			
-				// TODO: Kann das weg?			
-				/*ArrayList<String> projects = new ArrayList<String>();
-				for (Project p : this.selectedTeam.getProjectList()) {
-					projects.add(String.valueOf(p.getProjectID()));
-				}
-				*/
 				} catch (NumberFormatException nfe) {
 					this.view.getTeamForm().resetTeamForm();
 					Notification.show("NumberFormatException");
-			}
-			 
+			}	 
 		} else {
 			this.view.getTeamForm().setVisible(false);
+		}	
 	}
-	}
-	
-	/**
-	 * Methode, die die Speicherung eines neuen Teams in der Datenbank regelt
-	 
-	private void saveTeam() {
-		if 	(this.selectedTeam == null && (this.binderT.validate().isOk())) {
-			this.selectedTeam = new Team();
-		} 
-		try {
-			this.selectedTeam.setTeamName(this.view.getTeamForm().getTfTeamName().getValue());
-			this.selectedTeam.setActive(this.view.getTeamForm().getIsActive().getValue());
-			this.eventBus.post(new SendTeamToDBEvent(this.selectedTeam));
-			this.view.getTeamForm().setVisible(false);
-			this.view.addTeam(selectedTeam);
-			this.view.updateGrid();
-			Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-		} catch (NumberFormatException nfe) {
-			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
-					Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
-			this.view.getTeamForm().setVisible(true);
-			this.view.getTeamForm().resetTeamForm();
-			this.view.getTeamGrid().deselectAll();
-		} catch (NullPointerException npe) {
-			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
-			this.view.getTeamForm().setVisible(true);
-			this.view.getTeamForm().resetTeamForm();
-			this.view.getTeamGrid().deselectAll();
-		} finally {
-			resetSelectedTeam();
-		}
-	}
-	*/
-	
+
 	private void saveTeam() {
 		if (this.binderT.validate().isOk()) {
 			try {
-				System.out.println(this.selectedTeam);
 				this.eventBus.post(new SendTeamToDBEvent(this, this.selectedTeam));
 				this.view.getTeamForm().setVisible(false);
 				this.addTeam(selectedTeam);
@@ -228,16 +190,7 @@ public class VaadinTeamViewLogic implements ITeamView{
 			}
 		}
 	}
-	
-	/**
-	 * Methode, die ein neues Event erstellt und die Datenbank nach allen Teams abfragt
-	 * doppelter Code -> siehe initReadFromDB
-	public void initReadAllTeamsEvent() {
-		this.eventBus.post(new ReadAllTeamsEvent(this));
-		this.updateGrid();
-	}
-	*/
-	
+		
 	public void updateGrid() {
 		this.view.getTeamGrid().setItems(this.teams);
 	}

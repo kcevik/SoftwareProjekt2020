@@ -5,10 +5,13 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+
+import de.fhbielefeld.pmt.JPAEntities.ProjectActivity.activityCategories;
 
 /**
  * 
@@ -20,11 +23,8 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	private static final long serialVersionUID = 1L;
 
 	private final Label lblCreateEdit = new Label("Anlegen / Bearbeiten");
-	
-	// TODO: in den JPA Entities muss ne Liste rein mit ActivityCategories!
-	// TODO: private final ComboBox<HIER_ACTIVITY_KATEGORY> cbCategory = new ComboBox("Tätigkeitskategorie: ");
-	// TODO: Das scheiß Textfield tfCategory wieder löschen!
-	private final TextField tfCategory = new TextField("Tätigkeitskategorie :");
+
+	private final ComboBox<activityCategories> cbActivityCategory = new ComboBox<activityCategories>("Tätigkeitskategorie:");		
 	
 	private final TextField tfDescription = new TextField("Tätigkeitsbeschreibung: ");
 	private final TextField tfHoursAvailable = new TextField("max. verfügbare Stunden: ");
@@ -38,13 +38,15 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 		addClassName("projectActivity-form");
 		configureProjectActivityFormTextFields();
 		add(lblCreateEdit);
+	
 		lblCreateEdit.addClassName("lbl-heading-form");
-		add(tfCategory, tfDescription, tfHoursAvailable, tfHourlyRates, cbIsActive, configureProjectActivityFormButtons());
+		
+		add(cbActivityCategory, tfDescription, tfHoursAvailable, tfHourlyRates, cbIsActive, configureProjectActivityFormButtons());
 	}
 	
 	public void configureProjectActivityFormTextFields() {
 		this.lblCreateEdit.setEnabled(false);
-		this.tfCategory.setEnabled(false);
+		this.cbActivityCategory.setEnabled(false);
 		this.tfDescription.setEnabled(false);
 		this.tfHoursAvailable.setEnabled(false);
 		this.tfHourlyRates.setEnabled(false);
@@ -65,7 +67,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	
 	public void prepareProjectActivityFormFields() {
 		this.lblCreateEdit.setEnabled(true);
-		this.tfCategory.setEnabled(true);
+		this.cbActivityCategory.setEnabled(true);
 		this.tfDescription.setEnabled(true);
 		this.tfHoursAvailable.setEnabled(true);
 		this.tfHourlyRates.setEnabled(true);
@@ -75,7 +77,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	}
 	
 	public void closeProjectActivityFormFields() {
-		this.tfCategory.setEnabled(false);
+		this.cbActivityCategory.setEnabled(false);
 		this.tfDescription.setEnabled(false);
 		this.tfHoursAvailable.setEnabled(false);
 		this.tfHourlyRates.setEnabled(false);
@@ -86,7 +88,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	
 	public void resetProjectActivityForm() {
 		this.setVisible(false);
-		this.tfCategory.clear();
+		this.cbActivityCategory.clear();
 		this.tfDescription.clear();
 		this.tfHoursAvailable.clear();
 		this.tfHourlyRates.clear();
@@ -99,8 +101,8 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	 * ProjectActivityGrid ausgewählten Tätigkeit in der ProjectActivityForm darstellen kann 
 	 * @return
 	 */
-	public TextField getTfCategory() {
-		return tfCategory;
+	public ComboBox<activityCategories> getCbActivityCategory() {
+		return cbActivityCategory;
 	}
 	
 	public TextField getTfDescription() {
