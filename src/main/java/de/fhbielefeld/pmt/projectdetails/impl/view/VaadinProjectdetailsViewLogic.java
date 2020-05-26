@@ -33,6 +33,7 @@ import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.pdf.PDFGenerating;
 import de.fhbielefeld.pmt.project.impl.event.GenerateInvoiceEvent;
+import de.fhbielefeld.pmt.project.impl.event.ProjectDetailsModuleChoosenEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
@@ -40,9 +41,11 @@ import de.fhbielefeld.pmt.project.impl.event.SendStreamResourceInvoiceEvent;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 import de.fhbielefeld.pmt.projectdetails.impl.event.GenerateTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.ReadAllCostsEvent;
+import de.fhbielefeld.pmt.projectdetails.impl.event.ReadCurrentProjectEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendCostToDBEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendStreamResourceTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.TransportAllCostsEvent;
+import de.fhbielefeld.pmt.projectdetails.impl.event.TransportProjectEvent;
 import de.fhbielefeld.pmt.team.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.team.impl.event.SendTeamToDBEvent;
 import de.fhbielefeld.pmt.team.impl.event.TransportAllTeamsEvent;
@@ -51,9 +54,10 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 	BeanValidationBinder<Costs> binderT = new BeanValidationBinder<>(Costs.class);
 	private final VaadinProjectdetailsView view;
 	private final EventBus eventBus;
-	private ArrayList<Costs> costs = new ArrayList<>();
-	private Project project = new Project();
+	private List<Costs> costs;
+	private Project project;
 	private Costs selectedCost;
+	private boolean newCost = false;
 
 	public VaadinProjectdetailsViewLogic(VaadinProjectdetailsView view, EventBus eventBus) {
 
@@ -82,16 +86,18 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 			this.selectedCost = event.getValue();
 			this.displayCost();
 		});
-		this.view.getCostForm().getBtnEdit().addClickListener(event -> view.getCostForm().prepareCostFormFields());
-		this.view.getCostForm().getBtnSave().addClickListener(event -> this.saveCostPosition());
-		this.view.getBtnCreateCostPosition().addClickListener(event ->  createNewCostPosition());
+		this.view.getCostForm().getBtnEdit().addClickListener(event ->{ newCost = false; 
+																	    view.getCostForm().prepareCostFormFields();});
+		this.view.getCostForm().getBtnSave().addClickListener(event ->{ if (newCost)
+																		 this.createNewCostPosition();
+																	    this.saveCostPosition();
+																	    newCost = false; });
+		this.view.getBtnCreateCostPosition().addClickListener(event ->  newCost = true);//createNewCostPosition());
 		this.view.getBtnBackToProjectview().addClickListener(event -> this.view.getUI().ifPresent(ui -> ui.navigate("projectmanagement")));
 		//TODO: Error legt sich sobald selectedProject richtig implementiert ist
-		this.view.getBtnCreateCostPDF().addClickListener(event -> eventBus.post(new GenerateTotalCostsEvent(this, this.selectedProject)));
+		this.view.getBtnCreateCostPDF().addClickListener(event -> eventBus.post(new GenerateTotalCostsEvent(this, this.project)));
 		this.view.getBtnCreateCostPosition().setId("id");
 	}
-
-
 
 	public void resetForm() {
 		this.selectedCost = null;
@@ -99,8 +105,12 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	}
 
-	public void initReadFromDB() {
-		this.eventBus.post(new ReadAllCostsEvent(this));
+	public void initReadFromDB(Project project) {
+		this.project = project;
+		System.out.println("upper gehts");
+		this.eventBus.post(new ReadCurrentProjectEvent(this, project));	
+		//this.eventBus.post(new ReadAllCostsEvent(thist));*/
+		
 		this.updateGrid();
 	}
 
@@ -112,13 +122,12 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 	void calculateForAllCostInfo(List<Costs> list) {
 		double currentCost = 0;
 		for (Costs t : list)
-			if(t.getProject().getProjectID() == (project.getProjectID()))
-			   currentCost += t.getIncurredCosts();
+			currentCost += t.getIncurredCosts();
 		this.view.createCostInfo(currentCost, project.getBudget());
 
 	}
 
-	void bindToFields() {
+	void bindToFields() {  
 
 		this.binderT.forField(this.view.getCostForm().getCbCostType()).asRequired()
 				.withValidator((string -> string != null && !string.isEmpty()),
@@ -129,9 +138,11 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 				.withValidator(new RegexpValidator("Bitte positive Zahl eingeben. Bsp.: 1234,56", "\\d+\\,?\\d+"))
 				.withConverter(new plainStringToDoubleConverter("Bitte positive Zahl eingeben"))
 				.bind(Costs::getIncurredCosts, Costs::setIncurredCosts);
-	
-		this.binderT.forField(this.view.getCostForm().getTaDescription()).withValidator((string -> string != null && !string.isEmpty()),
-				"Bitte geben Sie eine Beschreibung ein!").bind(Costs::getDescription, Costs::setDescription);
+
+		this.binderT.forField(this.view.getCostForm().getTaDescription())
+				.withValidator((string -> string != null && !string.isEmpty()),
+						"Bitte geben Sie eine Beschreibung ein!")
+				.bind(Costs::getDescription, Costs::setDescription);
 
 	}
 
@@ -152,18 +163,22 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	@Subscribe
 	public void setCostItems(TransportAllCostsEvent event) {
-		for (Costs t : event.getCostList()) {
-			if (t.getProject().getProjectID() == this.project.getProjectID())
-			this.costs.add(t);
-		}
-		this.calculateForAllCostInfo(event.getCostList());
+		System.out.println("PRojekt " +this.project.getProjectID());
+		/*List<Costs> list = event.getCostList();
+		for (Costs t : list) {
+			if (t.getProject().getProjectID() == (this.project.getProjectID())) {
+				this.costs.add(t);
+			}
+		}*/
+		this.costs = event.getCostList();
+		this.calculateForAllCostInfo(this.costs);
 		this.updateGrid();
+		
 	}
-	
+
 	private void saveCostPosition() {
-		if (this.binderT.validate().isOk()) {
-			try {
-				
+		if (this.binderT.validate().isOk()) {   
+			try { 
 				this.eventBus.post(new SendCostToDBEvent(this, this.selectedCost));
 				this.view.getCostForm().setVisible(false);
 				this.addCost(selectedCost);
@@ -178,24 +193,39 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 			}
 		}
 	}
-	
+
 	void resetSelectedCost() {
 		this.selectedCost = null;
 	}
-	
+
 	public void addCost(Costs c) {
 		if (!this.costs.contains(c)) {
 			this.costs.add(c);
 		}
 	}
 	
+	@Override
+	public void setSelectedProject(Project selectedproject) {
+		this.project = selectedproject;
+	}
+	
+	@Subscribe
+	public void onTransportProjectEvent( TransportProjectEvent event) {
+		
+		this.project = event.getProject();
+	}
+	
 	private void createNewCostPosition() {
-		this.selectedCost = new Costs();
-		this.selectedCost.setCostType(this.view.getCostForm().getCbCostType().getValue());
-		this.selectedCost.setDescription(this.view.getCostForm().getTaDescription().getValue());
-		this.selectedCost.setIncurredCosts(Double.parseDouble(this.view.getCostForm().getTfIncurredCosts().getValue()));
-		this.selectedCost.setProject(this.project);
-		//saveCostPosition(); = new 
+		try {
+			this.selectedCost = new Costs();
+			this.selectedCost.setCostType(this.view.getCostForm().getCbCostType().getValue());
+			this.selectedCost.setDescription(this.view.getCostForm().getTaDescription().getValue());
+			this.selectedCost.setIncurredCosts(Double.parseDouble(this.view.getCostForm().getTfIncurredCosts().getValue()));
+			this.selectedCost.setProject(this.project);
+		} catch (NumberFormatException e) {
+			System.out.println("leeeere");
+		}
+		// saveCostPosition();
 	}
 	
 	
@@ -246,12 +276,12 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 		downloadLink.getElement().getStyle().set("display", "none");
 		downloadLink.getElement().setAttribute( "download" , true );
 		Page page = UI.getCurrent().getPage();
-<<<<<<< HEAD
+/*<<<<<<< HEAD
 		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
 	
 =======
 		page.executeJs("document.getElementById('" + event.getTimeStamp().toString() + "').click()");
->>>>>>> master
+>>>>>>> master*/
 	}
 
 	@Override

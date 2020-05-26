@@ -4,6 +4,7 @@ import java.util.EventObject;
 
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.project.IProjectView;
+import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class GenerateTotalCostsEvent extends EventObject {
 	private static final long serialVersionUID = 1L;
 	private Project selectedProject;
 	
-	public GenerateTotalCostsEvent(IProjectView view, Project selectedProject) {
+	public GenerateTotalCostsEvent(IProjectdetailsView view, Project selectedProject) {
 		super(view);
 		this.selectedProject = selectedProject;
 	}
