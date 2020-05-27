@@ -71,11 +71,10 @@ public class ProjectModel implements IProjectModel {
 	 */
 	@Override
 	public List<Project> getEditableProjectListFromDatabase(String userID, String userRole) {
-		if (userRole.equalsIgnoreCase("ceo")) {
+		if (userRole.equalsIgnoreCase("CEO")) {
 			return dbService.readproject();
 		}else if (userRole.equalsIgnoreCase("Projectmanager")) {
 			return dbService.readProjectForProjectmanager(userID);
-
 		}else return null;
 	}
 
