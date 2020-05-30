@@ -7,6 +7,11 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 import de.fhbielefeld.pmt.projectActivity.IProjectActivityModel;
 
+/**
+ * Klasse, die den Datenbankzugriff kontrolliert / Auslesen von Daten aus der Datenbank
+ * @author David Bistron
+ *
+ */
 public class ProjectActivityModel implements IProjectActivityModel {
 
 	private DatabaseService dbService;
@@ -52,9 +57,4 @@ public class ProjectActivityModel implements IProjectActivityModel {
 		
 	}
 	
-	/**
-	 * TODO: Hier muss noch so was rein wie getAlleTätigkeitskategorien oder so
-	 * TODO: Außderdem: Sende die erfassten Projekttätigkeiten zur Database
-	 */
-
 }

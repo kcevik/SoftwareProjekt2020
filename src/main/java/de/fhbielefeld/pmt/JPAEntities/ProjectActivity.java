@@ -1,13 +1,6 @@
 package de.fhbielefeld.pmt.JPAEntities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.*;
 
@@ -27,27 +20,28 @@ public class ProjectActivity implements Serializable {
 	private long projectActivityID;
 
 	/**
-	 * Neu hinzugefügt, damit Aktivitäten zur Verfügung stehen
+	 * Enum hinzugefügt, damit Aktivitäten zur Verfügung stehen -> werden in diesem Fall vom Softwarentwickler fest vorgegeben
 	 * @author David Bistron
-	 * TODO: Dat läuft, aber er will nicht binden!
 	 */
-	public enum activityCategories {Manager("Manager"), Koch("Koch"), IT("Systembetreuung"), Consulting("Consulting");
+	public static enum ActivityCategories {Management, Personal, Buchhaltung, Finanzen, Recht, Forschung_Entwicklung, Fertigung_Produktion, Qualitätssicherung, 
+		Consulting, Ausbildung_Praktikum, Marketing, IT, Facility_Management;
 		
+		/*
 		private String category;
-		
-		activityCategories(String category) {
+		ActivityCategories(String category) {
 			this.category = category;
 		}
-		
 		public  String getActivityCategories() {
 			return category;
 		}
-	
+		*/
 	}
 	
-	private List<activityCategories> cats = new ArrayList<activityCategories>(Arrays.asList(activityCategories.values()));
+	/* private List<ActivityCategories> enumCat = new ArrayList<ActivityCategories>(Arrays.asList(ActivityCategories.values()));
+	 * Keine Liste verwendet, da das den Sinn des enum zu nichte macht. Außerdem kann die ComboBox nicht gebindet werden! Lösung: private ActivityCategories category;
+	*/
 	
-	private String category;
+	private ActivityCategories category;
 	private String description;
 	private int hoursAvailable;
 	private int hoursExpended;
@@ -74,10 +68,9 @@ public class ProjectActivity implements Serializable {
 	 * @param hourlyRate
 	 * @param project
 	 */
-	public ProjectActivity(String category, String description, int hoursAvailable, int hoursExpended,
+	public ProjectActivity(ActivityCategories category, String description, int hoursAvailable, int hoursExpended,
 			double hourlyRate, Project project) {
 		super();
-		this.cats = cats;
 		this.category = category;
 		this.description = description;
 		this.hoursAvailable = hoursAvailable;
@@ -85,6 +78,7 @@ public class ProjectActivity implements Serializable {
 		this.hourlyRate = hourlyRate;
 		this.project = project;
 		this.isActive = true;
+		//this.enumCat = new ArrayList<ActivityCategories>();
 	}
 
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden
@@ -92,12 +86,19 @@ public class ProjectActivity implements Serializable {
 		return projectActivityID;
 	}
 
-	public String getCategory() {
+	/*
+	 * @author David Bistron
+	 * getMethode -> wird für die ComboBox benötigt
+	 */
+	public ActivityCategories getCategory() {
 		return category;
 	}
 	
-
-	public void setCategory(String category) {
+	/*
+	 * @author David Bistron
+	 * setMethode -> wird für die ComboBox benötigt
+	 */
+	public void setCategory(ActivityCategories category) {
 		this.category = category;
 	}
 
@@ -161,12 +162,20 @@ public class ProjectActivity implements Serializable {
 		return "(" + this.projectActivityID + ") " + this.description;
 	}
 
-	public List<activityCategories> getCats() {
-		return cats;
+	/**
+	 * @author David Bistron
+	 * get- und set-Methode für die enum - Werte
+	 * Keine Liste verwendet! Stattdessen 
+	 * public ActivityCategories getCategory() und public void setCategory(ActivityCategories category)		
+	 */
+	
+	/*public List<ActivityCategories> getEnumCat() {
+		return enumCat;
 	}
 
-	public void setCats(List<activityCategories> cats) {
-		this.cats = cats;
+	public void setEnumCat(List<ActivityCategories> enumCat) {
+		this.enumCat = enumCat;
 	}
+	*/
 
 }

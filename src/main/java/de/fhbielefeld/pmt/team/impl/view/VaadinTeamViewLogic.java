@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.binder.ErrorMessageProvider;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 
@@ -22,7 +20,7 @@ import de.fhbielefeld.pmt.team.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.team.impl.event.ReadAllProjectsEvent;
 import de.fhbielefeld.pmt.team.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.team.impl.event.SendTeamToDBEvent;
-import de.fhbielefeld.pmt.team.impl.event.TransportAllTeamsEvent;
+
 /**
  * Klasse, die die Logik für die View beinhaltet
  * @author David Bistron
@@ -30,14 +28,19 @@ import de.fhbielefeld.pmt.team.impl.event.TransportAllTeamsEvent;
  */
 public class VaadinTeamViewLogic implements ITeamView{
 	
+	/**
+	 * Instanzvariablen
+	 * BeanValidationBinder ist für das Binden der MultiSelectComboBoxen erforderlich. BeanValidation anstatt normalem 
+	 * Binder verwendet, damit ein Überprüfung der MultiSelectComboBoxen möglich ist
+	 */
 	BeanValidationBinder<Team> binderT = new BeanValidationBinder<Team>(Team.class);
 	private final VaadinTeamView view;
 	private final EventBus eventBus;
 	private Team selectedTeam;
-	private List<Employee> employees = new ArrayList<Employee>();
-	private List<Project> projects = new ArrayList<Project>();
+	private List<Employee> employees = new ArrayList<Employee>();;
+	private List<Project> projects= new ArrayList<Project>();;
 	private List<Team> teams = new ArrayList<Team>();
-
+ 
 	public VaadinTeamViewLogic(VaadinTeamView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View");
@@ -77,6 +80,10 @@ public class VaadinTeamViewLogic implements ITeamView{
 		
 	}
 		
+	/**
+	 * Methode, die die MultiselectComboBox mit Daten aus der Datenbank verknüpft. Die JPA-Entity Team wird angesprochen
+	 * und die entsprechenden Daten werden abgefragt
+	 */
 	public void bindToFields() {
 				
 		this.binderT.forField(this.view.getTeamForm().getTfTeamID())
@@ -88,7 +95,6 @@ public class VaadinTeamViewLogic implements ITeamView{
 		this.binderT.bind(this.view.getTeamForm().getIsActive(), "active");
 		
 		// TODO: Hinweis, dass mind. 1 Projekt und Mitarbeiter ausgewählt werden muss!
-	
 		this.binderT.forField(this.view.getTeamForm().getMscbTeamProject()).asRequired().
 		withValidator((string -> string != null && !string.isEmpty()), ("Bitte wählen Sie mindestens ein Projekt aus!"))
 		.bind(Team::getProjectList, Team::setProjectList);
@@ -117,6 +123,11 @@ public class VaadinTeamViewLogic implements ITeamView{
 		this.view.getTeamGrid().setItems(filtered);
 	}
 	
+	/**
+	 * Methode die das aktuell ausgewählte Team auf null setzt -> wird beim Klick auf den btnBack aufgerufen
+	 * wird von der Methode cancelForm aufgerufen
+	 * wird beim btnBackToMainMenu aufgerufen
+	 */
 	private void resetSelectedTeam() {
 		this.selectedTeam = null;
 	}
@@ -124,14 +135,12 @@ public class VaadinTeamViewLogic implements ITeamView{
 	/**
 	 * Methode, die dafür sorgt, dass die TeamForm ohne Werte angezeigt wird
 	 * Wird benötigt, wenn ein neues Team erfasst werden soll
-	 */
+	 */ 
 	private void createNewTeam() {
 		this.selectedTeam = new Team();
 		displayTeam();
-		this.view.getTeamGrid().deselectAll();
-		this.view.getTeamForm().resetTeamForm();
 		this.view.getTeamForm().prepareTeamFormFields();
-		this.view.getTeamForm().setVisible(true);
+		
 	}
 	
 	/**
@@ -143,6 +152,10 @@ public class VaadinTeamViewLogic implements ITeamView{
 		this.view.getTeamForm().getMscbTeamEmployee().setItems(this.employees);
 		}
 	
+	/**
+	 * Methode, die das zuvor selektierte Team beim Verlassen der teamForm zurücksetzt
+	 * Wird beim btnClose ausgeführt
+	 */
 	private void cancelForm() {
 		resetSelectedTeam();
 		this.view.clearGridAndForm();
@@ -155,12 +168,6 @@ public class VaadinTeamViewLogic implements ITeamView{
 	private void displayTeam() {
 		if (this.selectedTeam != null) {
 			try {
-				if (this.projects != null) {
-					this.view.getTeamForm().getMscbTeamProject().setItems(this.projects);
-				}
-				if (this.employees != null) {
-					this.view.getTeamForm().getMscbTeamEmployee().setItems(this.employees);
-				}
 				this.binderT.setBean(this.selectedTeam);
 				this.view.getTeamForm().closeTeamFormFields();
 				this.view.getTeamForm().setVisible(true);
@@ -172,7 +179,10 @@ public class VaadinTeamViewLogic implements ITeamView{
 			this.view.getTeamForm().setVisible(false);
 		}	
 	}
-
+ 
+	/**
+	 * Methode zum Speicher neu angelegter Teams -> mit SendTeamToDBEvent wird das Team als Event an die DB gesendet
+	 */
 	private void saveTeam() {
 		if (this.binderT.validate().isOk()) {
 			try {
@@ -190,30 +200,31 @@ public class VaadinTeamViewLogic implements ITeamView{
 			}
 		}
 	}
-		
+	 	
+	/**
+	 * Methode, die das TeamGrid aktualisiert, indem die Liste mit den Teams neu übergeben wird
+	 * wird von der Methode initReadFromDB aufgerufen
+	 */
 	public void updateGrid() {
 		this.view.getTeamGrid().setItems(this.teams);
 	}
-	
+	 
+	/**
+	 * Methode, die ein Event auslöst, das die DB nach allen Projekten, Mitarbeitern und Teams abfragt
+	 */
 	public void initReadFromDB() {
 		this.eventBus.post(new ReadAllProjectsEvent(this));
 		this.eventBus.post(new ReadAllEmployeesEvent(this));
 		this.eventBus.post(new ReadAllTeamsEvent(this));
+		if (this.projects != null) {
+			this.view.getTeamForm().getMscbTeamProject().setItems(this.projects);
+		}
+		if (this.employees != null) {
+			this.view.getTeamForm().getMscbTeamEmployee().setItems(this.employees);
+		}
 		this.updateGrid();
 	}
-	
-	/**
-	 * Methode, die das Event "TransportAllTeams" als Liste überliefert bekommt und die Teams einzeln der View hinzufügt 
-	 * @param event
-	 */
-	@Subscribe
-	public void setTeamItems(TransportAllTeamsEvent event) {
-		for(Team t : event.getTeamList()) {
-			this.view.addTeam(t);
-		}
-		this.view.updateGrid();
-	}
-
+  
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {
@@ -223,6 +234,10 @@ public class VaadinTeamViewLogic implements ITeamView{
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
 	
+	/**
+	 * Methode, die benötigt wird, damit die über die mscb zu einem Team die entsprechenden Projekte und Mitarbeiter  
+	 * hinzugefügt werden können
+	 */
 	@Override
 	public void setProjects(List<Project> projects) {
 		this.projects = projects;
@@ -233,6 +248,11 @@ public class VaadinTeamViewLogic implements ITeamView{
 		this.employees = employees;
 	}
 
+	@Override
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
+	}
+	
 	/**
 	 * Methode, um das Team zu der Array-Liste hinzufügen
 	 * Abfrage, ob in der Liste das gewünschte Team bereits entalten ist. Wenn nicht, wird es hinzugefügt
@@ -245,9 +265,6 @@ public class VaadinTeamViewLogic implements ITeamView{
 		}
 	}
 	
-	/**
-	 * brauche ich das überhaupt`?
-	 */
 	@Override
 	public void addProject(Project p) {
 		if (!this.projects.contains(p)) {
@@ -255,9 +272,6 @@ public class VaadinTeamViewLogic implements ITeamView{
 		}
 	}
 	
-	/**
-	 * brauche ich das überhaupt`?
-	 */
 	@Override
 	public void addEmployee(Employee e) {
 		if (!this.employees.contains(e)) {
