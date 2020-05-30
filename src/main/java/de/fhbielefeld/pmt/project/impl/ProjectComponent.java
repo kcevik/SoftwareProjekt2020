@@ -44,10 +44,10 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 			if (this.model.isNonEditableProjectListReadSuccessfull(event.getUserID(), event.getUserRole())) {
 				this.view.setNonEditableProjects(
 						this.model.getNonEditableProjectListFromDatabase(event.getUserID(), event.getUserRole()));
-				if (this.model.isEditableProjectListReadSuccessfull(event.getUserID(), event.getUserRole())) {
-					this.view.setEditableProjects(
-							this.model.getEditableProjectListFromDatabase(event.getUserID(), event.getUserRole()));
-				}
+			}
+			if (this.model.isEditableProjectListReadSuccessfull(event.getUserID(), event.getUserRole())) {
+				this.view.setEditableProjects(
+						this.model.getEditableProjectListFromDatabase(event.getUserID(), event.getUserRole()));
 			}
 		}
 	}
