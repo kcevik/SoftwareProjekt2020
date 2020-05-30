@@ -64,7 +64,7 @@ public class VaadinTeamView extends VerticalLayout {
 
 	/**
 	 * addClassName greift auf den CSS-Style "list-view" zu
-	 * die TeamForm ist zunächst nicht sichtbar
+	 * die TeamForm ist zunächst nicht sichtbar, daher setVisible(false)
 	 */
 	private void initUI() {
 		
@@ -101,14 +101,8 @@ public class VaadinTeamView extends VerticalLayout {
 	private void configureGrid() {
 		this.teamGrid.addClassName("team-grid");
 		this.teamGrid.removeColumnByKey("projectList");
-		this.teamGrid.setColumns("teamID", "teamName", "employeeList", "projectList");
-		this.teamGrid.getColumnByKey("employeeList").setHeader("Zugehörige Mitarbeiter");
-		this.teamGrid.getColumnByKey("projectList").setHeader("Zugehörige Projekte");
-		
-		// TODO: Hierdurch wird eine weitere Spalte mit Projekte angelegt, in der die Projekte gesammelt werden
-		// TODO: ist irgendwie doppelt, da ja bereits "Zugehörige Projekte" vorhanden sind
-		this.teamGrid.getColumnByKey("employeeList").setVisible(false);
-		this.teamGrid.getColumnByKey("projectList").setVisible(false);
+		this.teamGrid.removeColumnByKey("employeeList");
+		this.teamGrid.setColumns("teamID", "teamName");	
 		
 		this.teamGrid.addColumn(team -> { 
 			String projectString = "";
@@ -135,6 +129,13 @@ public class VaadinTeamView extends VerticalLayout {
 		this.teamGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.teamGrid.setHeightFull();
 		this.teamGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
+	}
+	
+	/**
+	 * Aktualisierung des Grid. Wie? Die darzustellende Liste wird neu übergeben
+	 */
+	public void updateGrid() {
+		this.teamGrid.setItems(this.teamList);
 	}
 
 	/**
@@ -182,13 +183,6 @@ public class VaadinTeamView extends VerticalLayout {
 	
 	public List<Team> getTeamList(){
 		return teamList;
-	}
-	
-	/**
-	 * Aktualisierung des Grid. Wie? Die darzustellende Liste wird neu übergeben
-	 */
-	public void updateGrid() {
-		this.teamGrid.setItems(this.teamList);
 	}
 
 }
