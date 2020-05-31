@@ -48,7 +48,7 @@ public class DatabaseService {
 			databaseService = new DatabaseService();
 		}
 		//TODO: ToFix: Braucht new DatabaseService falls SQL Aktualisierungen durchkommen sollen!
-		return databaseService;
+		return new DatabaseService();// databaseService;
 	}
 
 	/**
@@ -220,6 +220,20 @@ public class DatabaseService {
 		return resultListProject;
 	}
 
+	/**
+	 * Gibt Liste aller Projects aus DB zurück, die zu einem bestimmten Kunden gehören
+	 * 
+	 * @param none
+	 * @return List<Project>
+	 */
+	public List<Project> readProjectsForClient(Client client) {
+
+		TypedQuery<Project> query = em.createQuery("SELECT p FROM Project p WHERE p.client = :client", Project.class);
+		query.setParameter("client", client);
+		List<Project> resultListProject = query.getResultList();
+		return resultListProject;
+	}
+	
 	/**
 	 * Gibt Liste aller Costs zu einem Project aus DB zurück
 	 * 
