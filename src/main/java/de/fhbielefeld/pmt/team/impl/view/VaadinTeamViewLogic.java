@@ -7,6 +7,7 @@ import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 
@@ -92,7 +93,6 @@ public class VaadinTeamViewLogic implements ITeamView{
 		// TODO: Hinweis erscheint nur, wenn > 50 Zeichen eingegeben werden, aber nicht bei < 1 Zeichen!
 		this.binderT.forField(this.view.getTeamForm().getTfTeamName()).asRequired().withValidator(new RegexpValidator
 				("Bitte wählen Sie einen Teamnamen zwischen 1 und 50 Zeichen", ".{1,50}")).bind(Team::getTeamName, Team::setTeamName);
-		this.binderT.bind(this.view.getTeamForm().getIsActive(), "active");
 		
 		// TODO: Hinweis, dass mind. 1 Projekt und Mitarbeiter ausgewählt werden muss!
 		this.binderT.forField(this.view.getTeamForm().getMscbTeamProject()).asRequired().
@@ -102,6 +102,8 @@ public class VaadinTeamViewLogic implements ITeamView{
 		this.binderT.forField(this.view.getTeamForm().getMscbTeamEmployee()).asRequired().
 		withValidator((string -> string != null && !string.isEmpty()), ("Bitte wählen Sie mindestens einen Mitarbeiter aus!"))
 		.bind(Team::getEmployeeList, Team::setEmployeeList);
+		
+		this.binderT.bind(this.view.getTeamForm().getIsActive(), "active");
 		
 	}
 	 
@@ -168,7 +170,7 @@ public class VaadinTeamViewLogic implements ITeamView{
 	private void displayTeam() {
 		if (this.selectedTeam != null) {
 			try {
-				this.binderT.setBean(this.selectedTeam);
+				this.binderT.readBean(this.selectedTeam);
 				this.view.getTeamForm().closeTeamFormFields();
 				this.view.getTeamForm().setVisible(true);
 				} catch (NumberFormatException nfe) {
@@ -186,13 +188,14 @@ public class VaadinTeamViewLogic implements ITeamView{
 	private void saveTeam() {
 		if (this.binderT.validate().isOk()) {
 			try {
+				this.binderT.writeBean(this.selectedTeam);
 				this.eventBus.post(new SendTeamToDBEvent(this, this.selectedTeam));
 				this.view.getTeamForm().setVisible(false);
 				this.addTeam(selectedTeam);
 				this.updateGrid();
 				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-			} catch (NumberFormatException nfe) {
+			} catch (NumberFormatException | ValidationException nfe) {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {

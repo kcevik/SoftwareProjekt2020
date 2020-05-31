@@ -14,7 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity.ActivityCategories;
 
 /**
- * 
+ * Klasse, die die ProjectActivityForm (links innerhalb der View) erstellt
  * @author David Bistron
  *
  */
@@ -26,6 +26,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 
 	private final ComboBox<ActivityCategories> cbActivityCategory = new ComboBox<ActivityCategories>("Tätigkeitskategorie:");		
 		
+	private final TextField tfProjectID = new TextField("Projekt-ID: ");
 	private final TextField tfDescription = new TextField("Tätigkeitsbeschreibung: ");
 	private final TextField tfHoursAvailable = new TextField("max. verfügbare Stunden: ");
 	private final TextField tfHourlyRates = new TextField("Stundensatz: ");
@@ -39,11 +40,12 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 		configureProjectActivityFormTextFields();
 		add(lblCreateEdit);		
 		lblCreateEdit.addClassName("lbl-heading-form");
-		add(cbActivityCategory, tfDescription, tfHoursAvailable, tfHourlyRates, cbIsActive, configureProjectActivityFormButtons());
+		add(tfProjectID, cbActivityCategory, tfDescription, tfHoursAvailable, tfHourlyRates, cbIsActive, configureProjectActivityFormButtons());
 	}
 	
 	public void configureProjectActivityFormTextFields() {
 		this.lblCreateEdit.setEnabled(false);
+		this.tfProjectID.setEnabled(false);
 		this.cbActivityCategory.setEnabled(false);
 		this.tfDescription.setEnabled(false);
 		this.tfHoursAvailable.setEnabled(false);
@@ -65,6 +67,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	
 	public void prepareProjectActivityFormFields() {
 		this.lblCreateEdit.setEnabled(true);
+		this.tfProjectID.setEnabled(false);
 		this.cbActivityCategory.setEnabled(true);
 		this.tfDescription.setEnabled(true);
 		this.tfHoursAvailable.setEnabled(true);
@@ -76,6 +79,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	
 	public void closeProjectActivityFormFields() {
 		this.cbActivityCategory.setEnabled(false);
+		this.tfProjectID.setEnabled(false);
 		this.tfDescription.setEnabled(false);
 		this.tfHoursAvailable.setEnabled(false);
 		this.tfHourlyRates.setEnabled(false);
@@ -86,6 +90,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	
 	public void resetProjectActivityForm() {
 		this.setVisible(false);
+		this.tfProjectID.clear();
 		this.cbActivityCategory.clear();
 		this.tfDescription.clear();
 		this.tfHoursAvailable.clear();

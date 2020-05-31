@@ -71,10 +71,10 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 	private void bindToFields() {
 
 		this.binder.forField(this.view.getREMARKFORM().getTfRemarkID())
-				.withConverter(new StringToLongConverter("")).bind(Remark::getCommentID, null);
+				.withConverter(new StringToLongConverter("")).bind(Remark::getRemarkID, null);
 		this.binder.forField(this.view.getREMARKFORM().getCbProject()).bind(Remark::getProject, Remark::setProject);
-		this.binder.forField(this.view.getREMARKFORM().getTaRemark()).asRequired().bind(Remark::getCommentText,
-				Remark::setCommentText);
+		this.binder.forField(this.view.getREMARKFORM().getTaRemark()).asRequired().bind(Remark::getRemarkText,
+				Remark::setRemarkText);
 		//this.binder.bind(this.view.getREMARKFORM().getCkIsActive(), "active");
 	}
 
@@ -153,7 +153,7 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 
 			if (r.getProject().getProjectName() != null && r.getProject().getProjectName().contains(filter)) {
 				filtered.add(r);
-			} else if (String.valueOf(r.getCommentID()).contains(filter)) {
+			} else if (String.valueOf(r.getRemarkID()).contains(filter)) {
 				filtered.add(r);
 			} else if (String.valueOf(r.getProject().getProjectID()).contains(filter)) {
 				filtered.add(r);
