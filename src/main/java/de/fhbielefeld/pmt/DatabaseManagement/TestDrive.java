@@ -5,6 +5,7 @@ import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
+import de.fhbielefeld.pmt.JPAEntities.ProjectActivity.ActivityCategories;
 import de.fhbielefeld.pmt.JPAEntities.Remark;
 import de.fhbielefeld.pmt.JPAEntities.RoleCEO;
 import de.fhbielefeld.pmt.JPAEntities.RoleProjectManager;
@@ -190,68 +191,68 @@ public class TestDrive {
 		 * public ProjectActivity(String category, String description, int
 		 * hoursAvailable, int hoursExpended, boolean isActive, Project project)
 		 */
-		ProjectActivity activityEis = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityEis = new ProjectActivity(ActivityCategories.Ausbildung_Praktikum,
 				"Beschreibung der Activity fehlt ebenfalls", 130, 00, 40.0, projectEiswebsite);
-		ProjectActivity activityEis1 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityEis1 = new ProjectActivity(ActivityCategories.Fertigung_Produktion,
 				"Beschreibung der Activity fehlt ebenfalls", 18, 00, 150.0, projectEiswebsite);
-		ProjectActivity activityEis2 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityEis2 = new ProjectActivity(ActivityCategories.Facility_Management,
 				"Beschreibung der Activity fehlt ebenfalls", 70, 00, 30.0, projectEiswebsite);
-		ProjectActivity activityEis3 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityEis3 = new ProjectActivity(ActivityCategories.Ausbildung_Praktikum,
 				"Beschreibung der Activity fehlt ebenfalls", 158, 00, 40.0, projectEiswebsite);
-		ProjectActivity activityEis4 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityEis4 = new ProjectActivity(ActivityCategories.Facility_Management,
 				"Beschreibung der Activity fehlt ebenfalls", 130, 00, 50.5, projectEiswebsite);
-		ProjectActivity activityEis5 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityEis5 = new ProjectActivity(ActivityCategories.Ausbildung_Praktikum,
 				"Beschreibung der Activity fehlt ebenfalls", 18, 00, 50.5, projectEiswebsite);
-		ProjectActivity activityEis6 = new ProjectActivity("Activity50.0, fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityEis6 = new ProjectActivity(ActivityCategories.Marketing,
 				"Beschreibung der Activity fehlt ebenfalls", 70, 00, 56.0, projectEiswebsite);
-		ProjectActivity activityEis7 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityEis7 = new ProjectActivity(ActivityCategories.Fertigung_Produktion,
 				"Beschreibung der Activity fehlt ebenfalls", 158, 00, 50.0, projectEiswebsite);
 
-		ProjectActivity activityKFZ = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityKFZ = new ProjectActivity(ActivityCategories.Forschung_Entwicklung,
 				"Beschreibung der Activity fehlt ebenfalls", 122, 00, 9.0, projectKFZRestwert);
-		ProjectActivity activityKFZ2 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityKFZ2 = new ProjectActivity(ActivityCategories.Fertigung_Produktion,
 				"Beschreibung der Activity fehlt ebenfalls", 1858, 00, 90.0, projectKFZWebsite);
-		ProjectActivity activityKFZ3 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityKFZ3 = new ProjectActivity(ActivityCategories.IT,
 				"Beschreibung der Activity fehlt ebenfalls", 155, 55, 50.0, projectKFZSchadenswert);
-		ProjectActivity activityKFZ4 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityKFZ4 = new ProjectActivity(ActivityCategories.Buchhaltung,
 				"Beschreibung der Activity fehlt ebenfalls", 157, 99, 53.0, projectKFZWebsite);
-		ProjectActivity activityKFZ5 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityKFZ5 = new ProjectActivity(ActivityCategories.Fertigung_Produktion,
 				"Beschreibung der Activity fehlt ebenfalls", 122, 00, 30.0, projectKFZRestwert);
-		ProjectActivity activityKFZ6 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityKFZ6 = new ProjectActivity(ActivityCategories.Personal,
 				"Beschreibung der Activity fehlt ebenfalls", 1858, 00, 20.0, projectKFZWebsite);
-		ProjectActivity activityKFZ7 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityKFZ7 = new ProjectActivity(ActivityCategories.Marketing,
 				"Beschreibung der Activity fehlt ebenfalls", 155, 55, 54.0, projectKFZSchadenswert);
-		ProjectActivity activityKFZ8 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityKFZ8 = new ProjectActivity(ActivityCategories.Fertigung_Produktion,
 				"Beschreibung der Activity fehlt ebenfalls", 157, 99, 90.0, projectKFZWebsite);
 
-		ProjectActivity activityProd = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityProd = new ProjectActivity(ActivityCategories.Consulting,
 				"Beschreibung der Activity fehlt ebenfalls", 122, 00, 50.0, projectProdukt);
-		ProjectActivity activityProd2 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityProd2 = new ProjectActivity(ActivityCategories.Forschung_Entwicklung,
 				"Beschreibung der Activity fehlt ebenfalls", 1858, 00, 50.0, projectProdukt);
-		ProjectActivity activityProd3 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityProd3 = new ProjectActivity(ActivityCategories.IT,
 				"Beschreibung der Activity fehlt ebenfalls", 155, 55, 50.0, projectProdukt);
-		ProjectActivity activityProd4 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityProd4 = new ProjectActivity(ActivityCategories.Buchhaltung,
 				"Beschreibung der Activity fehlt ebenfalls", 157, 99, 50.0, projectProdukt);
-		ProjectActivity activityProd5 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityProd5 = new ProjectActivity(ActivityCategories.Ausbildung_Praktikum,
 				"Beschreibung der Activity fehlt ebenfalls", 122, 00, 50.0, projectProdukt);
-		ProjectActivity activityProd6 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityProd6 = new ProjectActivity(ActivityCategories.Qualitätssicherung,
 				"Beschreibung der Activity fehlt ebenfalls", 1858, 00, 50.0, projectProdukt);
-		ProjectActivity activityProd7 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityProd7 = new ProjectActivity(ActivityCategories.Recht,
 				"Beschreibung der Activity fehlt ebenfalls", 155, 55, 50.0, projectProdukt);
-		ProjectActivity activityProd8 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityProd8 = new ProjectActivity(ActivityCategories.Recht,
 				"Beschreibung der Activity fehlt ebenfalls", 157, 99, 50.0, projectProdukt);
 
-		ProjectActivity activityMesse = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityMesse = new ProjectActivity(ActivityCategories.Facility_Management,
 				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 54.0, projectMesse);
-		ProjectActivity activityMesse1 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityMesse1 = new ProjectActivity(ActivityCategories.Forschung_Entwicklung,
 				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 55.0, projectMesse);
-		ProjectActivity activityMesse2 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityMesse2 = new ProjectActivity(ActivityCategories.Management,
 				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 59.0, projectMesse);
-		ProjectActivity activityMesse3 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityMesse3 = new ProjectActivity(ActivityCategories.Marketing,
 				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 10.0, projectMesse);
-		ProjectActivity activityMesse4 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityMesse4 = new ProjectActivity(ActivityCategories.Personal,
 				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 20.0, projectMesse);
-		ProjectActivity activityMesse5 = new ProjectActivity("Activity fehlt noch keine Ahnung welche es geben wird",
+		ProjectActivity activityMesse5 = new ProjectActivity(ActivityCategories.Consulting,
 				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 50.0, projectMesse);
 
 		// Erstellung Teams

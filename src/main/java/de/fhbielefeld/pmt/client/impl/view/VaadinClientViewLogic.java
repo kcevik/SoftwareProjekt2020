@@ -107,7 +107,6 @@ public class VaadinClientViewLogic implements IClientView {
 	/**
 	 * Zeigt Daten des aktuell Ausgewählten Clients im Bearbeitungsformular an
 	 */
-	//TODO: Klappt das überhaut so? MSCB Bug fix
 	private void displayClient() {
 		if (this.selectedClient != null) {
 			try {
@@ -128,15 +127,29 @@ public class VaadinClientViewLogic implements IClientView {
 	 * Formularfeldern und verschickt den das Client Objekt mit einem Bus
 	 */
 	private void saveClient() {
-
 		if (this.binder.validate().isOk()) {
 			try {
-				this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
-				this.view.getCLIENTFORM().setVisible(false);
-				this.addClient(selectedClient);
-				this.updateGrid();
-				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
-						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+				// TODO Nicht schön aber läuft? Lokale Daten genauso anpassen wie sie in der DB
+				// landen
+				if (this.selectedClient.getProjectList().isEmpty()) {
+					Notification.show("Projekt benötigt Kunden", 5000, Notification.Position.TOP_CENTER)
+							.addThemeVariants(NotificationVariant.LUMO_ERROR);
+					return;
+				} else {
+
+					for (Client c : this.clients) {
+						for (Project p : this.selectedClient.getProjectList()) {
+							if (c.getProjectList().contains(p) && c != this.selectedClient) {
+								c.removeProject(p);
+							}
+						}
+					}
+
+					this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
+					this.view.getCLIENTFORM().setVisible(false);
+					this.addClient(selectedClient);
+					this.updateGrid();
+				}
 			} catch (NumberFormatException e) {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);

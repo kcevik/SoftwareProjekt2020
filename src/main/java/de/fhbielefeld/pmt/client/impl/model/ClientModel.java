@@ -2,6 +2,9 @@ package de.fhbielefeld.pmt.client.impl.model;
 
 import java.util.List;
 
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Project;
@@ -33,16 +36,30 @@ public class ClientModel implements IClientModel {
 	}
 
 	/**
-	 * Schreibt den übergenen Client in die DB
-	 * TODO: Wieso wird das Projekt nicht aktualisiert?
+	 * Schreibt den übergenen Client in die DB TODO: Wieso wird das Projekt nicht
+	 * aktualisiert?
+	 * 
 	 * @param Client
 	 */
 	@Override
 	public void persistClient(Client client) {
-		for(Project p : client.getProjectList()) {
-			this.dbService.readSingleProject(p.getProjectID()).setClient(client);
+		//TODO: Random Contraint violation bei Projekt 38?
+		if (client.getProjectList().isEmpty()) {
+			System.out.println("ich mache das");
+			for (Project p : this.dbService.readProjectsForClient(client)){
+				p.setClient(null);
+				this.dbService.persistProject(p);
+			}
+		} else {
+			for (Project p : client.getProjectList()) {
+				this.dbService.readSingleProject(p.getProjectID()).setClient(client);
+				this.dbService.persistProject(p);
+			}
 		}
 		this.dbService.persistClient(client);
+		Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
+		.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
 //		for (Project p : client.getProjectList()) {
 //			System.out.println("Prüfe: " + p);
 //			if (p.getClient() == client ) { 

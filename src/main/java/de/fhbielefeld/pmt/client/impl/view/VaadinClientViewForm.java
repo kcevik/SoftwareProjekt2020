@@ -31,7 +31,7 @@ public class VaadinClientViewForm extends FormLayout {
 	private final TextField tfZipCode = new TextField("PLZ:");
 	private final TextField tfTown = new TextField("Ort:");
 	private final Checkbox ckIsActive = new Checkbox("Aktiv");
-	private final MultiselectComboBox<Project> mscbProjects = new MultiselectComboBox<Project>();
+	private final MultiselectComboBox<Project> mscbProjects = new MultiselectComboBox<Project>("Projekte neu zuordnen:");
 
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
