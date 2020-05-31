@@ -43,6 +43,10 @@ public class VaadinTeamViewForm extends FormLayout {
 		add(tfTeamID, tfTeamName, mscbTeamProject, mscbTeamEmployee, cbIsActive, configureTeamFormButtons());
 	}
 
+	/**
+	 * Methode, die dafür sorgt, dass die TeamForm grundsätzlich nicht erscheint
+	 * TeamForm erscheint nur bei der Bearbeitung eines vorhandenen Teams oder bei der Erstellung eines neuen Teams
+	 */
 	public void configureTeamFormTextFields() {
 		this.lblCreateEdit.setEnabled(false);
 		this.tfTeamID.setEnabled(false);
@@ -50,9 +54,12 @@ public class VaadinTeamViewForm extends FormLayout {
 		this.mscbTeamProject.setEnabled(false);
 		this.mscbTeamEmployee.setEnabled(false);
 		this.cbIsActive.setEnabled(false);
-
 		
 	}
+	/**
+	 * Methode, die dafür sorgt, dass die Buttons entsprechend der Auswahl angepasst werden
+	 * @return
+	 */
 	
 	public Component configureTeamFormButtons() {
 		btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
@@ -66,7 +73,7 @@ public class VaadinTeamViewForm extends FormLayout {
 	}
 
 	/**
-	 * TODO: Methode, die die TeamForm 
+	 * TODO: Methode, die die Bearbeitungsmöglichkeit der Felder in der TeamForm steuert
 	 */
 	public void prepareTeamFormFields() {
 		this.tfTeamID.setEnabled(false);

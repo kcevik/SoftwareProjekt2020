@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
@@ -20,7 +19,7 @@ import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
  * @author David Bistron
  *
  */
-@CssImport("./styles/shared-styles.css")
+
 public class VaadinProjectActivityView extends VerticalLayout {
 
 	private static final long serialVersionUID = 1L;
@@ -36,7 +35,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	private Button btnCreateNewProjectActivity = new Button("Neue Projekttätigkeit erfassen");
 	private Button btnBackToMainMenu = new Button("Zurück zur Aufgabenauswahl");
 	private VaadinProjectActivityViewForm projectActivityForm = new VaadinProjectActivityViewForm();
-
+	
 	/**
 	 * Methode, die die ProjectActivityView erstellt, indem sie die Methoden initUI und builtUI aufruft
 	 */
@@ -66,7 +65,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	private void initUI() {
 		
 		addClassName("list-view");
-		this.projectActivityForm.setVisible(true);
+		this.projectActivityForm.setVisible(false);
 		setSizeFull();
 		configureGrid();
 		configureFilter();
@@ -85,7 +84,6 @@ public class VaadinProjectActivityView extends VerticalLayout {
 
 	/**
 	 * Methode, die die Tabelle und das Formular zurücksetzt
-	 * TODO: hat hier nix zu suchen, muss in die Logic
 	 */
 	public void clearGridAndForm() {
 		this.projectActivityGrid.deselectAll();
@@ -109,7 +107,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		
 		// TODO: Hierdurch wird eine weitere Spalte mit Projekte angelegt, in der die Projekte gesammelt werden
 		// TODO: ist irgendwie doppelt, da ja bereits "Zugehörige Projekte" vorhanden sind
-		this.projectActivityGrid.getColumnByKey("projectActivityID").setVisible(false);
+		// this.projectActivityGrid.getColumnByKey("projectActivityID").setVisible(false);
 	
 		// TODO: Hier ist ein Fehler
 		/*this.projectActivityGrid.addColumn(project -> {
@@ -165,7 +163,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		return btnCreateNewProjectActivity;
 	}
 	
-	public VaadinProjectActivityViewForm getProjectActivityViewForm() {
+	public VaadinProjectActivityViewForm getProjectActivityForm() {
 		return projectActivityForm;
 	}
 	

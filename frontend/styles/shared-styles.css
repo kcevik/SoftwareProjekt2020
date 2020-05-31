@@ -95,8 +95,6 @@ html {
 b{
 	position: fixed;
 	right: 0;
-	
-	
 }
 
 .analyticsDiv{
@@ -109,6 +107,21 @@ b{
 .chartsDiv{
 	position: absolute;
 }
+
+/*
+/*@author Sebastian Siegmann, David Bistron
+/*Style für die Navigator-Box definiert, damit diese Korrekt dargestellt wird
+*/
+
+.navigatorBox{
+	border: white 1px solid;
+	z-index: 1;
+	align-self: flex-end;
+	position: absolute;
+	top: 136px;
+	
+}
+
 
 
 }

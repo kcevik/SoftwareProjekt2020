@@ -9,6 +9,7 @@ import de.fhbielefeld.pmt.team.ITeamView;
  *
  */
 public class ReadAllTeamsEvent extends EventObject {
+	
 	private static final long serialVersionUID = 1L;
 
 	public ReadAllTeamsEvent(ITeamView view) {

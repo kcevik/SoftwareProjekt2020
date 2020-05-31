@@ -11,7 +11,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
-import de.fhbielefeld.pmt.JPAEntities.ProjectActivity.activityCategories;
+import de.fhbielefeld.pmt.JPAEntities.ProjectActivity.ActivityCategories;
 
 /**
  * 
@@ -24,8 +24,8 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 
 	private final Label lblCreateEdit = new Label("Anlegen / Bearbeiten");
 
-	private final ComboBox<activityCategories> cbActivityCategory = new ComboBox<activityCategories>("Tätigkeitskategorie:");		
-	
+	private final ComboBox<ActivityCategories> cbActivityCategory = new ComboBox<ActivityCategories>("Tätigkeitskategorie:");		
+		
 	private final TextField tfDescription = new TextField("Tätigkeitsbeschreibung: ");
 	private final TextField tfHoursAvailable = new TextField("max. verfügbare Stunden: ");
 	private final TextField tfHourlyRates = new TextField("Stundensatz: ");
@@ -37,10 +37,8 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	public VaadinProjectActivityViewForm() {
 		addClassName("projectActivity-form");
 		configureProjectActivityFormTextFields();
-		add(lblCreateEdit);
-	
+		add(lblCreateEdit);		
 		lblCreateEdit.addClassName("lbl-heading-form");
-		
 		add(cbActivityCategory, tfDescription, tfHoursAvailable, tfHourlyRates, cbIsActive, configureProjectActivityFormButtons());
 	}
 	
@@ -101,7 +99,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	 * ProjectActivityGrid ausgewählten Tätigkeit in der ProjectActivityForm darstellen kann 
 	 * @return
 	 */
-	public ComboBox<activityCategories> getCbActivityCategory() {
+	public ComboBox<ActivityCategories> getCbActivityCategory() {
 		return cbActivityCategory;
 	}
 	

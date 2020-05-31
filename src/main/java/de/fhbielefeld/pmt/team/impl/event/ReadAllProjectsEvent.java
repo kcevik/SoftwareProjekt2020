@@ -5,6 +5,7 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.team.ITeamView;
 
 /**
+ * EventObject = Vaadin-Komponente
  * Klasse, die für die MultiSelektListBox benötigt wird
  * @author David Bistron
  *

@@ -20,13 +20,13 @@ public class VaadinTopBarView extends HorizontalLayout {
 	private final Label lblHeading = new Label();
 	private final Label lblSlogan = new Label();
 	private final Button btnLogout = new Button(new Icon(VaadinIcon.BACKWARDS));
-	private final Icon iconLogo = new Icon(VaadinIcon.CHART_GRID);
+	private final Icon iconLogo = new Icon(VaadinIcon.CHART_GRID);	
 
 	public VaadinTopBarView() {
 		this.initUI();
 		this.buildUI();
 	}
-
+  
 	/**
 	 * Baut das Layout auf und fügt Komponenten hinzu
 	 */

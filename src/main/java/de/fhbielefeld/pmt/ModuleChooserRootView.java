@@ -72,7 +72,6 @@ public class ModuleChooserRootView extends VerticalLayout {
 	 */
 	@Subscribe
 	public void onEmloyeeModuleChosen(EmployeesModuleChosenEvent event) {
-		System.out.println("wenn ich dich wähle, dann bist du ein EmployeeModule");
 		this.getUI().ifPresent(ui -> ui.navigate("employeemanagement"));
 	}
 
@@ -81,7 +80,6 @@ public class ModuleChooserRootView extends VerticalLayout {
 	 */
 	@Subscribe
 	public void onClientModuleChosen(ClientModuleChosenEvent event) {
-		System.out.println("wenn ich dich wähle, dann bist du ein ClientModule");
 		this.getUI().ifPresent(ui -> ui.navigate("clientmanagement"));
 	}
 
@@ -107,7 +105,6 @@ public class ModuleChooserRootView extends VerticalLayout {
 	 */
 	@Subscribe
 	public void onPersonalDetailsChosen(PersonalDetailsChosenEvent event) {
-		System.out.println("wenn ich dich wähle, dann bist du ein Mein Konto");
 		this.getUI().ifPresent(ui -> ui.navigate("personalDetails"));
 	}
 	

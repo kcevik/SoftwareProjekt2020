@@ -6,13 +6,22 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
+import de.fhbielefeld.pmt.error.LoginChecker;
+import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.navigatorBox.INavigatorBoxComponent;
+import de.fhbielefeld.pmt.navigatorBox.impl.NavigatorBoxComponent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenActivitiesEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenAnalyticsEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenCostsEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenRemarksEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.view.VaadinNavigatorBoxLogic;
+import de.fhbielefeld.pmt.navigatorBox.impl.view.VaadinNavigatorBoxView;
 import de.fhbielefeld.pmt.projectActivity.IProjectActivityComponent;
 import de.fhbielefeld.pmt.projectActivity.impl.ProjectActivityComponent;
 import de.fhbielefeld.pmt.projectActivity.impl.model.ProjectActivityModel;
@@ -24,9 +33,7 @@ import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
 
 /**
- * Klasse, die das Routing steuert / Wo wird der User hingeleitet, wenn er auf
- * "Teams verwalten" klickt?
- * 
+ * Klasse, die das Routing steuert / Wo wird der User hingeleitet, wenn er auf "Projektaktivitäten" klickt?
  * @author David Bistron
  *
  */
@@ -40,24 +47,48 @@ public class ProjectActivityRootView extends VerticalLayout {
 	VaadinSession session = VaadinSession.getCurrent();
 
 	/**
-	 * Methode zur Erstellug der View (Routing im Web mit URL) ruft die Methoden
-	 * createTopBarComponent = Obere Leiste und TeamComponent = Unterer Bereich auf
+	 * Methode zur Erstellug der View (Routing im Web mit URL) ruft die Methoden createTopBarComponent = Obere Leiste und TeamComponent = Unterer Bereich (Grid&View) auf
+	 * INavigatorBox stellt die 4 Buttons dar, mit denen die speziellen Bereiche zu einem Projekt aufgerufen werden können -> wird nicht in jeder View eingebunden!
 	 */
 	public ProjectActivityRootView() {
 
 		this.eventBus.register(this);
-		ITopBarComponent topBarComponent = this.createTopBarComponent();
-		IProjectActivityComponent projectActivityComponent = this.createProjectActivityComponent();
-
-		Component topBarView = topBarComponent.getViewAs(Component.class);
-		Component projectActivityView = projectActivityComponent.getViewAs(Component.class);
 		
-		this.add(topBarView);
-		this.add(projectActivityView);
+		if (rootViewLoginCheck()) {	
+			ITopBarComponent topBarComponent = this.createTopBarComponent();
+			IProjectActivityComponent projectActivityComponent = this.createProjectActivityComponent();
+			INavigatorBoxComponent navigatorBoxComponent = this.createNavigatorBoxComponent();
+			
+			Component topBarView = topBarComponent.getViewAs(Component.class);
+			Component navigatorBoxView = navigatorBoxComponent.getViewAs(Component.class);
+			Component projectActivityView = projectActivityComponent.getViewAs(Component.class);
+		
+			this.add(topBarView);
+			this.add(navigatorBoxView);
+			this.add(projectActivityView);
+		}
+		
 		this.setHeightFull();
-		this.setAlignItems(Alignment.CENTER);
+		// this.setAlignItems(Alignment.CENTER); -> entfernt, da die Darstellung von 3 Komponenten ansonsten Mist ist
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
+	}
+	
+	/**
+	 * Methode, die überprüft, ob der User eingeloggt ist oder nicht
+	 * Sofern der User nicht eingeloggt sein sollte, wird eine Fehlermeldung angezeigt
+	 * @return
+	 */
+	private boolean rootViewLoginCheck() {
+		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
+				session.getAttribute("LOGIN_USER_FIRSTNAME"), session.getAttribute("LOGIN_USER_LASTNAME"),
+				session.getAttribute("LOGIN_USER_ROLE"))) {
+			return true;
+		} else {
+			this.removeAll();
+			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
+			return false;
+		}
 	}
 
 	/**
@@ -78,10 +109,9 @@ public class ProjectActivityRootView extends VerticalLayout {
 	}
 
 	/**
-	 * Methode, die die komplette Teamkomponente erstellt (Logik für TeamGrid und
-	 * TeamForm)
+	 * Methode, die die komplette Teamkomponente erstellt (Logik für TeamGrid und TeamForm)
 	 * 
-	 * @return
+	 * @return projectActivityComponent
 	 */
 	private IProjectActivityComponent createProjectActivityComponent() {
 
@@ -95,6 +125,20 @@ public class ProjectActivityRootView extends VerticalLayout {
 
 	}
 
+	/**
+	 * Methode, die die Navigationsbox mit den Icons erstellt, um zwischen den einzelnen Bereichen hin und her switchen zu können
+	 * @return navigatorBoxComponent
+	 */
+	private INavigatorBoxComponent createNavigatorBoxComponent() {
+		
+		VaadinNavigatorBoxView vaadinNavigatorBoxView = new VaadinNavigatorBoxView();
+		INavigatorBoxComponent navigatorBoxComponent = new NavigatorBoxComponent(
+				new ProjectActivityModel(DatabaseService.DatabaseServiceGetInstance()),
+				new VaadinNavigatorBoxLogic(vaadinNavigatorBoxView, this.eventBus), this.eventBus);
+		return navigatorBoxComponent;
+		
+	}
+	
 	/**
 	 * Methode, die die Rückkehr zum Aufgabenauswahl-Screen steuert, wenn der Button
 	 * "zurück zur Aufgabenauswahl" gedrückt wird
@@ -123,6 +167,31 @@ public class ProjectActivityRootView extends VerticalLayout {
 		session.setAttribute("LOGIN_USER_ROLE", null);
 		this.getUI().ifPresent(ui -> ui.navigate(""));
 
+	}
+	
+	/**
+	 * Routing für die einzelnen Buttons
+	 * @param event
+	 */
+	
+	@Subscribe
+	public void onOpenAnalyticsEvent(OpenAnalyticsEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("projectanalytics"));
+	}
+	
+	@Subscribe
+	public void onOpenActivitiesEvent(OpenActivitiesEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("projectactivity"));
+	}
+	
+	@Subscribe
+	public void onOpenCostEvent(OpenCostsEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("projectdetails"));
+	}
+	
+	@Subscribe
+	public void onOpenRemarksEvent(OpenRemarksEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("remarkmanagement"));
 	}
 
 }

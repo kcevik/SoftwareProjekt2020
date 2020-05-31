@@ -22,7 +22,7 @@ public class Team implements Serializable {
 	private String teamName;
 	private boolean isActive;
 	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "teamList")
-	private Set<Employee> employeeList;
+	private HashSet<Employee> employeeList;
 	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "teamList")
 	private Set<Project> projectList;
 	
@@ -31,6 +31,8 @@ public class Team implements Serializable {
 	 */
 	public Team() {
 		super();
+		this.employeeList = new HashSet<Employee>();	// Hinzugefügt, da ansonsten kein neues Team persistiert werden kann,
+		this.projectList  = new HashSet<Project>(); 	// da die Liste leer ist
 	}
 
 	/**
@@ -45,7 +47,7 @@ public class Team implements Serializable {
 		//TODO: https://www.codeflow.site/de/article/java-hashset-vs-treeset Deswegen Hashset weil speed
 		this.employeeList = new HashSet<Employee>();
 		this.projectList  = new HashSet<Project>();
-		this.employeeList.add(employee);
+		// this.employeeList.add(employee);
 	}
 
 	public boolean isActive() {
@@ -91,16 +93,27 @@ public class Team implements Serializable {
 	 * neue Mitarbeiter hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
 	 * bearbeitet werden
 	 */
-	public void setEmployeeList(Set<Employee> employeeList) {
-		this.employeeList = employeeList;
+	public void setEmployeeList(Set<Employee> employeeList) {		
+		for (Employee e : employeeList) { // Übergabeparameter MA-Liste
+			if (!this.employeeList.contains(e)) { // wenn in der Instanzliste NICHT e enthalten ist, dann adden
+				addEmployee(e);
+			}
+		}
+		for (Employee e : this.employeeList) { // Instanzliste MA-Liste
+			if (!employeeList.contains(e)) { // wenn in der Übergabeparameter MA-Liste NICHT e enthalten ist, dann remove
+				removeEmployee(e);
+			}
+		}
 	}
 
 	public void addEmployee (Employee employee) {
 		this.employeeList.add(employee);
+		employee.addTeam(this);	// BI-Direktionale Anweisung, damit in DB persistiert wird
 	}
 
 	public void removeEmployee (Employee employee) {
 		this.employeeList.remove(employee);
+		employee.removeTeam(this); // BI-Direktionale Anweisung, damit in DB persistiert wird
 	}
 
 	public Set<Project> getProjectList() {
@@ -114,16 +127,28 @@ public class Team implements Serializable {
 	 * neue Projekte hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
 	 * bearbeitet werden
 	 */
+	
 	public void setProjectList(Set<Project> projectList) {
-		this.projectList = projectList;
+		for (Project p : projectList) {
+			if (!this.projectList.contains(p)) {
+				addProject(p);
+			}
+		}
+		for (Project p : this.projectList) {
+			if (!projectList.contains(p)) {
+				removeProject(p);
+			}
+		}
 	}
 
 	public void addProject (Project project) {
 		this.projectList.add(project);
+		project.addTeam(this);
 	}
 
 	public void removeProject (Project project) {
 		this.projectList.remove(project);
+		project.removeTeam(this);
 	}
 	
 	/**

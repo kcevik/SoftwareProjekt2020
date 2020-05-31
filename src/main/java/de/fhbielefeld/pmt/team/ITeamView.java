@@ -14,11 +14,13 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
  */
 public interface ITeamView extends IViewAccessor {
 
-	public void setProjects(List<Project> projects);
-	public void setEmployees(List<Employee> employees);
-	
+	public void setTeams(List<Team> teams);
 	public void addTeam(Team t);
+	
+	public void setProjects(List<Project> projects);
 	public void addProject(Project p);
+	
+	public void setEmployees(List<Employee> employees);
 	public void addEmployee(Employee e);
 	
 }

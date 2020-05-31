@@ -4,13 +4,13 @@ import de.fhbielefeld.pmt.IViewAccessor;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 
 /**
- * Interface für 
+ * Interface für die NavigatorBox
  * @author David Bistron
  *
  */
 public interface IProjectActivityView extends IViewAccessor {
 
-	// TODO public void setProjectActivityCategory(List<ActivityCategories> activityCategories);
+	//public void setProjectActivityCategory(List<ActivityCategories> activityCategories);
 	public void addProjectActivity(ProjectActivity p);
 	
 }
