@@ -7,6 +7,7 @@ import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.RegexpValidator;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
@@ -29,15 +30,14 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	
 	/**
 	 * Instanzvariablen
-	 * BeanValidationBinder ist für das Binden der MultiSelectComboBoxen erforderlich. BeanValidation anstatt normalem 
-	 * Binder verwendet, damit ein Überprüfung der MultiSelectComboBoxen möglich ist
+	 * BeanValidationBinder ist für das Binden der ComboBox erforderlich. BeanValidation anstatt normalem 
+	 * Binder verwendet, damit ein Überprüfung der ComboBox möglich ist
 	 */
 	BeanValidationBinder<ProjectActivity> binder = new BeanValidationBinder<ProjectActivity>(ProjectActivity.class);
 	private final VaadinProjectActivityView view;
 	private final EventBus eventBus;
 	private ProjectActivity selectedProjectActivity;
 	private List<ProjectActivity> projectActivities = new ArrayList<ProjectActivity>();
-	//private List<ActivityCategories> enumCat = new ArrayList<ActivityCategories>(); // enum
 
 	public VaadinProjectActivityViewLogic(VaadinProjectActivityView view, EventBus eventBus) {
 		if (view == null) {
@@ -53,6 +53,9 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		this.bindToFields();
 	}
 
+	/**
+	 *  Fügt den Komponenten der View die entsprechenden Listener hinzu. 
+	 */
 	private void registerViewListeners() {
 		this.view.getProjectActivityGrid().asSingleSelect().addValueChangeListener(event -> {
 		this.selectedProjectActivity = event.getValue();
@@ -73,6 +76,10 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		
 	}
 
+	/**
+	 * Methode, die die MultiselectComboBox mit Daten aus der Datenbank verknüpft. Die JPA-Entity ProjectActivity wird angesprochen
+	 * und die entsprechenden Daten werden abgefragt
+	 */
 	public void bindToFields() {
 
 		this.binder.forField(this.view.getProjectActivityForm().getCbActivityCategory()).asRequired()
@@ -124,6 +131,8 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 			System.out.println(p.toString());
 			if (p.getDescription() != null && p.getDescription().contains(filter)) {
 				filtered.add(p);
+			} else if (String.valueOf(p.getProjectActivityID()) != null && (String.valueOf(p.getProjectActivityID()).contains(filter))) {
+				filtered.add(p);
 			} else if (p.getCategory() != null && p.getCategory().toString().contains(filter)) {
 				filtered.add(p);
 			} else if (String.valueOf(p.getHourlyRate()) != null && (String.valueOf(p.getHourlyRate()).toString().contains(filter))) {
@@ -153,7 +162,6 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	private void createNewProjectActivity() {
 		this.selectedProjectActivity = new ProjectActivity();
 		displayProjectActivity();
-		newProjectActivityBinder();
 		this.view.getProjectActivityForm().prepareProjectActivityFormFields();
 		
 	}
@@ -170,8 +178,8 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	private void displayProjectActivity() {
 		if (this.selectedProjectActivity != null) {
 			try {
-				this.binder.setBean(this.selectedProjectActivity);
-				//this.view.getProjectActivityForm().closeProjectActivityFormFields();
+				this.binder.readBean(this.selectedProjectActivity);
+				this.view.getProjectActivityForm().closeProjectActivityFormFields();
 				this.view.getProjectActivityForm().setVisible(true);
 				} catch (NumberFormatException nfe) {
 					this.view.getProjectActivityForm().resetProjectActivityForm();
@@ -182,16 +190,20 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		}
 	}
 	
+	/**
+	 * Methode zum Speicher neu angelegter Projektaktivitäten -> mit SendProjectActivityToDBEvent wird die Aktivität als Event an die DB gesendet
+	 */
 	private void saveProjectActivity() {
 		if (this.binder.validate().isOk()) {
 			try {
+				this.binder.writeBean(this.selectedProjectActivity);
 				this.eventBus.post(new SendProjectActivityToDBEvent(this, this.selectedProjectActivity));
 				this.view.getProjectActivityForm().setVisible(false);
 				this.addProjectActivity(selectedProjectActivity);
 				this.updateGrid();
 				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-			} catch (NumberFormatException nfe) {
+			} catch (NumberFormatException | ValidationException nfe) {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
@@ -214,7 +226,14 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		if (this.projectActivities != null) {
 			this.view.getProjectActivityForm().getCbActivityCategory().setItems(ActivityCategories.values());
 		}
+		this.updateGrid();
 	}
+	
+	@Override
+	public void setProjectActivity(List<ProjectActivity> projectActivities) {
+		this.projectActivities = projectActivities;
+	}
+	 
 	
 	@Override
 	public void addProjectActivity(ProjectActivity p) {

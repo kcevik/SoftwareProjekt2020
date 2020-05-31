@@ -6,18 +6,19 @@
 
 /*
 /*@author Sebastian Siegmann, David Bistron
-/*Style für die Navigator-Box definiert, damit diese Korrekt dargestellt wird
+/*Style fï¿½r die Navigator-Box definiert, damit diese Korrekt dargestellt wird
 */
 
 .navigatorBox{
-	border: white 1px solid;
+	border: white 1px dashed;
+	background-color: #F8F8FF;
 	z-index: 1;
 	align-self: flex-end;
 	position: absolute;
-	top: 136px;
+	top: 136px;	
+	margin-right: 10px;
 	
 }
-
 
 /* Example: CSS class name to center align the content . */
 .centered-content {
@@ -122,4 +123,7 @@ b{
 .chartsDiv{
 	position: absolute;
 }
+
+
+
 
