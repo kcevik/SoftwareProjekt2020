@@ -6,7 +6,7 @@ import de.fhbielefeld.pmt.team.ITeamView;
 
 /**
  * EventObject = Vaadin-Komponente
- * Klasse, die für die MultiSelektListBox benötigt wird
+ * Klasse, die das Event zum Auslesen aller Projekte aus der DB verantwortlich ist
  * @author David Bistron
  *
  */

@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
+import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 
 /**
@@ -56,7 +57,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		content.addClassName("content");
 		content.setSizeFull();
 		this.add(new HorizontalLayout(tfFilterText, btnCreateNewProjectActivity), content, btnBackToMainMenu);
-	
+		
 	}
 
 	/**
@@ -96,33 +97,30 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	 */
 	private void configureGrid() {
 		this.projectActivityGrid.addClassName("projectActivity-grid");
-		// this.projectActivityGrid.removeColumnByKey("project");
-		// TODO: Hier noch keine korrekte Verknüpfung, wird Fehler geben!
-		this.projectActivityGrid.setColumns("project", "projectActivityID", "category", "description", "hoursAvailable", "hoursExpended");
-		this.projectActivityGrid.getColumnByKey("project").setHeader("Projekt-ID");
+		
+		this.projectActivityGrid.removeColumnByKey("project");
+		
+		this.projectActivityGrid.setColumns("projectActivityID", "category", "description", "hoursAvailable", "hourlyRate", "hoursExpended");
+		
+		//TODO: Die Projekt-ID vom gewählten Projekt muss da stehen!
+		this.projectActivityGrid.addColumn(ProjectActivity -> {
+			String projectActivityString = "";
+			projectActivityString += ProjectActivity.getProject() + "";
+			
+			// TODO: TEST
+			System.out.println(ProjectActivity.getProject());
+			
+			return projectActivityString;
+		}).setHeader("Projekt ID");
+		
+		// this.projectActivityGrid.getColumnByKey("project").setHeader("Projekt ID");
+		this.projectActivityGrid.getColumnByKey("projectActivityID").setHeader("Aktivitäts ID");
 		this.projectActivityGrid.getColumnByKey("category").setHeader("Tätigkeitskategorie");
 		this.projectActivityGrid.getColumnByKey("description").setHeader("Tätigkeitsbeschreibung");
+		this.projectActivityGrid.getColumnByKey("hourlyRate").setHeader("Stundensatz");
 		this.projectActivityGrid.getColumnByKey("hoursAvailable").setHeader("max. verfügbare Stunden");
 		this.projectActivityGrid.getColumnByKey("hoursExpended").setHeader("bisher aufgewendete Stunden");
-		
-		// TODO: Hierdurch wird eine weitere Spalte mit Projekte angelegt, in der die Projekte gesammelt werden
-		// TODO: ist irgendwie doppelt, da ja bereits "Zugehörige Projekte" vorhanden sind
-		// this.projectActivityGrid.getColumnByKey("projectActivityID").setVisible(false);
-	
-		// TODO: Hier ist ein Fehler
-		/*this.projectActivityGrid.addColumn(project -> {
-			String projectString = "";
-			// TODO: in ProjectActivity muss es ne Liste von Projekten geben!
-			for (Project p : project.getProject()) {
-				projectString += p.getProjectName() + ", ";
-			}
-			if (projectString.length() > 2) {
-				projectString = projectString.substring(0, projectString.length());
-			}
-			return projectString;
-		}).setHeader("Zugehörige Mitarbeiter als String");
-		*/
-		
+			
 		this.projectActivityGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.projectActivityGrid.setHeightFull();
 		this.projectActivityGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
