@@ -6,6 +6,7 @@ import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
@@ -110,7 +111,7 @@ public class VaadinClientViewLogic implements IClientView {
 	private void displayClient() {
 		if (this.selectedClient != null) {
 			try {
-				this.binder.setBean(this.selectedClient);
+				this.binder.readBean(this.selectedClient);
 				this.view.getCLIENTFORM().closeEdit();
 				this.view.getCLIENTFORM().setVisible(true);
 
@@ -129,8 +130,10 @@ public class VaadinClientViewLogic implements IClientView {
 	private void saveClient() {
 		if (this.binder.validate().isOk()) {
 			try {
-				// TODO Nicht schön aber läuft? Lokale Daten genauso anpassen wie sie in der DB
-				// landen
+				this.binder.writeBean(this.selectedClient);
+				// TODO Wenn von mehreren Projekten eins gelöscht wird, dass ist die Liste nicht leer aber das Projekt hat trotzdem keinen Client mehr
+				//TODO For schleife und gucken ob jedes Projekt nen Kunden hat und wenn nich denn fehler?
+				
 				if (this.selectedClient.getProjectList().isEmpty()) {
 					Notification.show("Projekt benötigt Kunden", 5000, Notification.Position.TOP_CENTER)
 							.addThemeVariants(NotificationVariant.LUMO_ERROR);
@@ -150,8 +153,8 @@ public class VaadinClientViewLogic implements IClientView {
 					this.addClient(selectedClient);
 					this.updateGrid();
 				}
-			} catch (NumberFormatException e) {
-				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
+			} catch (NumberFormatException | ValidationException e) {
+				Notification.show("NumberFormatException oder ValidationException", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
 				resetSelectedClient();
