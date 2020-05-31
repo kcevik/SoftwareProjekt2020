@@ -45,6 +45,7 @@ public class VaadinModuleChooserView extends VerticalLayout{
 		header.setFlexGrow(1, icon);
 		header.setPadding(true);
 		header.setSpacing(true);
+		lblChooseOption.addClassName("lblWelcome");
 		
 		this.add(header);
 		

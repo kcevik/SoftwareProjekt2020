@@ -129,25 +129,27 @@ public class VaadinClientViewLogic implements IClientView {
 	private void saveClient() {
 		if (this.binder.validate().isOk()) {
 			try {
-				// TODO Nicht schön aber läuft? Lokale Daten genauso anpassen wie sie in der DB landen
+				// TODO Nicht schön aber läuft? Lokale Daten genauso anpassen wie sie in der DB
+				// landen
 				if (this.selectedClient.getProjectList().isEmpty()) {
 					Notification.show("Projekt benötigt Kunden", 5000, Notification.Position.TOP_CENTER)
 							.addThemeVariants(NotificationVariant.LUMO_ERROR);
 					return;
-				}
-				
-				for(Client c : this.clients) {
-					for(Project p : this.selectedClient.getProjectList()) {
-						if(c.getProjectList().contains(p) && c != this.selectedClient) {
-							c.removeProject(p);
+				} else {
+
+					for (Client c : this.clients) {
+						for (Project p : this.selectedClient.getProjectList()) {
+							if (c.getProjectList().contains(p) && c != this.selectedClient) {
+								c.removeProject(p);
+							}
 						}
 					}
+
+					this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
+					this.view.getCLIENTFORM().setVisible(false);
+					this.addClient(selectedClient);
+					this.updateGrid();
 				}
-				
-				this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
-				this.view.getCLIENTFORM().setVisible(false);
-				this.addClient(selectedClient);
-				this.updateGrid();
 			} catch (NumberFormatException e) {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
