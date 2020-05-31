@@ -1,6 +1,7 @@
 package de.fhbielefeld.pmt.remark.impl.event;
 
 import java.util.EventObject;
+
 import de.fhbielefeld.pmt.remark.IRemarkView;
 /**
  * 

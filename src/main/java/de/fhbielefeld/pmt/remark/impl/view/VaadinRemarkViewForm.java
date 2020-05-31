@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 
 import de.fhbielefeld.pmt.JPAEntities.Project;
+import oracle.sql.TIMESTAMP;
 
 /**
  * VaadinView Klasse, welche das Formular erstellt
@@ -26,8 +28,10 @@ public class VaadinRemarkViewForm extends FormLayout {
 	private final Label lblBeschreibung = new Label();
 	private final TextField tfRemarkID = new TextField("Anmerkung ID:");
 	private final TextArea taRemark = new TextArea("Anmerkung:");
-	private final Checkbox ckIsActive = new Checkbox("Aktiv");
+//	private final Checkbox ckIsActive = new Checkbox("Aktiv");
 	private final ComboBox<Project> cbProject = new ComboBox<Project>();
+//	private final TextField dPDate = new TextField("Datum:");
+
 
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
@@ -35,18 +39,21 @@ public class VaadinRemarkViewForm extends FormLayout {
 
 	public VaadinRemarkViewForm() {
 		addClassName("remark-form");
-		configureTextFields();
+		configureFormFields();
 		cbProject.isReadOnly();
+//		this.dPDate.isReadOnly();
 		lblBeschreibung.add("Anlegen/Bearbeiten");
 		lblBeschreibung.addClassName("lbl-heading-form");
-		add(lblBeschreibung, tfRemarkID, cbProject, ckIsActive, taRemark, configureButtons());
+		add(lblBeschreibung, tfRemarkID, cbProject, taRemark, configureButtons());
 	}
 
-	private void configureTextFields() {
+	private void configureFormFields() {
 		this.tfRemarkID.setEnabled(false);
 		this.taRemark.setEnabled(false);
 		this.cbProject.setEnabled(false);
-		this.ckIsActive.setEnabled(false);
+//		this.ckIsActive.setEnabled(false);
+//		cbProject.setReadOnly(true);
+
 	}
 
 	/**
@@ -73,10 +80,10 @@ public class VaadinRemarkViewForm extends FormLayout {
 	public void clearRemarkForm() {
 		this.setVisible(false);
 		this.tfRemarkID.clear();
-
+//		this.dPDate.clear();
 		this.taRemark.clear();
 		this.cbProject.clear();
-		this.ckIsActive.clear();
+//		this.ckIsActive.clear();
 		this.cbProject.clear();
 		this.closeEdit();
 	}
@@ -85,7 +92,7 @@ public class VaadinRemarkViewForm extends FormLayout {
 		this.tfRemarkID.setEnabled(false);
 		this.taRemark.setEnabled(true);
 		this.cbProject.setEnabled(true);
-		this.ckIsActive.setEnabled(true);
+//		this.ckIsActive.setEnabled(true);
 		this.btnSave.setVisible(true);
 		this.btnEdit.setVisible(false);
 	}
@@ -94,7 +101,8 @@ public class VaadinRemarkViewForm extends FormLayout {
 		this.tfRemarkID.setEnabled(false);
 		this.taRemark.setEnabled(false);
 		this.cbProject.setEnabled(false);
-		this.ckIsActive.setEnabled(false);this.btnSave.setVisible(false);
+//		this.ckIsActive.setEnabled(false);
+		this.btnSave.setVisible(false);
 		this.btnEdit.setVisible(true);
 	}
 
@@ -116,9 +124,9 @@ public class VaadinRemarkViewForm extends FormLayout {
 		return cbProject;
 	}
 
-	public Checkbox getCkIsActive() {
-		return ckIsActive;
-	}
+//	public Checkbox getCkIsActive() {
+//		return ckIsActive;
+//	}
 
 	public ComboBox<Project> getCbProjects() {
 		return cbProject;
@@ -139,5 +147,9 @@ public class VaadinRemarkViewForm extends FormLayout {
 	public Label getLblBeschreibung() {
 		return lblBeschreibung;
 	}
+
+//	public TextField getdPDate() {
+//		return dPDate;
+//	}
 
 }

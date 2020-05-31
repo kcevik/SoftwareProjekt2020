@@ -13,6 +13,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
 import de.fhbielefeld.pmt.JPAEntities.Remark;
+import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
@@ -29,26 +30,26 @@ public class VaadinRemarkView extends VerticalLayout {
 	private final Grid<Remark> remarkGrid = new Grid<>(Remark.class);
 	private final List<Remark> remarkList = new ArrayList<Remark>();
 	private final TextField tfFilter = new TextField();
-	private final Button btnBackToMainMenu = new Button();
+	private final Button btnBackToProjectview = new Button();
 	private final Button btnCreateRemark = new Button();
 
-	private final VaadinRemarkViewForm REMARKFORM = new VaadinRemarkViewForm();
+	private final VaadinRemarkViewForm remarkForm = new VaadinRemarkViewForm();
 
 	public VaadinRemarkView() {
 
 		this.initUI();
-		this.buitUI();
+		this.builtUI();
 	}
 
 	/**
 	 * Erzeugt die Vaadin Komponenten
 	 * 
 	 */
-	private void buitUI() {
-		Div content = new Div(remarkGrid, REMARKFORM);
+	private void builtUI() {
+		Div content = new Div(remarkGrid, remarkForm);
 		content.addClassName("content");
 		content.setSizeFull();
-		this.add(new HorizontalLayout(tfFilter, btnCreateRemark), content, btnBackToMainMenu);
+		this.add(new HorizontalLayout(tfFilter, btnCreateRemark), content, btnBackToProjectview);
 	}
 
 	/**
@@ -58,32 +59,36 @@ public class VaadinRemarkView extends VerticalLayout {
 	private void initUI() {
 		addClassName("list-view");
 		setSizeFull();
-		this.btnCreateRemark.setText("Neuen Anmerkung erstellen");
-		this.REMARKFORM.setVisible(false);
-		this.btnBackToMainMenu.setText("Zurück zur Aufgabenauswahl");
-		System.out.println("Test a");
+		this.btnCreateRemark.setText("Neue Anmerkung erstellen");
+		this.remarkForm.setVisible(false);
+		this.btnBackToProjectview.setText("Zurück zur Aufgabenauswahl");
 		configureGrid();
-		System.out.println("Test b");
-		configureFilter();
-		System.out.println("Test c");
+		createFilter();
 
 	}
 
+	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	/**
 	 * Setzt die Tabelle und das Forular zurück
 	 */
 	public void clearGridAndForm() {
 		this.remarkGrid.deselectAll();
-		this.REMARKFORM.clearRemarkForm();
+		this.remarkForm.clearRemarkForm();
 	}
 
 	/**
 	 * Setzt Eigenschaften für den Filter fest
 	 */
-	private void configureFilter() {
-		this.tfFilter.setPlaceholder("Filter nach Projekt ID");
+	private void createFilter() {
+		this.tfFilter.setPlaceholder("Suchen");
 		this.tfFilter.setClearButtonVisible(true);
 		this.tfFilter.setValueChangeMode(ValueChangeMode.LAZY);
+//		this.tfFilter.addValueChangeListener(e -> filterList(tfFilter.getValue()));
+
 	}
 
 	/**
@@ -91,19 +96,16 @@ public class VaadinRemarkView extends VerticalLayout {
 	 */
 	private void configureGrid() {
 		this.remarkGrid.addClassName("remark-grid");
-		System.out.println("Test Well");
-		
-		System.out.println("Test Well 2");
-//		this.remarkGrid.addColumn(remark -> remark.getProject().getProjectName()).setHeader("Projektname");
-//		this.remarkGrid.addColumn(remark -> remark.getProject().getProjectID()).setHeader("Projekt ID");
-//		this.remarkGrid.addColumn(remark -> remark.getProject().getSupProject()).setHeader("Überprojekt");
-		System.out.println("Test Well 3");
-//		this.remarkGrid.setColumns("remarkID", "remarkText", "postedDate");
-		System.out.println("Test Well 3");
-//		this.remarkGrid.getColumnByKey("remarkID").setHeader("Notiz ID");
-//		this.remarkGrid.getColumnByKey("remarkText").setHeader("Anmerkung");
-//		this.remarkGrid.getColumnByKey("postedDate").setHeader("Datum");
-//		this.remarkGrid.removeColumnByKey("remarkID");
+		this.remarkGrid.removeColumnByKey("remarkID");
+		this.remarkGrid.removeColumnByKey("project");
+//		remarkGrid.addColumn(project -> {
+//		     return project.getProject().getSupProject();
+//		}).setHeader("Überprojekt").setId("20");
+		this.remarkGrid.setColumns("project", "remarkID", "remarkText", "date");
+		this.remarkGrid.getColumnByKey("project").setHeader("Projektnummer");
+		this.remarkGrid.getColumnByKey("remarkID").setHeader("Notiz ID");
+		this.remarkGrid.getColumnByKey("remarkText").setHeader("Anmerkung");
+		this.remarkGrid.getColumnByKey("date").setHeader("Datum");
 
 		
 //		this.remarkGrid.addColumn(remark -> {
@@ -118,6 +120,7 @@ public class VaadinRemarkView extends VerticalLayout {
 //		}).setHeader("Projekte");
 		this.remarkGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.remarkGrid.setHeightFull();
+	
 		this.remarkGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 	}
 
@@ -125,12 +128,12 @@ public class VaadinRemarkView extends VerticalLayout {
 		return remarkGrid;
 	}
 
-	public VaadinRemarkViewForm getREMARKFORM() {
-		return REMARKFORM;
+	public VaadinRemarkViewForm getRemarkForm() {
+		return remarkForm;
 	}
 
-	public Button getBtnBackToMainMenu() {
-		return btnBackToMainMenu;
+	public Button getBtnBackProject() {
+		return btnBackToProjectview;
 	}
 
 	public void addRemark(Remark c) {

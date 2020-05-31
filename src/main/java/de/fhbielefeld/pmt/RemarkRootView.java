@@ -4,22 +4,41 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
+import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.remark.IRemarkComponent;
 import de.fhbielefeld.pmt.remark.impl.RemarkComponent;
 import de.fhbielefeld.pmt.remark.impl.model.RemarkModel;
 import de.fhbielefeld.pmt.remark.impl.view.VaadinRemarkView;
 import de.fhbielefeld.pmt.remark.impl.view.VaadinRemarkViewLogic;
+import de.fhbielefeld.pmt.remarkNavBar.impl.view.VaadinRemarksNavBarView;
+import de.fhbielefeld.pmt.remarkNavBar.impl.view.VaadinRemarksNavBarViewLogic;
 import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.error.LoginChecker;
 import de.fhbielefeld.pmt.error.impl.view.NotAuthorizedError;
 import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.navigatorBox.INavigatorBoxComponent;
+import de.fhbielefeld.pmt.navigatorBox.impl.NavigatorBoxComponent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenActivitiesEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenAnalyticsEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenCostsEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenRemarksEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.view.VaadinNavigatorBoxLogic;
+import de.fhbielefeld.pmt.navigatorBox.impl.view.VaadinNavigatorBoxView;
+import de.fhbielefeld.pmt.projectActivity.IProjectActivityComponent;
+import de.fhbielefeld.pmt.projectActivity.impl.model.ProjectActivityModel;
+import de.fhbielefeld.pmt.projectdetails.model.ProjectdetailsModel;
+import de.fhbielefeld.pmt.projectdetailsNavBar.IProjectdetailsNavComponent;
+import de.fhbielefeld.pmt.projectdetailsNavBar.impl.ProjectdetailsNavBarComponent;
+import de.fhbielefeld.pmt.remarkNavBar.impl.view.OpenProjectAnalyticsEvent;
 import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
@@ -48,28 +67,62 @@ public class RemarkRootView extends VerticalLayout {
 
 		this.eventBus.register(this);
 
-		//if (rootViewLoginCheck()) {
-			ITopBarComponent topBarComponent = this.createTopBarComponent();
-			IRemarkComponent remarksComponent = this.createRemarkComponent();
+		// if (rootViewLoginCheck()) {
+		ITopBarComponent topBarComponent = this.createTopBarComponent();
+		IRemarkComponent remarksComponent = this.createRemarkComponent();
+		INavigatorBoxComponent navigatorBoxComponent = this.createNavigatorBoxComponent();
+		
 
-			Component topBarView = topBarComponent.getViewAs(Component.class);
-			Component remarksView = remarksComponent.getViewAs(Component.class);
+		Component topBarView = topBarComponent.getViewAs(Component.class);
+		Component remarksView = remarksComponent.getViewAs(Component.class);
+		Component navigatorBoxView = navigatorBoxComponent.getViewAs(Component.class);
 
-			this.add(topBarView);
-			this.add(remarksView);
-		//}
+		
+		
+//		IProjectdetailsNavComponent navBarComponent = this.createNavBarComponent();
+//		Component navBarView = navBarComponent.getViewAs(Component.class);
+
+		/*
+		 * Hotfix, damit das Layout nicht ganz verramscht ist.. HorizontalLayout macht
+		 * nicht wie es soll
+		 */
+//		Div projectDiv = new Div(remarksView);
+//		Div navDiv = new Div(navBarView);
+
+//		HorizontalLayout layout = new HorizontalLayout();
+//		layout.add(projectDiv, navDiv);
+//		layout.setFlexGrow(1, projectDiv);
+//		layout.setFlexGrow(1, navDiv);
+//		layout.setSizeFull();
+//		layout.addClassName("content");
+//		layout.setMaxHeight("75%");
+
+//		this.add(layout);
+		this.add(topBarView);
+		this.add(navigatorBoxView);
+		this.add(remarksView);
+		// }
 
 		this.setHeightFull();
-		this.addClassName("root-view");
-		this.setAlignItems(Alignment.CENTER);
+//		this.addClassName("root-view");
+//		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 	}
 
+	private IProjectdetailsNavComponent createNavBarComponent() {
+		VaadinRemarksNavBarView view = new VaadinRemarksNavBarView();
+		ProjectdetailsNavBarComponent component = new ProjectdetailsNavBarComponent(
+				new ProjectdetailsModel(DatabaseService.DatabaseServiceGetInstance()),
+				new VaadinRemarksNavBarViewLogic(view, this.eventBus), this.eventBus);
+
+		return component;
+	}
+
 	/**
-	 * Checkt ob der User eingeloggt ist oder nicht mit hilfe des LoginCheckers 
-	 * Falls der User eingeloggt ist wird direkt die Authorisierung getestet
-	 * Nur Wenn beide Werte true ergeben ist der gesamte Rückgabewert true.
-	 * Bei Login = false wird eine Error Seite dargestellt statt dem richtigen Inhalt
+	 * Checkt ob der User eingeloggt ist oder nicht mit hilfe des LoginCheckers
+	 * Falls der User eingeloggt ist wird direkt die Authorisierung getestet Nur
+	 * Wenn beide Werte true ergeben ist der gesamte Rückgabewert true. Bei Login =
+	 * false wird eine Error Seite dargestellt statt dem richtigen Inhalt
 	 */
 	private boolean rootViewLoginCheck() {
 		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
@@ -89,8 +142,8 @@ public class RemarkRootView extends VerticalLayout {
 	}
 
 	/**
-	 * TODO: Checkt ob ein User Authorisiert ist eine Seite aufzurufen
-	 * Falls nicht wird eine Error Seite dargestellt
+	 * TODO: Checkt ob ein User Authorisiert ist eine Seite aufzurufen Falls nicht
+	 * wird eine Error Seite dargestellt
 	 */
 	private boolean rootViewAuthorizationCheck() {
 		if (AuthorizationChecker.checkIsAuthorizedManager(session, session.getAttribute("LOGIN_USER_ROLE"))) {
@@ -109,6 +162,22 @@ public class RemarkRootView extends VerticalLayout {
 	 * 
 	 * @return
 	 */
+	
+	/**
+	 * Methode, die die Navigationsbox mit den Icons erstellt, um zwischen den einzelnen Bereichen hin und her switchen zu können
+	 * @return navigatorBoxComponent
+	 */
+	private INavigatorBoxComponent createNavigatorBoxComponent() {
+		
+		VaadinNavigatorBoxView vaadinNavigatorBoxView = new VaadinNavigatorBoxView();
+		INavigatorBoxComponent navigatorBoxComponent = new NavigatorBoxComponent(
+				new RemarkModel(DatabaseService.DatabaseServiceGetInstance()),
+				new VaadinNavigatorBoxLogic(vaadinNavigatorBoxView, this.eventBus), this.eventBus);
+		return navigatorBoxComponent;
+		
+	}
+	
+	
 	private ITopBarComponent createTopBarComponent() {
 		VaadinTopBarView vaadinTopBarView;
 		vaadinTopBarView = new VaadinTopBarView();
@@ -126,16 +195,12 @@ public class RemarkRootView extends VerticalLayout {
 	 * @return remarksComponent
 	 */
 	private IRemarkComponent createRemarkComponent() {
-		System.out.println("Test 1");
-		VaadinRemarkViewLogic vaadinRemarksViewLogic;
-		System.out.println("Test 2");
-		vaadinRemarksViewLogic = new VaadinRemarkViewLogic(new VaadinRemarkView(), this.eventBus);
-		System.out.println("Test worked");
+		VaadinRemarkViewLogic vaadinRemarksViewLogic = new VaadinRemarkViewLogic(new VaadinRemarkView(), this.eventBus);
 		IRemarkComponent remarksComponent = new RemarkComponent(
-				new RemarkModel(DatabaseService.DatabaseServiceGetInstance()), vaadinRemarksViewLogic, this.eventBus);
-		System.out.println("Test 1");
-		vaadinRemarksViewLogic.initReadFromDB();
-		System.out.println("Test 2");
+				new RemarkModel(DatabaseService.DatabaseServiceGetInstance()), vaadinRemarksViewLogic, this.eventBus,
+				(Project) session.getAttribute("PROJECT"));
+		vaadinRemarksViewLogic.initReadFromDB((Project)session.getAttribute("PROJECT"));
+
 		return remarksComponent;
 	}
 
@@ -152,4 +217,37 @@ public class RemarkRootView extends VerticalLayout {
 		session.setAttribute("LOGIN_USER_ROLE", null);
 		this.getUI().ifPresent(ui -> ui.navigate(""));
 	}
+	
+//	@Subscribe
+//	public void onOpenProjectAnalyticsEvent(OpenProjectAnalyticsEvent event) {
+//		System.out.println("projektnummer: " +session.getAttribute("PROJECT"));
+//		
+//		//session.setAttribute("PROJECT", event.getProject());
+//		/*TransportProject dataEvent = new TransportProject(this , event.getProject());
+//		System.out.println(dataEvent.getProject().getProjectName());
+//		eventBus.post(dataEvent);*/
+//		this.getUI().ifPresent(UI -> UI.navigate("projectanalytics"));
+//		
+//	},
+	
+	@Subscribe
+	public void onOpenAnalyticsEvent(OpenAnalyticsEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("projectanalytics"));
+	}
+	
+	@Subscribe
+	public void onOpenActivitiesEvent(OpenActivitiesEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("projectactivity"));
+	}
+	
+	@Subscribe
+	public void onOpenCostEvent(OpenCostsEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("projectdetails"));
+	}
+	
+	@Subscribe
+	public void onOpenRemarksEvent(OpenRemarksEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("remarkmanagement"));
+	}
+	
 }

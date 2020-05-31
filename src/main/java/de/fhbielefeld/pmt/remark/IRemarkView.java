@@ -12,9 +12,13 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
  */
 public interface IRemarkView extends IViewAccessor {
 
-	public void setRemarks(List<Remark> remarks);
-	public void addRemark(Remark c);
+//	public void setRemarks(List<Remark> remarks);
+//	public void addRemark(Remark c);
+//	
+//	public void setProjects(List<Project> projectListFromDatabase);
+//	public void addProjects(Project project);
 	
-	public void setProjects(List<Project> projectListFromDatabase);
-	public void addProjects(Project project);
+	
+	void setSelectedProject(Project project);
+
 }

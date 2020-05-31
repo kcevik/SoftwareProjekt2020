@@ -16,7 +16,7 @@ public class Remark implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long commentID;
+	private long remarkID;
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "project")
 	private Project project;

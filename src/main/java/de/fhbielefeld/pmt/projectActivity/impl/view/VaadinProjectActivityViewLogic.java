@@ -79,7 +79,14 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		.bind(ProjectActivity::getCategory, ProjectActivity::setCategory);
 
 		
-		this.binder.forField(this.view.getProjectActivityForm().getTfDescription()).asRequired()
+		// TODO: Sobald es eine Liste mit ActivityCategories gibt, muss hier ne setCategory rein!
+		this.binder.forField(this.view.getProjectActivityViewForm().getCbActivityCategory()).asRequired()
+		.bind(ProjectActivity::getCats, ProjectActivity::setCats);
+		
+		
+		this.binder.bind(this.view.getProjectActivityViewForm().getCbActivityCategory(), "cats");
+		
+		this.binder.forField(this.view.getProjectActivityViewForm().getTfDescription()).asRequired()
 			.withValidator(new RegexpValidator("Bitte geben Sie eine Beschreibung zwischen 1 und 50 Zeichen an", ".{1,50}"))
 			.bind(ProjectActivity::getDescription, ProjectActivity::setDescription);
 		

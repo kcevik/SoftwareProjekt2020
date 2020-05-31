@@ -1,22 +1,28 @@
 package de.fhbielefeld.pmt.remark.impl.view;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Remark;
+import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.remark.IRemarkView;
 import de.fhbielefeld.pmt.remark.impl.event.ReadAllRemarksEvent;
-import de.fhbielefeld.pmt.remark.impl.event.ReadActiveProjectsEvent;
 import de.fhbielefeld.pmt.remark.impl.event.SendRemarkToDBEvent;
+import oracle.sql.DATE;
 import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.remark.impl.event.ReadCurrentProjectEvent;
+import de.fhbielefeld.pmt.projectdetails.impl.event.TransportProjectEvent;
 
 /**
  * Vaadin Logik Klasse. Steuert den zugehörigen VaadinView und alle
@@ -34,6 +40,8 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 	private Remark selectedRemark;
 	private List<Project> projects;
 	private List<Remark> remarks;
+//	private boolean newCost = false;
+	private Project project;
 
 	public VaadinRemarkViewLogic(VaadinRemarkView view, EventBus eventBus) {
 		if (view == null) {
@@ -60,22 +68,24 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 			this.selectedRemark = event.getValue();
 			this.displayRemark();
 		});
-		this.view.getBtnBackToMainMenu().addClickListener(event -> eventBus.post(new ModuleChooserChosenEvent(this)));
+		this.view.getBtnBackProject().addClickListener(event -> eventBus.post(new ModuleChooserChosenEvent(this)));
 		this.view.getBtnCreateRemark().addClickListener(event -> newRemark());
-		this.view.getREMARKFORM().getBtnSave().addClickListener(event -> this.saveRemark());
-		this.view.getREMARKFORM().getBtnEdit().addClickListener(event -> this.view.getREMARKFORM().prepareEdit());
-		this.view.getREMARKFORM().getBtnClose().addClickListener(event -> cancelForm());
+		this.view.getRemarkForm().getBtnSave().addClickListener(event -> this.saveRemark());
+		this.view.getRemarkForm().getBtnEdit().addClickListener(event -> this.view.getRemarkForm().prepareEdit());
+		this.view.getRemarkForm().getBtnClose().addClickListener(event -> cancelForm());
 		this.view.getFilterText().addValueChangeListener(event -> filterList(this.view.getFilterText().getValue()));
 	}
 
 	private void bindToFields() {
 
-		this.binder.forField(this.view.getREMARKFORM().getTfRemarkID())
-				.withConverter(new StringToLongConverter("")).bind(Remark::getCommentID, null);
-		this.binder.forField(this.view.getREMARKFORM().getCbProject()).bind(Remark::getProject, Remark::setProject);
-		this.binder.forField(this.view.getREMARKFORM().getTaRemark()).asRequired().bind(Remark::getCommentText,
-				Remark::setCommentText);
-		//this.binder.bind(this.view.getREMARKFORM().getCkIsActive(), "active");
+		this.binder.forField(this.view.getRemarkForm().getTfRemarkID()).withConverter(new StringToLongConverter(""))
+				.bind(Remark::getRemarkID, null);
+		this.binder.forField(this.view.getRemarkForm().getCbProject()).bind(Remark::getProject, Remark::setProject);
+		this.binder.forField(this.view.getRemarkForm().getTaRemark()).asRequired().bind(Remark::getRemarkText,
+				Remark::setRemarkText);
+		// this.binder.bind(this.view.getREMARKFORM().getCkIsActive(), "active");
+//		this.binder.bind(this.view.getRemarkForm().getdPDate(), "date");
+		
 	}
 
 	/**
@@ -89,17 +99,18 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 	private void displayRemark() {
 		if (this.selectedRemark != null) {
 			try {
-				if (this.projects != null) {
-					this.view.getREMARKFORM().getCbProjects().setItems(this.projects);
+				if (this.project != null) {
+//					this.view.getRemarkForm().getCbProjects().setItems(this.projects);
+					this.binder.readBean(this.selectedRemark);
+					
 				}
-				this.binder.setBean(this.selectedRemark);
-				this.view.getREMARKFORM().closeEdit();
-				this.view.getREMARKFORM().setVisible(true);
+				this.view.getRemarkForm().closeEdit();
+				this.view.getRemarkForm().setVisible(true);
 			} catch (NumberFormatException e) {
 				Notification.show("NumberFormatException");
 			}
 		} else {
-			this.view.getREMARKFORM().setVisible(false);
+			this.view.getRemarkForm().setVisible(false);
 		}
 	}
 
@@ -111,13 +122,15 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 
 		if (this.binder.validate().isOk()) {
 			try {
+				this.binder.writeBean(this.selectedRemark);
+
 				this.eventBus.post(new SendRemarkToDBEvent(this, this.selectedRemark));
-				this.view.getREMARKFORM().setVisible(false);
+				this.view.getRemarkForm().setVisible(false);
 				this.addRemark(selectedRemark);
 				this.updateGrid();
 				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-			} catch (NumberFormatException e) {
+			} catch (NumberFormatException | ValidationException e) {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
@@ -136,8 +149,13 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 	private void newRemark() {
 		this.selectedRemark = new Remark();
 		displayRemark();
-		this.view.getREMARKFORM().prepareEdit();
-		this.view.getREMARKFORM().getCbProjects().setItems(this.projects);
+		try {
+			this.selectedRemark.setDate(DATE.getCurrentDate().toString());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.view.getRemarkForm().prepareEdit();
+		this.view.getRemarkForm().getCbProjects().setItems(this.projects);
 	}
 
 	/**
@@ -153,10 +171,12 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 
 			if (r.getProject().getProjectName() != null && r.getProject().getProjectName().contains(filter)) {
 				filtered.add(r);
-			} else if (String.valueOf(r.getCommentID()).contains(filter)) {
+			} else if (String.valueOf(r.getRemarkID()).contains(filter)) {
 				filtered.add(r);
 			} else if (String.valueOf(r.getProject().getProjectID()).contains(filter)) {
 				filtered.add(r);
+//			} else if (String.valueOf(r.getDate()).contains(filter)) {
+//				filtered.add(r);
 			}
 			this.view.getRemarkGrid().setItems(filtered);
 		}
@@ -165,10 +185,17 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 	/**
 	 * Erstellt ein neues Event, welches die DB Abfrage anstößt
 	 */
-	public void initReadFromDB() {
-		this.eventBus.post(new ReadAllRemarksEvent(this));
-		this.eventBus.post(new ReadActiveProjectsEvent(this));
+	public void initReadFromDB(Project project) {
+		this.project = project;
+		System.out.println("upper gehts");
+
+		this.eventBus.post(new ReadCurrentProjectEvent(this, project));
+
 		this.updateGrid();
+
+//		this.eventBus.post(new ReadAllRemarksEvent(this));
+//		this.eventBus.post(new ReadActiveProjectsEvent(this));
+
 	}
 
 	/**
@@ -178,9 +205,9 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 		this.view.getRemarkGrid().setItems(this.remarks);
 	}
 
-	public void addRemark(Remark c) {
-		if (!this.remarks.contains(c)) {
-			this.remarks.add(c);
+	public void addRemark(Remark r) {
+		if (!this.remarks.contains(r)) {
+			this.remarks.add(r);
 		}
 	}
 
@@ -193,20 +220,44 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
 
-	@Override
-	public void setRemarks(List<Remark> remarks) {
-		this.remarks = remarks;
-	}
+//	@Override
+//	public void setRemarks(List<Remark> remarks) {
+//		this.remarks = remarks;
+//	}
+//
+//	@Override
+//	public void setProjects(List<Project> projectListFromDatabase) {
+//		this.projects = projectListFromDatabase;
+//	}
+//
+//	@Override
+//	public void addProjects(Project project) {
+//		if (!this.projects.contains(project)) {
+//			this.projects.add(project);
+//		}
+//	}
 
 	@Override
-	public void setProjects(List<Project> projectListFromDatabase) {
-		this.projects = projectListFromDatabase;
+	public void setSelectedProject(Project project) {
+		this.project = project;
 	}
+	
+	@Subscribe
+	public void onTransportProjectEvent(TransportProjectEvent event) {
 
-	@Override
-	public void addProjects(Project project) {
-		if (!this.projects.contains(project)) {
-			this.projects.add(project);
+		this.project = event.getProject();
+	}
+	
+	private void createNewRemarkEntry() {
+		try {
+			this.selectedRemark = new Remark();
+			this.selectedRemark.setProject(this.view.getRemarkForm().getCbProject().getValue());
+			this.selectedRemark.setRemarkText(this.view.getRemarkForm().getTaRemark().getValue());
+//			this.selectedRemark
+//					.setIncurredCosts(Double.parseDouble(this.view.getRemarkForm().getTfIncurredCosts().getValue()));
+//			this.selectedRemark.setProject(this.project);
+		} catch (NumberFormatException e) {
+			System.out.println("Falscher Wert");
 		}
 	}
 }

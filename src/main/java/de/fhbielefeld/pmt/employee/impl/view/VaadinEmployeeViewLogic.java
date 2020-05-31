@@ -8,6 +8,7 @@ import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 import com.vaadin.flow.server.VaadinSession;
@@ -63,33 +64,33 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 //		if (selectedEmployeeDesignation.equals("CEO")) {
 //		if(selectedEmployee.getClass().equals(RoleCEO.class)) {
 		
-//		if(AuthorizationChecker.checkIsAuthorizedEmployee(VaadinSession.getCurrent(), selectedEmployee.getRole())) {
-//			this.occupations.add("Keine vergeben");
-//			this.occupations.add("SW-Entwickler");
-//			this.occupations.add("Personalmanager");
-//			this.occupations.add("Reinigungskraft");
-//		}
-		
-		if (checkRoleEmployeeFowler(selectedEmployeeRole) == true) {
+		if(AuthorizationChecker.checkIsAuthorizedCEO(VaadinSession.getCurrent(), selectedEmployee.getRole()) || AuthorizationChecker.checkIsAuthorizedManager(VaadinSession.getCurrent(), selectedEmployee.getRole()) || AuthorizationChecker.checkIsAuthorizedEmployee(VaadinSession.getCurrent(), selectedEmployee.getRole())) {
 			this.occupations.add("Keine vergeben");
 			this.occupations.add("SW-Entwickler");
 			this.occupations.add("Personalmanager");
 			this.occupations.add("Reinigungskraft");
+		}
+		
+//		if (checkRoleEmployeeFowler(selectedEmployeeRole) == true) {
+//			this.occupations.add("Keine vergeben");
+//			this.occupations.add("SW-Entwickler");
+//			this.occupations.add("Personalmanager");
+//			this.occupations.add("Reinigungskraft");
+//
+////		} else if (selectedEmployee.getClass().equals(RoleEmployee.class)) {
+//		} else if (checkRoleManagerFowler(selectedEmployeeRole) == true) {
+//			this.occupations.add("Keine vergeben");
+//			this.occupations.add("Wow löppt");
+//			this.occupations.add("Personalmanager");
+//			this.occupations.add("Reinigungskraft");
+////		} else if (selectedEmployee.getClass().equals(RoleProjectManager.class)) {
+//		} else if (checkRoleCeoFowler(selectedEmployeeRole) == true) {
+//			this.occupations.add("Keine vergeben");
+//			this.occupations.add("Wow löppt Ceo");
+//			this.occupations.add("Personalmanager");
+//			this.occupations.add("Reinigungskraft");
 
-//		} else if (selectedEmployee.getClass().equals(RoleEmployee.class)) {
-		} else if (checkRoleManagerFowler(selectedEmployeeRole) == true) {
-			this.occupations.add("Keine vergeben");
-			this.occupations.add("Wow löppt");
-			this.occupations.add("Personalmanager");
-			this.occupations.add("Reinigungskraft");
-//		} else if (selectedEmployee.getClass().equals(RoleProjectManager.class)) {
-		} else if (checkRoleCeoFowler(selectedEmployeeRole) == true) {
-			this.occupations.add("Keine vergeben");
-			this.occupations.add("Wow löppt Ceo");
-			this.occupations.add("Personalmanager");
-			this.occupations.add("Reinigungskraft");
-
-		} else {
+		else {
 			this.occupations.add("Sind im elseTeil");
 		}
 	}
@@ -184,17 +185,20 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 	 */
 	private void saveEmployee() {
 		if (this.binder.validate().isOk()) {
+			
 //			this.selectedEmployee = new Employee();
 //			System.out.println("new Employee erzeugt in saveEmployee");
 		}
 		try {
+			this.binder.writeBean(this.selectedEmployee);
+
 			this.eventBus.post(new SendEmployeeToDBEvent(this.selectedEmployee));
 			this.view.getEMPLOYEEFORM().setVisible(false);
 			this.addEmployee(selectedEmployee);
 			this.updateGrid();
 			Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 					.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException | ValidationException e) {
 			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 					Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 
@@ -336,7 +340,7 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 				if (this.teams != null) {
 					this.view.getEMPLOYEEFORM().getMscbTeams().setItems(this.teams);
 				}
-				this.binder.setBean(this.selectedEmployee);
+				this.binder.readBean(this.selectedEmployee);
 				configureCbOccupation();
 				this.view.getEMPLOYEEFORM().closeEdit();
 				this.view.getEMPLOYEEFORM().setVisible(true);

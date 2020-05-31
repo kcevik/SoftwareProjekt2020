@@ -53,21 +53,6 @@ public class Employee implements Serializable {
 		super();
 	}
 	
-	public String getProjectIDsAsString() {
-		String projectIDs = "";
-		for (Project p : this.getProjectList()) {
-			projectIDs += p.getProjectID() + " ";
-		}
-		return projectIDs;
-	}
-	
-	public String getTeamIDsAsString() {
-		String teamIDs = "";
-		for (Team t : this.getTeamList()) {
-			teamIDs += t.getTeamID() + " ";
-		}
-		return teamIDs;
-	}
 
 	/**
 	 * Public Konstruktor der Employee JPAentity Klasse

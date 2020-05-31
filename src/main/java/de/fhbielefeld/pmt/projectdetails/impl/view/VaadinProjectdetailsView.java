@@ -114,13 +114,13 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 		this.costGrid.addClassName("client-grid");
 		this.costGrid.removeColumnByKey("costsID");
 		this.costGrid.removeColumnByKey("project");
+		
 		this.costGrid.setColumns("project", "costType", "description", "incurredCosts");
 		this.costGrid.getColumnByKey("project").setHeader("Projektnummer");
 		this.costGrid.getColumnByKey("costType").setHeader("Kostenart");
 		this.costGrid.getColumnByKey("description").setHeader("Beschreibung");
 		this.costGrid.getColumnByKey("incurredCosts").setHeader("enstandene Kosten");
 		
-
 		this.costGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.costGrid.setHeightFull();
 		

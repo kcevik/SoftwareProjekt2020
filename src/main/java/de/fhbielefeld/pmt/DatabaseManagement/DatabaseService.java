@@ -248,6 +248,16 @@ public class DatabaseService {
 		return resultListCostsForProject;
 	}
 
+	public List<Remark> readRemarksOfProject(Project project) {
+
+		TypedQuery<Remark> query = em.createQuery("SELECT r FROM Remark r WHERE r.project = :project", Remark.class);
+		query.setParameter("project", project);
+		List<Remark> resultListRemarkForProject = query.getResultList();
+		return resultListRemarkForProject;
+	}
+	
+	
+
 	/**
 	 * Schreibt übergebenes Team in die Datenbank
 	 * 

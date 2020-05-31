@@ -114,6 +114,8 @@ public class ProjectdetailsRootView extends VerticalLayout {
 				new ProjectdetailsModel(DatabaseService.DatabaseServiceGetInstance()), vaadinProjectdetailsViewLogic,
 				this.eventBus, (Project)session.getAttribute("PROJECT"));
 		vaadinProjectdetailsViewLogic.initReadFromDB((Project)session.getAttribute("PROJECT"));
+		System.out.println("projektnummerrrr: " +session.getAttribute("PROJECT"));
+
 		return projectdetailsComponent;
 	}
 

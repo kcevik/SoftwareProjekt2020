@@ -4,6 +4,21 @@
    https://vaadin.com/themes/lumo for more information.
 */
 
+/*
+/*@author Sebastian Siegmann, David Bistron
+/*Style für die Navigator-Box definiert, damit diese Korrekt dargestellt wird
+*/
+
+.navigatorBox{
+	border: white 1px solid;
+	z-index: 1;
+	align-self: flex-end;
+	position: absolute;
+	top: 136px;
+	
+}
+
+
 /* Example: CSS class name to center align the content . */
 .centered-content {
 	margin: 0 auto;
@@ -108,20 +123,3 @@ b{
 	position: absolute;
 }
 
-/*
-/*@author Sebastian Siegmann, David Bistron
-/*Style für die Navigator-Box definiert, damit diese Korrekt dargestellt wird
-*/
-
-.navigatorBox{
-	border: white 1px solid;
-	z-index: 1;
-	align-self: flex-end;
-	position: absolute;
-	top: 136px;
-	
-}
-
-
-
-}
