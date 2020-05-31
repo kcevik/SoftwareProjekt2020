@@ -19,10 +19,17 @@ import de.fhbielefeld.pmt.error.LoginChecker;
 import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.projectdetails.IProjectdetailsComponent;
+import de.fhbielefeld.pmt.projectdetails.impl.ProjectdetailsComponent;
+import de.fhbielefeld.pmt.projectdetails.impl.view.VaadinProjectdetailsView;
+import de.fhbielefeld.pmt.projectdetails.impl.view.VaadinProjectdetailsViewLogic;
+import de.fhbielefeld.pmt.projectdetails.model.ProjectdetailsModel;
+import de.fhbielefeld.pmt.projectdetailsNavBar.IProjectdetailsNavComponent;
 import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
+import de.fhbielefeld.pmt.trafficLight.ITrafficLightComponent;
 
 /**
  * Grundaufbau der Vaadin Seite. Startpunkt für das Erstellen einer neuen
@@ -49,17 +56,19 @@ public class EmployeeRootView extends VerticalLayout {
 		
 // TODO: LoginCheck wieder einbinden
 		this.eventBus.register(this);
-		if (rootViewLoginCheck()) {
+//		if (rootViewLoginCheck()) {
 			IEmployeeComponent employeeComponent = this.createEmployeeComponent();
 			ITopBarComponent topBarComponent = this.createTopBarComponent();
 
-			;
 			Component topBarView = topBarComponent.getViewAs(Component.class);
 			Component employeeView = employeeComponent.getViewAs(Component.class);
 
+		
+			
+			
 			this.add(employeeView);
 			this.add(topBarView);
-		}
+//		}
 
 		this.setHeightFull();
 		this.setAlignItems(Alignment.CENTER);
@@ -128,5 +137,7 @@ public class EmployeeRootView extends VerticalLayout {
 		session.setAttribute("LOGIN_USER_ROLE", null);
 		this.getUI().ifPresent(ui -> ui.navigate(""));
 	}
+	
+	
 
 }

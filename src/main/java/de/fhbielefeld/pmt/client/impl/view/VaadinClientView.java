@@ -65,7 +65,7 @@ public class VaadinClientView extends VerticalLayout {
 		configureFilter();
 
 	}
-	
+
 	/**
 	 * Setzt die Tabelle und das Forular zurück
 	 */
@@ -82,7 +82,6 @@ public class VaadinClientView extends VerticalLayout {
 		this.tfFilter.setClearButtonVisible(true);
 		this.tfFilter.setValueChangeMode(ValueChangeMode.LAZY);
 	}
-
 
 	/**
 	 * Setzt Eigenschaften für das Grid fest.
@@ -112,7 +111,15 @@ public class VaadinClientView extends VerticalLayout {
 		this.clientGrid.setHeightFull();
 		this.clientGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 	}
+	
+	/**
+	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
+	 */
+	public void updateGrid() {
+		this.clientGrid.setItems(this.clientList);
+	}
 
+	//Getter und Setter
 	public Grid<Client> getClientGrid() {
 		return clientGrid;
 	}
@@ -130,7 +137,7 @@ public class VaadinClientView extends VerticalLayout {
 			this.clientList.add(c);
 		}
 	}
-	
+
 	public List<Client> getClientList() {
 		return clientList;
 	}
@@ -141,12 +148,5 @@ public class VaadinClientView extends VerticalLayout {
 
 	public TextField getFilterText() {
 		return tfFilter;
-	}
-
-	/**
-	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
-	 */
-	public void updateGrid() {
-		this.clientGrid.setItems(this.clientList);
 	}
 }

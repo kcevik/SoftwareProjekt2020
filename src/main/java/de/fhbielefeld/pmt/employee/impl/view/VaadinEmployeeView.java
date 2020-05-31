@@ -31,8 +31,7 @@ public class VaadinEmployeeView extends VerticalLayout {
 	private final TextField tfFilter = new TextField();
 	private final Button btnBackToMainMenu = new Button();
 	private final Button btnCreateEmployee = new Button();
-	
-	private final VaadinEmployeeViewForm EMPLOYEEFORM = new VaadinEmployeeViewForm();
+	private final VaadinEmployeeViewForm employeeViewForm = new VaadinEmployeeViewForm();
 
 	public VaadinEmployeeView() {
 
@@ -45,7 +44,7 @@ public class VaadinEmployeeView extends VerticalLayout {
 	 * 
 	 */
 	private void buitUI() {
-		Div content = new Div(employeeGrid, EMPLOYEEFORM);
+		Div content = new Div(employeeGrid, employeeViewForm);
 		content.addClassName("content");
 		content.setSizeFull();
 		this.add(new HorizontalLayout(tfFilter, btnCreateEmployee), content, btnBackToMainMenu);
@@ -59,7 +58,7 @@ public class VaadinEmployeeView extends VerticalLayout {
 		addClassName("list-view");
 		setSizeFull();
 		this.btnCreateEmployee.setText("Neuen Mitarbeiter anlegen");
-		this.EMPLOYEEFORM.setVisible(false);
+		this.employeeViewForm.setVisible(false);
 		this.btnBackToMainMenu.setText("Zurück zur Aufgabenauswahl");
 		configureGrid();
 		configureFilter();
@@ -71,7 +70,7 @@ public class VaadinEmployeeView extends VerticalLayout {
 	 */
 	public void clearGridAndForm() {
 		this.employeeGrid.deselectAll();
-		this.EMPLOYEEFORM.clearEmployeeForm();
+		this.employeeViewForm.clearEmployeeForm();
 	}
 
 	/**
@@ -155,7 +154,7 @@ public class VaadinEmployeeView extends VerticalLayout {
 	}
 
 	public VaadinEmployeeViewForm getEMPLOYEEFORM() {
-		return EMPLOYEEFORM;
+		return employeeViewForm;
 	}
 
 	public Button getBtnBackToMainMenu() {

@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
-import com.vaadin.flow.data.converter.StringToLongConverter;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.RegexpValidator;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
-import de.fhbielefeld.pmt.JPAEntities.Employee;
-import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
-import de.fhbielefeld.pmt.JPAEntities.Team;
+import de.fhbielefeld.pmt.JPAEntities.ProjectActivity.ActivityCategories;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
 import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
@@ -25,18 +22,22 @@ import de.fhbielefeld.pmt.projectActivity.impl.event.ReadAllProjectsEvent;
 import de.fhbielefeld.pmt.projectActivity.impl.event.SendProjectActivityToDBEvent;
 
 /**
- * 
+ * Klasse, die die Logik für die View beinhaltet
  * @author David Bistron
  *
  */
 public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	
+	/**
+	 * Instanzvariablen
+	 * BeanValidationBinder ist für das Binden der ComboBox erforderlich. BeanValidation anstatt normalem 
+	 * Binder verwendet, damit ein Überprüfung der ComboBox möglich ist
+	 */
 	BeanValidationBinder<ProjectActivity> binder = new BeanValidationBinder<ProjectActivity>(ProjectActivity.class);
 	private final VaadinProjectActivityView view;
 	private final EventBus eventBus;
 	private ProjectActivity selectedProjectActivity;
 	private List<ProjectActivity> projectActivities = new ArrayList<ProjectActivity>();
-
 
 	public VaadinProjectActivityViewLogic(VaadinProjectActivityView view, EventBus eventBus) {
 		if (view == null) {
@@ -52,6 +53,9 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		this.bindToFields();
 	}
 
+	/**
+	 *  Fügt den Komponenten der View die entsprechenden Listener hinzu. 
+	 */
 	private void registerViewListeners() {
 		this.view.getProjectActivityGrid().asSingleSelect().addValueChangeListener(event -> {
 		this.selectedProjectActivity = event.getValue();
@@ -63,118 +67,136 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		});
 		this.view.getCreateNewProjectActivity().addClickListener(event -> {
 			createNewProjectActivity();
-		// TODO: newProjectActivityBinder();
+		    newProjectActivityBinder();
 		});
-		this.view.getProjectActivityViewForm().getBtnSave().addClickListener(event -> this.saveProjectActivity());
-		this.view.getProjectActivityViewForm().getBtnDelete().addClickListener(event -> this.view.getProjectActivityViewForm().prepareProjectActivityFormFields());
-		this.view.getProjectActivityViewForm().getBtnClose().addClickListener(event -> cancelForm());
-		// TODO: this.view.getFilterText().addValueChangeListener(event -> this.filterList(this.view.getFilterText().getValue()));
+		this.view.getProjectActivityForm().getBtnSave().addClickListener(event -> this.saveProjectActivity());
+		this.view.getProjectActivityForm().getBtnDelete().addClickListener(event -> this.view.getProjectActivityForm().prepareProjectActivityFormFields());
+		this.view.getProjectActivityForm().getBtnClose().addClickListener(event -> cancelForm());
+		this.view.getFilterText().addValueChangeListener(event -> this.filterList(this.view.getFilterText().getValue()));
 		
 	}
-	
+
+	/**
+	 * Methode, die die MultiselectComboBox mit Daten aus der Datenbank verknüpft. Die JPA-Entity ProjectActivity wird angesprochen
+	 * und die entsprechenden Daten werden abgefragt
+	 */
 	public void bindToFields() {
+
+		this.binder.forField(this.view.getProjectActivityForm().getCbActivityCategory()).asRequired()
+		.bind(ProjectActivity::getCategory, ProjectActivity::setCategory);
+
 		
-		// TODO: Sobald es eine Liste mit ActivityCategories gibt, muss hier ne setCategory rein!
-		this.binder.forField(this.view.getProjectActivityViewForm().getTfCategory()).bind(ProjectActivity::getCategory, null);
-		
-		this.binder.forField(this.view.getProjectActivityViewForm().getTfDescription()).asRequired()
+		this.binder.forField(this.view.getProjectActivityForm().getTfDescription()).asRequired()
 			.withValidator(new RegexpValidator("Bitte geben Sie eine Beschreibung zwischen 1 und 50 Zeichen an", ".{1,50}"))
 			.bind(ProjectActivity::getDescription, ProjectActivity::setDescription);
 		
 		// TODO: Abfangen, dass nur positive Zahlen und nur zwischen 1 und X Stunden erfasst werden können --> NICHT 1Mio Stunden!
-		this.binder.forField(this.view.getProjectActivityViewForm().getTfHoursAvailable()).asRequired()
-			.withValidator(new RegexpValidator("Bitte geben Sie eine Zahl zwischen 1 und 1000 an", ".{1,50}"))
-			.withConverter(new plainStringToIntegerConverter("Bitte positive Zahl eingeben"))
+		// TODO: Double Werte müssen eingegeben werden können!
+		this.binder.forField(this.view.getProjectActivityForm().getTfHoursAvailable()).asRequired()
+			.withValidator(new RegexpValidator("Bitte geben Sie eine Zahl zwischen 1 und 1000 an", ".{1,10}"))
+			.withConverter(new plainStringToIntegerConverter("Bitte geben Sie eine positive Zahl ein"))
 			.bind(ProjectActivity::getHoursAvailable, ProjectActivity::setHoursAvailable);
-		
-		// TODO: HoursExpended in HourlyRates umbenennen
+				
 		// TODO: Abfangen, dass nur positive Zahlen und nur zwischen 1 und X Stunden erfasst werden können --> NICHT 1Mio Stunden!
-		this.binder.forField(this.view.getProjectActivityViewForm().getTfHourlyRates()).asRequired()
-			.withValidator(new RegexpValidator("Bitte geben Sie eine Zahl zwischen 1 und 1000 an", ".{1,50}"))
-			.withConverter(new plainStringToIntegerConverter("Bitte positive Zahl eingeben"))
-			.bind(ProjectActivity::getHoursExpended, ProjectActivity::setHoursExpended);
+		// TODO: Double Werte müssen eingegeben werden können!
+		this.binder.forField(this.view.getProjectActivityForm().getTfHourlyRates()).asRequired()
+			.withValidator(new RegexpValidator("Bitte geben Sie eine Zahl zwischen 1 und 1000 an", ".{1,10}"))
+			.withConverter(new plainStringToDoubleConverter("Bitte geben Sie eine positive Zahl ein"))
+			.bind(ProjectActivity::getHourlyRate, ProjectActivity::setHourlyRate);
 			
-		this.binder.bind(this.view.getProjectActivityViewForm().getIsActive(), "active");
+		this.binder.bind(this.view.getProjectActivityForm().getIsActive(), "active");
 		
 	}
 	
-	// TODO: FILTER korrekt einstellen!
-	/*
+	/**
+	 * Methode, die dafür sorgt, dass auch beim Anlegen einer neuen ProjectActivity die MultiselektBox Tätigkeitskategorie
+	 * mit Daten versehen und eine Auswahl möglich ist
+	 */
+	private void newProjectActivityBinder() {
+		this.view.getProjectActivityForm().getCbActivityCategory().setItems(ActivityCategories.values());
+		
+	}
+	
+	// TODO: Cast Exception
 	private void filterList(String filter) {
 		List<ProjectActivity> filtered = new ArrayList<>();
 		for (ProjectActivity p : this.projectActivities) {
 			System.out.println(p.toString());
-			if (p.getProjectID != null && p.getProject().contains(filter)) {
+			if (p.getDescription() != null && p.getDescription().contains(filter)) {
 				filtered.add(p);
-			} else if (String.valueOf(p.getTeamID()).contains(filter)) {
+			} else if (String.valueOf(p.getProjectActivityID()) != null && (String.valueOf(p.getProjectActivityID()).contains(filter))) {
 				filtered.add(p);
-				// TODO: bestimmt nicht ganz richtig
-			} else if (p.getEmployeeList() != null && p.getEmployeeList().toString().contains(filter)) {
-				filtered.add(t);
-			} else if (p.getProjectList() != null && p.getProjectList().toString().contains(filter)) {
-				filtered.add(t);
+			} else if (p.getCategory() != null && p.getCategory().toString().contains(filter)) {
+				filtered.add(p);
+			} else if (String.valueOf(p.getHourlyRate()) != null && (String.valueOf(p.getHourlyRate()).toString().contains(filter))) {
+				filtered.add(p);
+			} else if (String.valueOf(p.getHoursAvailable()) != null && (String.valueOf(p.getHoursAvailable()).toString().contains(filter))) {
+				filtered.add(p);
+			} else if (String.valueOf(p.getHoursExpended()) != null && (String.valueOf(p.getHoursExpended()).toString().contains(filter))) {
+				filtered.add(p);
 			}
-		}
-
+		}	
 		this.view.getProjectActivityGrid().setItems(filtered);
 	}
-	*/
-	
+
+	/**
+	 * Methode die den aktuell ausgewählte Projektakvitivät-Eintrag auf null setzt -> wird beim Klick auf den btnBack aufgerufen
+	 * wird von der Methode cancelForm aufgerufen
+	 * wird beim btnBackToMainMenu aufgerufen
+	 */
 	private void resetSelectedProjectActivity() {
 		this.selectedProjectActivity = null;
 	}
 	
+	/**
+	 * Methode, die dafür sorgt, dass die ProjectActivityForm ohne Werte angezeigt wird
+	 * Wird benötigt, wenn eine neue ProjectActivity erfasst werden soll
+	 */ 
 	private void createNewProjectActivity() {
-		this.view.getProjectActivityGrid().deselectAll();
-		this.view.getProjectActivityGrid(); // TODO: hier muss resetProjectActivityForm rein!
-		this.view.getProjectActivityGrid(); // TODO: prepareProjectActivityForm
-		this.view.getProjectActivityGrid().setVisible(true);
+		this.selectedProjectActivity = new ProjectActivity();
+		displayProjectActivity();
+		this.view.getProjectActivityForm().prepareProjectActivityFormFields();
+		
 	}
-	
-	/*
-	private void newProjectActivityBinder() {
-		this.view.getProjectActivityGrid().getMscbTeamProject().setItems(this.projects);
-		this.view.getProjectActivityGrid().getMscbTeamEmployee().setItems(this.employees);
-		}
-	*/
 	
 	private void cancelForm() {
 		resetSelectedProjectActivity();
 		this.view.clearGridAndForm();
 	}
 	
+	/**
+	 * Methode, die die Darstellung der aktuell ausgewählten ProjectActivity in der projectActivityForm abbildet
+	 * @param team
+	 */
 	private void displayProjectActivity() {
 		if (this.selectedProjectActivity != null) {
 			try {
-				this.binder.setBean(this.selectedProjectActivity);
-				this.view.getProjectActivityViewForm().closeProjectActivityFormFields();
-				this.view.getProjectActivityViewForm().setVisible(true);
-				// TODO: Kann das weg?			
-				/*
-				ArrayList<String> projects = new ArrayList<String>();
-				for (Project p : this.selectedProjectActivity.getProjectList()) {
-					projects.add(String.valueOf(p.getProjectID()));
-				}
-				*/
+				this.binder.readBean(this.selectedProjectActivity);
+				this.view.getProjectActivityForm().closeProjectActivityFormFields();
+				this.view.getProjectActivityForm().setVisible(true);
 				} catch (NumberFormatException nfe) {
-					this.view.getProjectActivityViewForm().resetProjectActivityForm();
+					this.view.getProjectActivityForm().resetProjectActivityForm();
 					Notification.show("NumberFormatException");
 			}
 		} else {
-			this.view.getProjectActivityViewForm().setVisible(false);
+			this.view.getProjectActivityForm().setVisible(false);
 		}
 	}
 	
+	/**
+	 * Methode zum Speicher neu angelegter Projektaktivitäten -> mit SendProjectActivityToDBEvent wird die Aktivität als Event an die DB gesendet
+	 */
 	private void saveProjectActivity() {
 		if (this.binder.validate().isOk()) {
 			try {
+				this.binder.writeBean(this.selectedProjectActivity);
 				this.eventBus.post(new SendProjectActivityToDBEvent(this, this.selectedProjectActivity));
-				this.view.getProjectActivityViewForm().setVisible(false);
+				this.view.getProjectActivityForm().setVisible(false);
 				this.addProjectActivity(selectedProjectActivity);
 				this.updateGrid();
 				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-			} catch (NumberFormatException nfe) {
+			} catch (NumberFormatException | ValidationException nfe) {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
@@ -183,28 +205,35 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		}
 	}
 	
-	// TODO: 
-	/*
-	@Subscribe
-	public void setProjectActivityItems(TransportAllProjectActivitiesEvent event) {
-		for(Team t : event.getTeamList()) {
-			this.view.addTeam(t);
-		}
-		this.view.updateGrid();
+	/**
+	 * Methode, die das TeamGrid aktualisiert, indem die Liste mit den Teams neu übergeben wird
+	 * wird von der Methode initReadFromDB aufgerufen
+	 */
+	public void updateGrid() {
+		this.view.getProjectActivityGrid().setItems(this.projectActivities);
 	}
-	*/
+	
+	public void initReadFromDB() {
+		this.eventBus.post(new ReadAllProjectsEvent(this));
+		this.eventBus.post(new ReadAllProjectActivitiesEvent(this));	
+		if (this.projectActivities != null) {
+			this.view.getProjectActivityForm().getCbActivityCategory().setItems(ActivityCategories.values());
+		}
+		this.updateGrid();
+	}
+	
+	@Override
+	public void setProjectActivity(List<ProjectActivity> projectActivities) {
+		this.projectActivities = projectActivities;
+	}
+	 
 	
 	@Override
 	public void addProjectActivity(ProjectActivity p) {
 		if (!this.projectActivities.contains(p)) {
 			this.projectActivities.add(p);
 		}
-	}
-	
-	public void updateGrid() {
-		this.view.getProjectActivityGrid().setItems(this.projectActivities);
-	}
-	
+	}	
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -215,9 +244,11 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
 
-	public void initReadFromDB() {
-		this.eventBus.post(new ReadAllProjectsEvent(this));
-		this.eventBus.post(new ReadAllProjectActivitiesEvent(this));		
+	//@Override
+	/*
+	public void setProjectActivityCategory(List<ActivityCategories> activityCategories) {
+		this.enumCat = activityCategories;
 	}
+	*/
 
 }

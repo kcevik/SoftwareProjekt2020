@@ -6,15 +6,16 @@ import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsView;
 /**
  * 
  * @author David Bistron, Sebastian Siegmann
- *
+ * @version 1.0
  */
 
 public class SendEmployeeDataToDBEvent {
 
 	private Employee selectedEmployee;
-	
+
 	/**
 	 * Konstruktor sowie get-/ set-Methoden
+	 * 
 	 * @param selectedTeam
 	 */
 	public SendEmployeeDataToDBEvent(IPersonalDetailsView view, Employee selectedEmployee) {
@@ -26,7 +27,6 @@ public class SendEmployeeDataToDBEvent {
 		return selectedEmployee;
 	}
 
-	
 	public void setSelectedEmployee(Employee selectedEmployee) {
 		this.selectedEmployee = selectedEmployee;
 	}

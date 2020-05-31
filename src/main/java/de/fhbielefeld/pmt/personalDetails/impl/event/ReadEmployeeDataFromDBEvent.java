@@ -7,6 +7,7 @@ import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsView;
 /**
  * @author David Bistron, Sebastian Siegmann
  * @param view
+ * @version 1.0
  */
 public class ReadEmployeeDataFromDBEvent extends EventObject {
 
@@ -16,5 +17,3 @@ public class ReadEmployeeDataFromDBEvent extends EventObject {
 		super(ipdView);
 	}
 }
-
-

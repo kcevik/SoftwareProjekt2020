@@ -10,6 +10,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
+import de.fhbielefeld.pmt.error.LoginChecker;
+import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.team.ITeamComponent;
@@ -43,18 +45,39 @@ public class TeamRootView extends VerticalLayout {
 	public TeamRootView() {
 
 		this.eventBus.register(this);
-		ITopBarComponent topBarComponent = this.createTopBarComponent();
-		ITeamComponent teamComponent = this.createTeamComponent();
 		
-		Component topBarView = topBarComponent.getViewAs(Component.class);
-		Component teamView = teamComponent.getViewAs(Component.class);
+		if (rootViewLoginCheck()) {			
+			ITopBarComponent topBarComponent = this.createTopBarComponent();
+			ITeamComponent teamComponent = this.createTeamComponent();
 		
-		this.add(topBarView);
-		this.add(teamView);
+			Component topBarView = topBarComponent.getViewAs(Component.class);
+			Component teamView = teamComponent.getViewAs(Component.class);
+			
+			this.add(topBarView);
+			this.add(teamView);
+		}
+		
 		this.setHeightFull();
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 		
+	}
+	
+	/**
+	 * Methode, die überprüft, ob der User eingeloggt ist oder nicht
+	 * Sofern der User nicht eingeloggt sein sollte, wird eine Fehlermeldung angezeigt
+	 * @return
+	 */
+	private boolean rootViewLoginCheck() {
+		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
+				session.getAttribute("LOGIN_USER_FIRSTNAME"), session.getAttribute("LOGIN_USER_LASTNAME"),
+				session.getAttribute("LOGIN_USER_ROLE"))) {
+			return true;
+		} else {
+			this.removeAll();
+			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
+			return false;
+		}
 	}
 	
 	/**

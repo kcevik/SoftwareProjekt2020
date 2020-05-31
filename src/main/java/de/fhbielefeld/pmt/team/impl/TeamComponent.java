@@ -26,20 +26,9 @@ public class TeamComponent extends AbstractPresenter<ITeamModel, ITeamView> impl
 		this.eventBus.register(this);
 	}
 
-	/*@Subscribe
-	public void onReadAllTeamsEvent(ReadAllTeamsEvent event) {
-		if (event.getSource() == this.view) {
-			if (this.model.isReadSuccessfull()) {
-				TransportAllTeamsEvent containsData = new TransportAllTeamsEvent(this.view);
-				containsData.setTeamList(this.model.getTeamListFromDatabase());
-				this.eventBus.post(containsData);	
-			}
-		}
-	}
-	*/
-	
+
 	/**
-	 * Diese Methode ersetzt die da oben! Ist besser so!
+	 * Methode, die alle Teams aus der DB ausliest
 	 * @param event
 	 */
 	@Subscribe
@@ -51,7 +40,7 @@ public class TeamComponent extends AbstractPresenter<ITeamModel, ITeamView> impl
 				}
 			}
 		}
-	}
+	} 
 	
 	@Subscribe
 	public void onReadAllProjectsEvent(ReadAllProjectsEvent event) {
@@ -63,7 +52,7 @@ public class TeamComponent extends AbstractPresenter<ITeamModel, ITeamView> impl
 	}
 	
 	@Subscribe
-	public void onReadAllEmployeeEvent(ReadAllEmployeesEvent event) {
+	public void onReadAllEmployeesEvent(ReadAllEmployeesEvent event) {
 		if (event.getSource() == this.view) {
 			if (this.model.isEmployeeReadSuccessfull()) {
 				this.view.setEmployees(this.model.getEmployeeListFromDatabase());	

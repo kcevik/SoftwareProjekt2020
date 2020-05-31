@@ -6,6 +6,7 @@ import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
@@ -52,8 +53,7 @@ public class VaadinClientViewLogic implements IClientView {
 	}
 
 	/**
-	 * Fügt den Komponenten der View die entsprechenden Listener hinzu. Noch unklar
-	 * welche Listener gebraucht werden
+	 * Fügt den Komponenten der View die entsprechenden Listener hinzu.
 	 */
 	private void registerViewListeners() {
 		this.view.getClientGrid().asSingleSelect().addValueChangeListener(event -> {
@@ -68,8 +68,11 @@ public class VaadinClientViewLogic implements IClientView {
 		this.view.getFilterText().addValueChangeListener(event -> filterList(this.view.getFilterText().getValue()));
 	}
 
+	/**
+	 * Nutzt Binder um eine Verbindung zwischen einem Client Objekt und den
+	 * Textfeldern herzustellen
+	 */
 	private void bindToFields() {
-
 		this.binder.forField(this.view.getCLIENTFORM().getTfClientID()).asRequired()
 				.withConverter(new StringToLongConverter("")).bind(Client::getClientID, null);
 		this.binder.forField(this.view.getCLIENTFORM().getTfName()).asRequired()
@@ -90,8 +93,8 @@ public class VaadinClientViewLogic implements IClientView {
 				.withConverter(new plainStringToIntegerConverter("")).bind(Client::getZipCode, Client::setZipCode);
 		this.binder.bind(this.view.getCLIENTFORM().getTfTown(), "town");
 		this.binder.bind(this.view.getCLIENTFORM().getCkIsActive(), "active");
-		this.binder.forField(this.view.getCLIENTFORM().getMscbProjects())
-				.bind(Client::getProjectList, Client::setProjectList);
+		this.binder.forField(this.view.getCLIENTFORM().getMscbProjects()).bind(Client::getProjectList,
+				Client::setProjectList);
 	}
 
 	/**
@@ -102,15 +105,16 @@ public class VaadinClientViewLogic implements IClientView {
 		this.view.clearGridAndForm();
 	}
 
+	/**
+	 * Zeigt Daten des aktuell Ausgewählten Clients im Bearbeitungsformular an
+	 */
 	private void displayClient() {
 		if (this.selectedClient != null) {
 			try {
-				if (this.projects != null) {
-					this.view.getCLIENTFORM().getMscbProjects().setItems(this.projects);
-				}
-				this.binder.setBean(this.selectedClient);
+				this.binder.readBean(this.selectedClient);
 				this.view.getCLIENTFORM().closeEdit();
 				this.view.getCLIENTFORM().setVisible(true);
+
 			} catch (NumberFormatException e) {
 				Notification.show("NumberFormatException");
 			}
@@ -124,17 +128,33 @@ public class VaadinClientViewLogic implements IClientView {
 	 * Formularfeldern und verschickt den das Client Objekt mit einem Bus
 	 */
 	private void saveClient() {
-
 		if (this.binder.validate().isOk()) {
 			try {
-				this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
-				this.view.getCLIENTFORM().setVisible(false);
-				this.addClient(selectedClient);
-				this.updateGrid();
-				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
-						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-			} catch (NumberFormatException e) {
-				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
+				this.binder.writeBean(this.selectedClient);
+				// TODO Wenn von mehreren Projekten eins gelöscht wird, dass ist die Liste nicht leer aber das Projekt hat trotzdem keinen Client mehr
+				//TODO For schleife und gucken ob jedes Projekt nen Kunden hat und wenn nich denn fehler?
+				
+				if (this.selectedClient.getProjectList().isEmpty()) {
+					Notification.show("Projekt benötigt Kunden", 5000, Notification.Position.TOP_CENTER)
+							.addThemeVariants(NotificationVariant.LUMO_ERROR);
+					return;
+				} else {
+
+					for (Client c : this.clients) {
+						for (Project p : this.selectedClient.getProjectList()) {
+							if (c.getProjectList().contains(p) && c != this.selectedClient) {
+								c.removeProject(p);
+							}
+						}
+					}
+
+					this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
+					this.view.getCLIENTFORM().setVisible(false);
+					this.addClient(selectedClient);
+					this.updateGrid();
+				}
+			} catch (NumberFormatException | ValidationException e) {
+				Notification.show("NumberFormatException oder ValidationException", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
 				resetSelectedClient();
@@ -149,6 +169,9 @@ public class VaadinClientViewLogic implements IClientView {
 		this.selectedClient = null;
 	}
 
+	/**
+	 * Erstellt einen neuen Client und bereitet das Formular vor
+	 */
 	private void newClient() {
 		this.selectedClient = new Client();
 		displayClient();
@@ -193,6 +216,9 @@ public class VaadinClientViewLogic implements IClientView {
 	public void initReadFromDB() {
 		this.eventBus.post(new ReadAllClientsEvent(this));
 		this.eventBus.post(new ReadActiveProjectsEvent(this));
+		if (this.projects != null) {
+			this.view.getCLIENTFORM().getMscbProjects().setItems(this.projects);
+		}
 		this.updateGrid();
 	}
 
@@ -202,13 +228,6 @@ public class VaadinClientViewLogic implements IClientView {
 	public void updateGrid() {
 		this.view.getClientGrid().setItems(this.clients);
 	}
- 
-	public void addClient(Client c) {
-		if (!this.clients.contains(c)) {
-			this.clients.add(c);
-		}
-	}
-
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -219,6 +238,7 @@ public class VaadinClientViewLogic implements IClientView {
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
 
+	// Getter und Setter
 	@Override
 	public void setClients(List<Client> clients) {
 		this.clients = clients;
@@ -233,6 +253,13 @@ public class VaadinClientViewLogic implements IClientView {
 	public void addProjects(Project project) {
 		if (!this.projects.contains(project)) {
 			this.projects.add(project);
+		}
+	}
+
+	@Override
+	public void addClient(Client c) {
+		if (!this.clients.contains(c)) {
+			this.clients.add(c);
 		}
 	}
 }

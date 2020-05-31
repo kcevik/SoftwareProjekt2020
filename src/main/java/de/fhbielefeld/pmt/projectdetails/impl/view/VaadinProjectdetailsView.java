@@ -62,25 +62,17 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 		btnCreateCostPDF = new Button("gesamtkostenübersicht PDF");
 		btnBackToProjectview = new Button("zurück zur Projektübersicht");
 		
-		
-		
 		this.initUI();
 		this.builtUI();
 	}
 	
 	public void builtUI() {
 		// TODO Auto-generated method stub
-		setSpacing(true);
+		//setSpacing(true);
 		Div content = new Div(costGrid, costForm);
-		content.addClassName("content");
+		content.addClassName("content"); 	
 		content.setSizeFull();
-	/*	VerticalLayout vLay = new VerticalLayout(nav, costForm);
-		HorizontalLayout lay = new HorizontalLayout();
-		lay.addAndExpand(content, costForm);*/
-		
-		//createCostInfo(0.0,0.0);
-		
-		this.add(new HorizontalLayout(filterText, btnCreateCostPosition, btnCreateCostPDF), content , new HorizontalLayout(btnBackToProjectview, allCostInfo));
+		this.add(new HorizontalLayout(filterText, btnCreateCostPosition, btnCreateCostPDF), content , costForm, new HorizontalLayout( btnBackToProjectview, allCostInfo));//new HorizontalLayout(btnBackToProjectview, allCostInfo));
 		
 	}
 
@@ -88,8 +80,8 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 		// TODO Auto-generated method stub
 		addClassName("list-view");
 		setSizeFull();
-		configureGrid();
 		this.costGrid.setVisible(true);
+		configureGrid();	
 		createFilter();
 
 	}

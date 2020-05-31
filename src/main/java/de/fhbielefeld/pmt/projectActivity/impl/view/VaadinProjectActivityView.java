@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
@@ -21,7 +20,7 @@ import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
  * @author David Bistron
  *
  */
-@CssImport("./styles/shared-styles.css")
+
 public class VaadinProjectActivityView extends VerticalLayout {
 
 	private static final long serialVersionUID = 1L;
@@ -31,14 +30,13 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	 * projectActivityForm entspricht dem rechten Auswahl-/Eingabebereich in der View
 	 * teamList ist eine ArrayList mit allen vorhandenen Teams und einzelnen Mitarbeitern
 	 */
-	
 	private Grid<ProjectActivity> projectActivityGrid = new Grid<ProjectActivity>(ProjectActivity.class);
 	private List<ProjectActivity> projectActivityList = new ArrayList<ProjectActivity>();
 	private TextField tfFilterText = new TextField();
 	private Button btnCreateNewProjectActivity = new Button("Neue Projekttätigkeit erfassen");
 	private Button btnBackToMainMenu = new Button("Zurück zur Aufgabenauswahl");
 	private VaadinProjectActivityViewForm projectActivityForm = new VaadinProjectActivityViewForm();
-
+	
 	/**
 	 * Methode, die die ProjectActivityView erstellt, indem sie die Methoden initUI und builtUI aufruft
 	 */
@@ -59,7 +57,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		content.addClassName("content");
 		content.setSizeFull();
 		this.add(new HorizontalLayout(tfFilterText, btnCreateNewProjectActivity), content, btnBackToMainMenu);
-	
+		
 	}
 
 	/**
@@ -87,63 +85,42 @@ public class VaadinProjectActivityView extends VerticalLayout {
 
 	/**
 	 * Methode, die die Tabelle und das Formular zurücksetzt
-	 * TODO: hat hier nix zu suchen, muss in die Logic
 	 */
 	public void clearGridAndForm() {
 		this.projectActivityGrid.deselectAll();
 		this.projectActivityForm.resetProjectActivityForm();
 	}
 	
-	// TODO: Doppelter Code --> muss in die Logic!
-	/**
-	 * Methode, die die Filterung nach Teams steuert. Wird in der Methode configureFilter verwendet
-	private void filterList(String filter) {
-		List<Team> filtered = new ArrayList<Team>();
-		for (Team t : this.getTeamList()) {
-			if (t.getTeamName().contains(filter)) {
-				filtered.add(t);
-			} else if (String.valueOf(t.getTeamID()).contains(filter)) {
-				filtered.add(t);															
-			}
-		}
-		//this.getTeamGrid().setVisible(true);
-		this.getTeamGrid().setItems(filtered);
-		  
-	}
-	 */
 	/**
 	 * Methode, um das Grid zu erstellen. Beinhaltet die Spaltenüberschriften, die identisch mit der Datenbank sind
 	 * vgl. Klasse Team im Package JPAEntities
 	 */
 	private void configureGrid() {
 		this.projectActivityGrid.addClassName("projectActivity-grid");
-		// this.projectActivityGrid.removeColumnByKey("project");
-		// TODO: Hier noch keine korrekte Verknüpfung, wird Fehler geben!
-		this.projectActivityGrid.setColumns("project", "projectActivityID", "category", "description", "hoursAvailable", "hoursExpended");
-		this.projectActivityGrid.getColumnByKey("project").setHeader("Projekt-ID");
+		
+		this.projectActivityGrid.removeColumnByKey("project");
+		
+		this.projectActivityGrid.setColumns("projectActivityID", "category", "description", "hoursAvailable", "hourlyRate", "hoursExpended");
+		
+		//TODO: Die Projekt-ID vom gewählten Projekt muss da stehen!
+		this.projectActivityGrid.addColumn(ProjectActivity -> {
+			String projectActivityString = "";
+			projectActivityString += ProjectActivity.getProject() + "";
+			
+			// TODO: TEST
+			System.out.println(ProjectActivity.getProject());
+			
+			return projectActivityString;
+		}).setHeader("Projekt ID");
+		
+		// this.projectActivityGrid.getColumnByKey("project").setHeader("Projekt ID");
+		this.projectActivityGrid.getColumnByKey("projectActivityID").setHeader("Aktivitäts ID");
 		this.projectActivityGrid.getColumnByKey("category").setHeader("Tätigkeitskategorie");
 		this.projectActivityGrid.getColumnByKey("description").setHeader("Tätigkeitsbeschreibung");
+		this.projectActivityGrid.getColumnByKey("hourlyRate").setHeader("Stundensatz");
 		this.projectActivityGrid.getColumnByKey("hoursAvailable").setHeader("max. verfügbare Stunden");
 		this.projectActivityGrid.getColumnByKey("hoursExpended").setHeader("bisher aufgewendete Stunden");
-		
-		// TODO: Hierdurch wird eine weitere Spalte mit Projekte angelegt, in der die Projekte gesammelt werden
-		// TODO: ist irgendwie doppelt, da ja bereits "Zugehörige Projekte" vorhanden sind
-		this.projectActivityGrid.getColumnByKey("projectActivityID").setVisible(false);
-	
-		// TODO: Hier ist ein Fehler
-		/*this.projectActivityGrid.addColumn(project -> {
-			String projectString = "";
-			// TODO: in ProjectActivity muss es ne Liste von Projekten geben!
-			for (Project p : project.getProject()) {
-				projectString += p.getProjectName() + ", ";
-			}
-			if (projectString.length() > 2) {
-				projectString = projectString.substring(0, projectString.length());
-			}
-			return projectString;
-		}).setHeader("Zugehörige Mitarbeiter als String");
-		*/
-		
+			
 		this.projectActivityGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.projectActivityGrid.setHeightFull();
 		this.projectActivityGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
@@ -184,7 +161,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		return btnCreateNewProjectActivity;
 	}
 	
-	public VaadinProjectActivityViewForm getProjectActivityViewForm() {
+	public VaadinProjectActivityViewForm getProjectActivityForm() {
 		return projectActivityForm;
 	}
 	

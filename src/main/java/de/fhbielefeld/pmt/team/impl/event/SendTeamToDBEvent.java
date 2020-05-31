@@ -1,5 +1,7 @@
 package de.fhbielefeld.pmt.team.impl.event;
 
+import java.util.EventObject;
+
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.team.ITeamView;
 
@@ -8,8 +10,9 @@ import de.fhbielefeld.pmt.team.ITeamView;
  * @author David Bistron
  *
  */
-public class SendTeamToDBEvent {
+public class SendTeamToDBEvent extends EventObject  {
 
+	private static final long serialVersionUID = 1L;
 	private Team selectedTeam;
 	
 	/**
@@ -17,15 +20,14 @@ public class SendTeamToDBEvent {
 	 * @param selectedTeam
 	 */
 	public SendTeamToDBEvent(ITeamView view, Team selectedTeam) {
-		super();
+		super(view);
 		this.selectedTeam = selectedTeam;
-	}
+	} 
 
 	public Team getSelectedTeam() {
-		return selectedTeam;
+		return this.selectedTeam;
 	}
 
-	
 	public void setSelectedTeam(Team selectedTeam) {
 		this.selectedTeam = selectedTeam;
 	}

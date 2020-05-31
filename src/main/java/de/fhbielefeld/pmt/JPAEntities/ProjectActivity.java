@@ -1,200 +1,181 @@
 package de.fhbielefeld.pmt.JPAEntities;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
  * Entity implementation class for Entity: ProjectActivity
  * 
  * @author Sebastian Siegmann
- * @version 1.0
+ * @version 1.1
  */
 @Entity
-
+@Cacheable(false)
 public class ProjectActivity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long projectActivityID;
-	private String category;
+
+	/**
+	 * Enum hinzugefügt, damit Aktivitäten zur Verfügung stehen -> werden in diesem Fall vom Softwarentwickler fest vorgegeben
+	 * @author David Bistron
+	 */
+	public static enum ActivityCategories {Management, Personal, Buchhaltung, Finanzen, Recht, Forschung_Entwicklung, Fertigung_Produktion, Qualitätssicherung, 
+		Consulting, Ausbildung_Praktikum, Marketing, IT, Facility_Management;
+		
+		/*
+		private String category;
+		ActivityCategories(String category) {
+			this.category = category;
+		}
+		public  String getActivityCategories() {
+			return category;
+		}
+		*/
+	}
+	
+	/* private List<ActivityCategories> enumCat = new ArrayList<ActivityCategories>(Arrays.asList(ActivityCategories.values()));
+	 * Keine Liste verwendet, da das den Sinn des enum zu nichte macht. Außerdem kann die ComboBox nicht gebindet werden! Lösung: private ActivityCategories category;
+	*/
+	
+	private ActivityCategories category;
 	private String description;
 	private int hoursAvailable;
 	private int hoursExpended;
+	private double hourlyRate;
 	private boolean isActive;
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "project")
 	private Project project;
 
 	/**
-	 * Public non-private zero-argument constructor for JPAentity class
-	 * ProjectActivity
-	 * 
-	 * @return none
+	 * Public non-private zero-argument Konstruktor. (Von JPA vorausgesetzt)
 	 */
 	public ProjectActivity() {
 		super();
 	}
 
 	/**
-	 * Public constructor of Comment JPAentity class
+	 * Public Konstruktor der ProjectActivity JPAentity Klasse
 	 * 
-	 * @return none
+	 * @param category
+	 * @param description
+	 * @param hoursAvailable
+	 * @param hoursExpended
+	 * @param hourlyRate
+	 * @param project
 	 */
-	public ProjectActivity(String category, String description, int hoursAvailable, int hoursExpended,
-			Project project) {
+	public ProjectActivity(ActivityCategories category, String description, int hoursAvailable, int hoursExpended,
+			double hourlyRate, Project project) {
 		super();
 		this.category = category;
 		this.description = description;
 		this.hoursAvailable = hoursAvailable;
 		this.hoursExpended = hoursExpended;
+		this.hourlyRate = hourlyRate;
 		this.project = project;
 		this.isActive = true;
+		//this.enumCat = new ArrayList<ActivityCategories>();
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden
 	public long getProjectActivityID() {
 		return projectActivityID;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
+	/*
+	 * @author David Bistron
+	 * getMethode -> wird für die ComboBox benötigt
 	 */
-	public String getCategory() {
+	public ActivityCategories getCategory() {
 		return category;
 	}
-
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
+	
+	/*
+	 * @author David Bistron
+	 * setMethode -> wird für die ComboBox benötigt
 	 */
-	public void setCategory(String category) {
+	public void setCategory(ActivityCategories category) {
 		this.category = category;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public String getDescription() {
 		return description;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public int getHoursAvailable() {
 		return hoursAvailable;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setHoursAvailable(int hoursAvailable) {
 		this.hoursAvailable = hoursAvailable;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public int getHoursExpended() {
 		return hoursExpended;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setHoursExpended(int hoursExpended) {
 		this.hoursExpended = hoursExpended;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
+	public double getHourlyRate() {
+		return hourlyRate;
+	}
+
+	public void setHourlyRate(double hourlyRate) {
+		this.hourlyRate = hourlyRate;
+	}
+
 	public boolean isActive() {
 		return isActive;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public Project getProject() {
 		return project;
 	}
 
-	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
-	 */
 	public void setProject(Project project) {
 		this.project = project;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	/**
+	 * Gibt die ID in Klammern gefolgt von der Beschreibung wieder
+	 */
 	@Override
 	public String toString() {
 		return "(" + this.projectActivityID + ") " + this.description;
 	}
 
 	/**
-	 * Public Methode um
-	 * 
-	 * @return
-	 * @param
+	 * @author David Bistron
+	 * get- und set-Methode für die enum - Werte
+	 * Keine Liste verwendet! Stattdessen 
+	 * public ActivityCategories getCategory() und public void setCategory(ActivityCategories category)		
 	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	
+	/*public List<ActivityCategories> getEnumCat() {
+		return enumCat;
 	}
+
+	public void setEnumCat(List<ActivityCategories> enumCat) {
+		this.enumCat = enumCat;
+	}
+	*/
+
 }

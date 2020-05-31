@@ -7,5 +7,5 @@ import de.fhbielefeld.pmt.IViewAccessor;
  *
  */
 public interface ITopBarComponent extends IViewAccessor{
-
+	// Noch keine Methoden benoetigt
 }

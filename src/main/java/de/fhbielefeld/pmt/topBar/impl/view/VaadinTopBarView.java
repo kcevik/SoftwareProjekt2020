@@ -11,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 /**
  * 
  * @author Sebastian Siegmann
- *
+ * @version 1.1
  */
 @CssImport("./styles/shared-styles.css")
 public class VaadinTopBarView extends HorizontalLayout {
@@ -20,21 +20,25 @@ public class VaadinTopBarView extends HorizontalLayout {
 	private final Label lblHeading = new Label();
 	private final Label lblSlogan = new Label();
 	private final Button btnLogout = new Button(new Icon(VaadinIcon.BACKWARDS));
-	private final Icon iconLogo = new Icon(VaadinIcon.CHART_GRID);
+	private final Icon iconLogo = new Icon(VaadinIcon.CHART_GRID);	
 
 	public VaadinTopBarView() {
 		this.initUI();
 		this.buildUI();
 	}
-
+  
+	/**
+	 * Baut das Layout auf und fügt Komponenten hinzu
+	 */
 	private void buildUI() {
-		//this.setClassName("testingborder");
+		// Falls Elemente identifiziert werden müssen, einfacher mit border
+		// this.setClassName("testingborder");
 		this.setClassName("topBar");
 		this.setAlignItems(Alignment.CENTER);
 		this.setWidthFull();
 		this.setMaxHeight("120px");
 		this.setMinHeight("120px");
-		VerticalLayout left = new VerticalLayout(iconLogo,lblSlogan);
+		VerticalLayout left = new VerticalLayout(iconLogo, lblSlogan);
 		left.setAlignSelf(Alignment.START);
 		VerticalLayout middle = new VerticalLayout(lblHeading);
 		middle.setAlignSelf(Alignment.CENTER);
@@ -43,11 +47,14 @@ public class VaadinTopBarView extends HorizontalLayout {
 		this.add(left, middle, right);
 	}
 
+	/**
+	 * Legt Eigenschaften der Komponenten fest
+	 */
 	private void initUI() {
 		this.iconLogo.setColor("rgb(22, 118, 243)");
 		this.iconLogo.addClassName("iconTopBar");
 		this.iconLogo.setSize("3em");
-		this.lblSlogan.setText("Projektgruppe1: Ihre Pfuscher von Nebenan");		
+		this.lblSlogan.setText("Projektgruppe1: BEST Project Verwaltungstool");
 		this.lblHeading.addClassName("lblTopBar");
 		this.btnLogout.addClassName("btnTopBar");
 		this.lblHeading.setText("DefaultHeading");
@@ -57,10 +64,11 @@ public class VaadinTopBarView extends HorizontalLayout {
 		addClassName("topBar");
 	}
 
+	//Getter und Setter
 	public void setLblHeadingText(String text) {
 		this.lblHeading.setText(text);
 	}
-	
+
 	public Label getLblHeading() {
 		return lblHeading;
 	}

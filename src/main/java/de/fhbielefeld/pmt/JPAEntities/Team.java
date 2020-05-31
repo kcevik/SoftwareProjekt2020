@@ -9,37 +9,36 @@ import javax.persistence.*;
  * Entity implementation class for Entity: Team
  * 
  * @author Sebastian Siegmann
- * @version 1.0
+ * @version 1.2
  */
 @Entity
-
+@Cacheable(false)
 public class Team implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long teamID;
 	private String teamName;
 	private boolean isActive;
-	
 	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "teamList")
-	private Set<Employee> employeeList;
-	
+	private HashSet<Employee> employeeList;
 	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "teamList")
 	private Set<Project> projectList;
 	
 	/**
-	 * Public non-private zero-argument constructor for JPAentity class Team
-	 * @return none
+	 * Public non-private zero-argument Konstruktor. (Von JPA vorausgesetzt)
 	 */
 	public Team() {
 		super();
+		this.employeeList = new HashSet<Employee>();	// Hinzugefügt, da ansonsten kein neues Team persistiert werden kann,
+		this.projectList  = new HashSet<Project>(); 	// da die Liste leer ist
 	}
 
 	/**
-	 * Public constructor of Team JPAentity class
-	 * @return none
+	 * Public Konstruktor der Team JPAentity Klasse
+	 * @param teamName
+	 * @param employee
 	 */
 	public Team(String teamName, Employee employee) {
 		super();
@@ -48,51 +47,26 @@ public class Team implements Serializable {
 		//TODO: https://www.codeflow.site/de/article/java-hashset-vs-treeset Deswegen Hashset weil speed
 		this.employeeList = new HashSet<Employee>();
 		this.projectList  = new HashSet<Project>();
-		this.employeeList.add(employee);
+		// this.employeeList.add(employee);
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public boolean isActive() {
 		return isActive;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void setActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden 
 	public long getTeamID() {
 		return teamID;
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public String getTeamName() {
 		return teamName;
 	}
@@ -107,12 +81,7 @@ public class Team implements Serializable {
 	public void setTeamName(String teamName) {
 		this.teamName = teamName;
 	}
-	
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
+
 	public Set<Employee> getEmployeeList() {
 		return employeeList;
 	}
@@ -124,33 +93,29 @@ public class Team implements Serializable {
 	 * neue Mitarbeiter hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
 	 * bearbeitet werden
 	 */
-	public void setEmployeeList(Set<Employee> employeeList) {
-		this.employeeList = employeeList;
+	public void setEmployeeList(Set<Employee> employeeList) {		
+		for (Employee e : employeeList) { // Übergabeparameter MA-Liste
+			if (!this.employeeList.contains(e)) { // wenn in der Instanzliste NICHT e enthalten ist, dann adden
+				addEmployee(e);
+			}
+		}
+		for (Employee e : this.employeeList) { // Instanzliste MA-Liste
+			if (!employeeList.contains(e)) { // wenn in der Übergabeparameter MA-Liste NICHT e enthalten ist, dann remove
+				removeEmployee(e);
+			}
+		}
 	}
-	
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
+
 	public void addEmployee (Employee employee) {
 		this.employeeList.add(employee);
+		employee.addTeam(this);	// BI-Direktionale Anweisung, damit in DB persistiert wird
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void removeEmployee (Employee employee) {
 		this.employeeList.remove(employee);
+		employee.removeTeam(this); // BI-Direktionale Anweisung, damit in DB persistiert wird
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public Set<Project> getProjectList() {
 		return projectList;
 	}
@@ -162,28 +127,33 @@ public class Team implements Serializable {
 	 * neue Projekte hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
 	 * bearbeitet werden
 	 */
+	
 	public void setProjectList(Set<Project> projectList) {
-		this.projectList = projectList;
+		for (Project p : projectList) {
+			if (!this.projectList.contains(p)) {
+				addProject(p);
+			}
+		}
+		for (Project p : this.projectList) {
+			if (!projectList.contains(p)) {
+				removeProject(p);
+			}
+		}
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void addProject (Project project) {
 		this.projectList.add(project);
+		project.addTeam(this);
 	}
 
-	/**
-	 * Public Methode um  
-	 * @return 
-	 * @param 
-	 */
 	public void removeProject (Project project) {
 		this.projectList.remove(project);
+		project.removeTeam(this);
 	}
 	
+	/**
+	 * Gibt die ID in Klammern gefolgt von dem Namen wieder
+	 */
 	@Override
 	public String toString() {
 		return "(" + this.teamID + ") " + this.teamName;

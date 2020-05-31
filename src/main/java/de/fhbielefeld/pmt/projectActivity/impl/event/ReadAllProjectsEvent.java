@@ -5,7 +5,8 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.projectActivity.IProjectActivityView;
 
 /**
- * 
+ * EventObject = Vaadin-Komponente
+ * Klasse, Klasse, die das Event zum Auslesen aller Projekte aus der DB verantwortlich ist
  * @author David Bistron
  *
  */

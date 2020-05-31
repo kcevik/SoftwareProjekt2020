@@ -48,7 +48,7 @@ public class VaadinProjectViewForm extends FormLayout{
 	
 	public VaadinProjectViewForm() {
 		addClassName("client-form");
-		//configureTextFields();
+
 		this.closeEdit();
 		this.tfProjectId.setReadOnly(true);
 		lblBeschreibung.add("Anlegen/Bearbeiten");

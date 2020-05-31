@@ -46,7 +46,7 @@ public class ModuleChooserRootView extends VerticalLayout {
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 	}
-
+ 
 	/**
 	 * Guckt nach ob ein User angemeldet ist oder nicht. Je nach dem wird eine Error Seite erstellt oder die normale Seite geladen
 	 */
@@ -67,15 +67,19 @@ public class ModuleChooserRootView extends VerticalLayout {
 		return ModuleChooserComponent;
 	}
 
+	/**
+	 * @author Fabian Oermann
+	 */
 	@Subscribe
 	public void onEmloyeeModuleChosen(EmployeesModuleChosenEvent event) {
-		System.out.println("wenn ich dich wähle, dann bist du ein EmployeeModule");
 		this.getUI().ifPresent(ui -> ui.navigate("employeemanagement"));
 	}
 
+	/**
+	 * @author Sebastian Siegmann
+	 */
 	@Subscribe
 	public void onClientModuleChosen(ClientModuleChosenEvent event) {
-		System.out.println("wenn ich dich wähle, dann bist du ein ClientModule");
 		this.getUI().ifPresent(ui -> ui.navigate("clientmanagement"));
 	}
 
@@ -96,9 +100,11 @@ public class ModuleChooserRootView extends VerticalLayout {
 		this.getUI().ifPresent(ui -> ui.navigate("projectmanagement"));
 	}
 	
+	/**
+	 * @author David Bistron, Sebastian Siegmann
+	 */
 	@Subscribe
 	public void onPersonalDetailsChosen(PersonalDetailsChosenEvent event) {
-		System.out.println("wenn ich dich wähle, dann bist du ein Mein Konto");
 		this.getUI().ifPresent(ui -> ui.navigate("personalDetails"));
 	}
 	

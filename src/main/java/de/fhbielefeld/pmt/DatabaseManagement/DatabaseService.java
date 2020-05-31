@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Remark;
@@ -18,7 +19,7 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
  * Service Klasse, die DB Interaktionen druchführt
  * 
  * @author Sebastian Siegmann
- * @version 1.0
+ * @version 1.5
  */
 
 public class DatabaseService {
@@ -29,18 +30,15 @@ public class DatabaseService {
 
 	/**
 	 * Privater Konstruktor von DatabaseService
-	 * 
-	 * @return none
 	 */
-	private DatabaseService() {
+	public DatabaseService() {
 
 		emf = Persistence.createEntityManagerFactory("SoftwareProjekt2020");
 		em = emf.createEntityManager();
 	}
 
-	
 	/**
-	 * Public method for getting a new DatabaseService
+	 * Public Methode um im Singleton Muster den DatabaseService zurück zu geben
 	 * 
 	 * @return DatabaseService Instanz
 	 */
@@ -49,10 +47,10 @@ public class DatabaseService {
 		if (databaseService == null) {
 			databaseService = new DatabaseService();
 		}
-		return databaseService;
+		//TODO: ToFix: Braucht new DatabaseService falls SQL Aktualisierungen durchkommen sollen!
+		return new DatabaseService();// databaseService;
 	}
 
-	
 	/**
 	 * Schreibt übergebenen Client in die Datenbank
 	 * 
@@ -66,11 +64,11 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(client);
-			em.getTransaction().commit();
+			em.flush();
+			em.getTransaction().commit();			
 		}
 	}
 
-	
 	/**
 	 * Gibt Liste aller Clients aus DB zurück
 	 * 
@@ -84,7 +82,6 @@ public class DatabaseService {
 		return resultListClient;
 	}
 
-	
 	/**
 	 * Gibt einen Client identifiziert durch die ID zurück
 	 * 
@@ -98,8 +95,7 @@ public class DatabaseService {
 		Client result = query.getSingleResult();
 		return result;
 	}
-	
-	
+
 	/**
 	 * Gibt Liste aller aktiven Clients aus DB zurück
 	 * 
@@ -112,7 +108,6 @@ public class DatabaseService {
 		List<Client> resultListClient = query.getResultList();
 		return resultListClient;
 	}
-	
 
 	/**
 	 * Schreibt übergebenes Projekt in die Datenbank
@@ -127,11 +122,12 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(project);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
-	
 	/**
 	 * Gibt Liste aller Projects aus DB zurück
 	 * 
@@ -144,41 +140,60 @@ public class DatabaseService {
 		List<Project> resultListProject = query.getResultList();
 		return resultListProject;
 	}
-	
+
 	/**
 	 * 
-	 * 
-	 * @param none
-	 * @return List<Project> List of projects
+	 * @author LucasEickmann
+	 * @param String userID Employee-ID des in der Session angemeldeten Benutzers.
+	 * @return List<Project> Liste von Projekten, die dem übergebenen User direkt
+	 *         zugeordnet sind.
 	 */
 	public List<Project> readProjectForUser(String userID) {
-		
-		TypedQuery<Project> queryEmployee = em.createQuery("SELECT p FROM Project p join p.employeeList e WHERE e.employeeID = " + userID + "", Project.class);
+
+		TypedQuery<Project> queryEmployee = em.createQuery(
+				"SELECT p FROM Project p join p.employeeList e WHERE e.employeeID = " + userID + "", Project.class);
 
 		List<Project> resultListProjectEmployee = queryEmployee.getResultList();
-		
+
 		return resultListProjectEmployee;
 
 	}
-	
-	
+
 	/**
 	 * 
-	 * 
-	 * @param none
-	 * @return List<Project> List of projects
+	 * @author LucasEickmann
+	 * @param String userID Employee-ID des in der Session angemeldeten Benutzers.
+	 * @return List<Project> Liste von Projekten, die dem übergebenen User durch
+	 *         seine Mitgliedschaft in Teams zugehörig sind.
 	 */
 	public List<Project> readProjectForUserByTeam(String userID) {
-		
-		TypedQuery<Project> queryTeam = em.createQuery("SELECT p FROM Project p join p.teamList tl join tl.employeeList e WHERE e.employeeID = " + userID + "", Project.class);
+
+		TypedQuery<Project> queryTeam = em.createQuery(
+				"SELECT p FROM Project p join p.teamList tl join tl.employeeList e WHERE e.employeeID = " + userID + "",
+				Project.class);
 
 		List<Project> resultListProjectTeam = queryTeam.getResultList();
-		
+
 		return resultListProjectTeam;
 
 	}
 
-	/** Gibt ein Project, identifiziert durch die ID, zurück
+	/**
+	 * @author LucasEickmann
+	 * @param String userID Employee-ID des in der Session angemeldeten Benutzers.
+	 * @return List<Project> Liste von Projekten, in denen
+	 */
+	public List<Project> readProjectForProjectmanager(String userID) {
+
+		Query query = em.createNativeQuery("SELECT DISTINCT * FROM project p START WITH p.projectmanager = " + userID
+				+ " CONNECT BY PRIOR p.projectid = p.supprojectid", Project.class);
+		@SuppressWarnings("unchecked")
+		List<Project> resultListProject = query.getResultList();
+		return resultListProject;
+	}
+
+	/**
+	 * Gibt ein Project, identifiziert durch die ID, zurück
 	 * 
 	 * @param none
 	 * @return Project
@@ -192,7 +207,6 @@ public class DatabaseService {
 		return result;
 	}
 
-	
 	/**
 	 * Gibt Liste aller aktiven Projects aus DB zurück
 	 * 
@@ -206,7 +220,34 @@ public class DatabaseService {
 		return resultListProject;
 	}
 
+	/**
+	 * Gibt Liste aller Projects aus DB zurück, die zu einem bestimmten Kunden gehören
+	 * 
+	 * @param none
+	 * @return List<Project>
+	 */
+	public List<Project> readProjectsForClient(Client client) {
+
+		TypedQuery<Project> query = em.createQuery("SELECT p FROM Project p WHERE p.client = :client", Project.class);
+		query.setParameter("client", client);
+		List<Project> resultListProject = query.getResultList();
+		return resultListProject;
+	}
 	
+	/**
+	 * Gibt Liste aller Costs zu einem Project aus DB zurück
+	 * 
+	 * @param none
+	 * @return List<Costs>
+	 */
+	public List<Costs> readCostsOfProject(Project project) {
+
+		TypedQuery<Costs> query = em.createQuery("SELECT c FROM Costs c WHERE c.project = :project", Costs.class);
+		query.setParameter("project", project);
+		List<Costs> resultListCostsForProject = query.getResultList();
+		return resultListCostsForProject;
+	}
+
 	/**
 	 * Schreibt übergebenes Team in die Datenbank
 	 * 
@@ -220,11 +261,12 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(team);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
-	
 	/**
 	 * Gibt Liste aller Teams aus DB zurück
 	 * 
@@ -238,7 +280,6 @@ public class DatabaseService {
 		return resultListEmployee;
 	}
 
-	
 	/**
 	 * Gibt ein Team, identifiziert durch die ID, zurück
 	 * 
@@ -252,8 +293,7 @@ public class DatabaseService {
 		Team result = query.getSingleResult();
 		return result;
 	}
-	
-	
+
 	/**
 	 * Gibt Liste aller aktiven Teams aus DB zurück
 	 * 
@@ -267,7 +307,6 @@ public class DatabaseService {
 		return resultListTeam;
 	}
 
-	
 	/**
 	 * Schreibt übergebenen Employee in die Datenbanke
 	 * 
@@ -281,11 +320,12 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(employee);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
-	
 	/**
 	 * Gibt Liste aller Employees aus DB zurück
 	 * 
@@ -298,20 +338,6 @@ public class DatabaseService {
 		List<Employee> resultListEmployee = query.getResultList();
 		return resultListEmployee;
 	}
-
-	
-//	/**
-//	 * Public method for retrieving a list of employee
-//	 * 
-//	 * @param none
-//	 * @return List<Employee> List of employee
-//	 */
-//	public List<Employee> readEmployee(Long employeeID) {
-//
-//		TypedQuery<Employee> query = em.createQuery("SELECT e FROM Employee e WHERE e.employeeID = :employeeID", Employee.class);
-//		List<Employee> resultListEmployee = query.getResultList();
-//		return resultListEmployee;
-//	}
 
 	/**
 	 * Gibt ein Employee, identifiziert durch die ID, zurück
@@ -329,7 +355,6 @@ public class DatabaseService {
 
 	}
 
-	
 	/**
 	 * Gibt Liste aller aktiven Employees aus DB zurück
 	 * 
@@ -342,8 +367,7 @@ public class DatabaseService {
 		List<Employee> resultListEmployee = query.getResultList();
 		return resultListEmployee;
 	}
-	
-	
+
 	/**
 	 * Schreibt übergebenes Cost Objekt in die Datenbank
 	 * 
@@ -357,11 +381,12 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(costs);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
-	
 	/**
 	 * Gibt Liste aller Costs aus DB zurück
 	 * 
@@ -375,7 +400,6 @@ public class DatabaseService {
 		return resultListEmployee;
 	}
 
-	
 	/**
 	 * Gibt ein Cost Objekt, identifiziert durch die ID, zurück
 	 * 
@@ -390,7 +414,6 @@ public class DatabaseService {
 		return result;
 	}
 
-	
 	/**
 	 * Schreibt übergebene ProjectActvity in die Datenbank
 	 * 
@@ -404,11 +427,12 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(projectActivity);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
-	
 	/**
 	 * Gibt Liste aller ProjectActivities aus DB zurück
 	 * 
@@ -422,7 +446,6 @@ public class DatabaseService {
 		return resultListEmployee;
 	}
 
-	
 	/**
 	 * Gibt eine ProjectActivity, identifiziert durch die ID, zurück
 	 * 
@@ -439,7 +462,6 @@ public class DatabaseService {
 		return result;
 	}
 
-	
 	/**
 	 * Schreibt übergebenes Remark in die Datenbank
 	 * 
@@ -453,11 +475,12 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(Remark);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
-	
 	/**
 	 * Gibt Liste aller Remarks aus DB zurück
 	 * 
@@ -471,7 +494,6 @@ public class DatabaseService {
 		return resultListEmployee;
 	}
 
-	
 	/**
 	 * Gibt ein Remark, identifiziert durch die ID, zurück
 	 * 
@@ -486,7 +508,6 @@ public class DatabaseService {
 		return result;
 	}
 
-	
 	/**
 	 * Schreibt übergebene Role in die Datenbank
 	 * 
@@ -500,11 +521,12 @@ public class DatabaseService {
 		} else {
 			em.getTransaction().begin();
 			em.persist(role);
+			em.flush();
 			em.getTransaction().commit();
+			
 		}
 	}
 
-	
 	/**
 	 * Gibt Liste aller Roles aus DB zurück
 	 * 
@@ -518,7 +540,6 @@ public class DatabaseService {
 		return resultListEmployee;
 	}
 
-	
 	/**
 	 * Gibt eine Role, identifiziert durch die ID, zurück
 	 * 
@@ -534,7 +555,6 @@ public class DatabaseService {
 
 	}
 
-	
 	/**
 	 * Gibt alle Objekte mit der Rolle Manager wieder
 	 * 
@@ -548,29 +568,25 @@ public class DatabaseService {
 		 * e.ROLE_ROLEID AND r.DTYPE LIKE 'RoleProjectManager'
 		 */
 		TypedQuery<Employee> query = em.createQuery(
-				"SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'Projectmanager'",
-				Employee.class);
+				"SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'Projectmanager'", Employee.class);
 		List<Employee> resultListEmployee = query.getResultList();
 		return resultListEmployee;
 	}
 
-	
 	/**
 	 * Gibt alle Objekte mit der Rolle CEO wieder
 	 * 
 	 * @param none
-	 * @return List<Employee> 
+	 * @return List<Employee>
 	 */
 	public List<Employee> readCEORole() {
 
-		TypedQuery<Employee> query = em.createQuery(
-				"SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'CEO'",
-				Employee.class);
+		TypedQuery<Employee> query = em
+				.createQuery("SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'CEO'", Employee.class);
 		List<Employee> resultListEmployee = query.getResultList();
 		return resultListEmployee;
 	}
 
-	
 	/**
 	 * Gibt alle Objekte mit der Rolle Employee wieder
 	 * 
@@ -580,8 +596,7 @@ public class DatabaseService {
 	public List<Employee> readEmployeeRole() {
 
 		TypedQuery<Employee> query = em.createQuery(
-				"SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'Employee'",
-				Employee.class);
+				"SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'Employee'", Employee.class);
 		List<Employee> resultListEmployee = query.getResultList();
 		return resultListEmployee;
 	}
