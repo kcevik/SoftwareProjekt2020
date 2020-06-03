@@ -20,6 +20,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
@@ -139,16 +140,9 @@ public class VaadinProjectViewLogic implements IProjectView {
 			
 			try {
 				
-				this.binder.setBean(this.selectedProject);
+				this.binder.readBean(this.selectedProject);
 				this.view.getProjectForm().setVisible(true);
-				System.out.println(this.selectedProject.getTeamList().toString());
-				System.out.println("---------------------");
-				Set<Team> ts = this.view.getProjectForm().getCbTeams().getValue();
-				for (Team t : ts) {
-					System.out.print(t.toString() + ", ");
-					
-				}
-				System.out.println();
+
 				if (this.selectedProject.getTeamList() == null) {
 					System.out.println(this.selectedProject.getTeamList());	
 				}
@@ -178,14 +172,15 @@ public class VaadinProjectViewLogic implements IProjectView {
 
 		if (this.binder.validate().isOk()) {
 			try {
+				this.binder.writeBean(this.selectedProject);
 				this.eventBus.post(new SendProjectToDBEvent(this, this.selectedProject));
 				this.view.getProjectForm().setVisible(false);
 				this.addProject(selectedProject);
 				this.updateGrid();
 				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-			} catch (NumberFormatException e) {
-				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
+			} catch (NumberFormatException | ValidationException e) {
+				Notification.show("Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
 				resetSelectedProject();
@@ -303,35 +298,6 @@ public class VaadinProjectViewLogic implements IProjectView {
 		}
 	}
 
-//	/**
-//	 * @author LucasEickmann
-//	 */
-//	private void downloadPDF() {
-//		
-//		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
-//		PDFGenerating gen = new PDFGenerating();
-//		//TODO: In Component umziehen um model zu nutzen! Braucht aktuelles Projekt statt null
-//		File file = gen.generateInvoicePdf(null);
-//		StreamResource res = new StreamResource(file.getName(), () ->  {
-//			try {
-//				return new FileInputStream(file);
-//			} catch (FileNotFoundException e) {
-//				Notification.show("Fehler beim erstellen der Datei");
-//				return null;
-//			}
-//		});
-//		
-//		Anchor downloadLink = new Anchor(res, "Download");
-//		this.view.add(downloadLink);
-//		downloadLink.setId(timeStamp.toString());
-//		downloadLink.getElement().getStyle().set("display", "none");
-//		downloadLink.getElement().setAttribute( "download" , true );
-//		
-//	
-//		Page page = UI.getCurrent().getPage();
-//		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
-//		
-//	}
 
 	/**
 	 * @author Sebastian Siegmann, Lucas Eickmann

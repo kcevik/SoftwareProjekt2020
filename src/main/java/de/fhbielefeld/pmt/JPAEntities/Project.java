@@ -193,27 +193,40 @@ public class Project implements Serializable {
 	public void setTeamList(Set<Team> teamSet) {
 		// Entfernt dieses Projekt aus allen Teams, die laut dem neuen übergebenen Setz
 		// nicht mehr zu diesem Projekt gehören.
-		if (teamSet != null) {
-			this.teamList = (HashSet<Team>) teamSet;
+		//if (teamSet != null) {
+		//	this.teamList = (HashSet<Team>) teamSet;
+		//}
+		
+		for (Team t : teamSet) {
+			if (!this.teamList.contains(t)) {
+				this.addTeam(t);
+			}
+		}
+		for (Team t : this.teamList) {
+			if (!teamSet.contains(t)) {
+				removeTeam(t);
+			}
 		}
 	}
 
 	public void addTeam(Team team) {
 		this.teamList.add(team);
+		if (!team.getProjectList().contains(this)) {
+			team.addProject(this);
+		}
+			
 	}
 
 	public void removeTeam(Team team) {
 		this.teamList.remove(team);
+		if (team.getProjectList().contains(this)) {
+			team.removeProject(this);
+		}
 	}
 
 	public Set<Employee> getEmployeeList() {
 		return employeeList;
 	}
-
-	public void addEmployee(Employee employee) {
-		this.employeeList.add(employee);
-	}
-
 
 	/**TODO
 	 * @author ?
@@ -222,25 +235,48 @@ public class Project implements Serializable {
 	public void setEmployeeList(Set<Employee> employeeSet) {
 		// Entfernt dieses Projekt aus allen Employee, die laut dem neuen übergebenen
 		// Setz nicht mehr zu diesem Projekt gehören.
-		if (employeeList != null) {
-			for (Employee e : this.employeeList) {
-				if (!employeeSet.contains(e)) {
-					e.removeProject(this);
-				}
+//		if (employeeList != null) {
+//			for (Employee e : this.employeeList) {
+//				if (!employeeSet.contains(e)) {
+//					e.removeProject(this);
+//				}
+//			}
+//			employeeList.clear();
+//		}
+//
+//		if (employeeSet != null) {
+//			for (Employee e : employeeSet) {
+//				this.employeeList.add(e);
+//				e.addProject(this);
+//			}
+//		}
+		
+		for (Employee e : employeeSet) {
+			if (!this.employeeList.contains(e)) {
+				addEmployee(e);
 			}
-			employeeList.clear();
 		}
-
-		if (employeeSet != null) {
-			for (Employee e : employeeSet) {
-				this.employeeList.add(e);
-				e.addProject(this);
+		for (Employee e : this.employeeList) {
+			if (!employeeSet.contains(e)) {
+				removeEmployee(e);
 			}
 		}
 	}
+	
+	public void addEmployee(Employee employee) {
+		if (!employee.getProjectList().contains(this)) {
+			this.employeeList.add(employee);
+		}
+	}
+
 
 	public void removeEmployee(Employee employee) {
+		
 		this.employeeList.remove(employee);
+		
+		if (employee.getProjectList().contains(this)) {
+			employee.removeProject(this);
+		}
 	}
 
 	/**
