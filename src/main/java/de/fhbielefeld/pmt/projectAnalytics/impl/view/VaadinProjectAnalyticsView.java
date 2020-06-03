@@ -13,20 +13,31 @@ public class VaadinProjectAnalyticsView extends VerticalLayout {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final Button btnBackToProjectdetails = new Button("Zurück zur Projektübersicht");
+	private final Button btnBackToProjectmanagement = new Button("Zurück zur Projektübersicht");
 	private final Label lblAnalytics = new Label("Analytics");
-	private final Label lblFullfillment = new Label("Erfüllungsgrad des Projektes");
-	private final Label lblTime = new Label("Zeit");
-	private final Label lblCosts = new Label("Kosten");
-
-	Div fullfillmentDiv = new Div();
-	Div timeDiv = new Div();
-	Div costsDiv = new Div();
 	
-	private Image fullfillmentImage = new Image("https://dummyimage.com/600x400/000/fff", "DummyImage");
+	private Image fullfillmentImage = new Image();
 	private Image timeImage = new Image();
 	private Image costsImage = new Image();
 	
+
+	public VaadinProjectAnalyticsView() {
+		this.initUI();
+		this.builtUI();
+	}
+	
+	private void initUI() {
+		
+		Div content = new Div(fullfillmentImage, timeImage, costsImage);
+		content.addClassName("content");
+		this.addClassName("list-view");
+		this.addClassName("client-grid");
+		this.add(content, btnBackToProjectmanagement);
+	}
+	
+	private void builtUI() {
+		addClassName("center-content");
+	}
 
 	public Image getFullfillmentImage() {
 		return fullfillmentImage;
@@ -52,49 +63,10 @@ public class VaadinProjectAnalyticsView extends VerticalLayout {
 		this.costsImage = costsImage;
 	}
 
-	public VaadinProjectAnalyticsView() {
-		this.initUI();
-		this.builtUI();
+	public Button getBtnBackToProjectmanagement() {
+		return btnBackToProjectmanagement;
 	}
 	
-	private void initUI() {
-		
-		Div content = new Div(fullfillmentImage, timeImage, costsImage);
-		/*content.add(lblAnalytics);
-		fullfillmentDiv.addClassName("analyticsDiv");
-		
-		
-		fullfillmentDiv.add(lblFullfillment);
-		fullfillmentDiv.setWidth("100%");
-		//fullfillmentDiv.setSizeFull();
-		timeDiv.add(lblTime);
-		timeDiv.setWidth("50%");
-		costsDiv.add(lblCosts);
-		costsDiv.setWidth("50%");
-		
-		/*HorizontalLayout bottomlay = new HorizontalLayout();
-		bottomlay.setFlexGrow(1, timeDiv);
-		bottomlay.setFlexGrow(1, costsDiv);
-		bottomlay.add(timeDiv, costsDiv);
-		this.setSizeFull();*/
-		//this.add(fullfillmentDiv);
-		
-		/*
-		content.addClassName("content");
-		content.addClassName("analyticsDiv");
-		fullfillmentDiv.addClassName("chartsDiv");
-		timeDiv.addClassName("chartsDiv");
-		costsDiv.addClassName("chartsDiv");
-		content.addClassName("analyticsDiv");
-		content.setSizeFull();
-		this.setSizeFull();*/
-		content.addClassName("content");
-		this.addClassName("list-view");
-		this.add(content, btnBackToProjectdetails);
-	}
-	
-	private void builtUI() {
-		addClassName("center-content");
-	}
+
 
 }

@@ -108,21 +108,7 @@ html {
 }
 
 
-b{
-	position: fixed;
-	right: 0;
-}
 
-.analyticsDiv{
-	position: relative;
-	height: 75%;
-	width: 100%;
-	border: 1px solid black;
-}
-
-.chartsDiv{
-	position: absolute;
-}
 
 
 

@@ -21,12 +21,21 @@ import de.fhbielefeld.pmt.error.impl.view.NotAuthorizedError;
 import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.navigatorBox.INavigatorBoxComponent;
+import de.fhbielefeld.pmt.navigatorBox.impl.NavigatorBoxComponent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenActivitiesEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenAnalyticsEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenCostsEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenRemarksEvent;
+import de.fhbielefeld.pmt.navigatorBox.impl.view.VaadinNavigatorBoxLogic;
+import de.fhbielefeld.pmt.navigatorBox.impl.view.VaadinNavigatorBoxView;
 import de.fhbielefeld.pmt.project.IProjectComponent;
 import de.fhbielefeld.pmt.project.impl.ProjectComponent;
 import de.fhbielefeld.pmt.project.impl.event.ProjectDetailsModuleChoosenEvent;
 import de.fhbielefeld.pmt.project.impl.model.ProjectModel;
 import de.fhbielefeld.pmt.project.impl.view.VaadinProjectView;
 import de.fhbielefeld.pmt.project.impl.view.VaadinProjectViewLogic;
+import de.fhbielefeld.pmt.projectActivity.impl.model.ProjectActivityModel;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsComponent;
 import de.fhbielefeld.pmt.projectdetails.impl.ProjectdetailsComponent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.TransportProjectEvent;
@@ -59,91 +68,90 @@ public class ProjectdetailsRootView extends VerticalLayout {
 	VaadinSession session = VaadinSession.getCurrent();
 
 	public ProjectdetailsRootView() {
-		//if (rootViewLoginCheck()) {
-			
-		    this.eventBus.register(this);
+		if (rootViewLoginCheck()) {
+
+			this.eventBus.register(this);
 			IProjectdetailsComponent projectdetailsComponent = this.createProjectdetailsComponent();
 			Component projectdetailsView = projectdetailsComponent.getViewAs(Component.class);
-			
+
 			ITopBarComponent topBarComponent = this.createTopBarComponent();
 			Component topBarView = topBarComponent.getViewAs(Component.class);
-			
-			
+
 			IProjectdetailsNavComponent navBarComponent = this.createNavBarComponent();
 			Component navBarView = navBarComponent.getViewAs(Component.class);
-			
-			
-			
-			/*Hotfix, damit das Layout nicht ganz verramscht ist.. 
-			 * HorizontalLayout macht nicht wie es soll  */
-			Div projectDiv = new Div(projectdetailsView);
-			Div navDiv = new Div(navBarView); 
-			
-			
-			HorizontalLayout layout = new HorizontalLayout();
-			layout.add(projectDiv,navDiv);
-			layout.setFlexGrow(1, projectDiv);
-			layout.setFlexGrow(1, navDiv);
-			layout.setSizeFull();
-			layout.addClassName("content");
-			layout.setMaxHeight("75%");
-			
-			this.add(layout);
+
+			INavigatorBoxComponent navigatorBoxComponent = this.createNavigatorBoxComponent();
+			Component navigatorBoxView = navigatorBoxComponent.getViewAs(Component.class);
+
 			this.add(topBarView);
-		//}
+			this.add(navigatorBoxView);
+			this.add(projectdetailsView);
+
+		}
 		this.setHeightFull();
+		this.addClassName("root-view");
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
 	}
-	
-	
+
+	private INavigatorBoxComponent createNavigatorBoxComponent() {
+
+		VaadinNavigatorBoxView vaadinNavigatorBoxView = new VaadinNavigatorBoxView();
+		INavigatorBoxComponent navigatorBoxComponent = new NavigatorBoxComponent(
+				new ProjectActivityModel(DatabaseService.DatabaseServiceGetInstance()),
+				new VaadinNavigatorBoxLogic(vaadinNavigatorBoxView, this.eventBus), this.eventBus);
+		return navigatorBoxComponent;
+
+	}
+
 	private IProjectdetailsNavComponent createNavBarComponent() {
 		VaadinProjectdetailsNavBarView view = new VaadinProjectdetailsNavBarView();
-		ProjectdetailsNavBarComponent component = new ProjectdetailsNavBarComponent(new ProjectdetailsModel(DatabaseService.DatabaseServiceGetInstance()),
-																					new VaadinProjectdetailsNavBarViewLogic(view,this.eventBus), this.eventBus);
-	
-		return 	component;
+		ProjectdetailsNavBarComponent component = new ProjectdetailsNavBarComponent(
+				new ProjectdetailsModel(DatabaseService.DatabaseServiceGetInstance()),
+				new VaadinProjectdetailsNavBarViewLogic(view, this.eventBus), this.eventBus);
+
+		return component;
 	}
-	
 
 	private IProjectdetailsComponent createProjectdetailsComponent() {
 		VaadinProjectdetailsViewLogic vaadinProjectdetailsViewLogic = new VaadinProjectdetailsViewLogic(
 				new VaadinProjectdetailsView(), this.eventBus);
 		IProjectdetailsComponent projectdetailsComponent = new ProjectdetailsComponent(
 				new ProjectdetailsModel(DatabaseService.DatabaseServiceGetInstance()), vaadinProjectdetailsViewLogic,
-				this.eventBus, (Project)session.getAttribute("PROJECT"));
-		vaadinProjectdetailsViewLogic.initReadFromDB((Project)session.getAttribute("PROJECT"));
+				this.eventBus, (Project) session.getAttribute("PROJECT"));
+		vaadinProjectdetailsViewLogic.initReadFromDB((Project) session.getAttribute("PROJECT"));
 		return projectdetailsComponent;
 	}
 
 	private ITopBarComponent createTopBarComponent() {
 
 		VaadinTopBarView vaadinTopBarView = new VaadinTopBarView();
-		vaadinTopBarView.setLblHeadingText("Teamübersicht");
+		vaadinTopBarView.setLblHeadingText("Projektkostenübersicht");
 		ITopBarComponent topBarComponent = new TopBarComponent(
 				new ClientModel(DatabaseService.DatabaseServiceGetInstance()),
 				new VaadinTopBarViewLogic(vaadinTopBarView, this.eventBus), this.eventBus);
 		return topBarComponent;
 
 	}
-	
-	
+
 	/**
-	 * Methode, die die Rückkehr zum LogIn-Screen steuert, wenn der Button "Logout" gedrückt wird
+	 * Methode, die die Rückkehr zum LogIn-Screen steuert, wenn der Button "Logout"
+	 * gedrückt wird
+	 * 
 	 * @param event
 	 */
 	@Subscribe
 	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
-		
+
 		session.setAttribute("LOGIN_USER_ID", null);
 		session.setAttribute("LOGIN_USER_FIRSTNAME", null);
 		session.setAttribute("LOGIN_USER_LASTNAME", null);
 		session.setAttribute("LOGIN_USER_ROLE", null);
 		this.getUI().ifPresent(ui -> ui.navigate(""));
-		
+
 	}
-	
+
 	private boolean rootViewLoginCheck() {
 		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
 				session.getAttribute("LOGIN_USER_FIRSTNAME"), session.getAttribute("LOGIN_USER_LASTNAME"),
@@ -161,7 +169,7 @@ public class ProjectdetailsRootView extends VerticalLayout {
 			return false;
 		}
 	}
-	
+
 	private boolean rootViewAuthorizationCheck() {
 		if (AuthorizationChecker.checkIsMinAuthorizedEmployee(session, session.getAttribute("LOGIN_USER_ROLE"))) {
 			System.out.println("User hat Berechtigung");
@@ -173,17 +181,39 @@ public class ProjectdetailsRootView extends VerticalLayout {
 			return false;
 		}
 	}
-	
+
+	/*
+	 * @Subscribe public void onOpenProjectAnalyticsEvent(OpenProjectAnalyticsEvent
+	 * event) { System.out.println("projektnummerrrr: "
+	 * +session.getAttribute("PROJECT"));
+	 * 
+	 * //session.setAttribute("PROJECT", event.getProject()); /*TransportProject
+	 * dataEvent = new TransportProject(this , event.getProject());
+	 * System.out.println(dataEvent.getProject().getProjectName());
+	 * eventBus.post(dataEvent); this.getUI().ifPresent(UI ->
+	 * UI.navigate("projectanalytics"));
+	 * 
+	 * }
+	 */
 	@Subscribe
-	public void onOpenProjectAnalyticsEvent(OpenProjectAnalyticsEvent event) {
-		System.out.println("projektnummerrrr: " +session.getAttribute("PROJECT"));
-		
-		//session.setAttribute("PROJECT", event.getProject());
-		/*TransportProject dataEvent = new TransportProject(this , event.getProject());
-		System.out.println(dataEvent.getProject().getProjectName());
-		eventBus.post(dataEvent);*/
-		this.getUI().ifPresent(UI -> UI.navigate("projectanalytics"));
-		
+	public void onOpenAnalyticsEvent(OpenAnalyticsEvent event) {
+		// session.setAttribute("PROJEKT", );
+		this.getUI().ifPresent(ui -> ui.navigate("projectanalytics"));
+	}
+
+	@Subscribe
+	public void onOpenActivitiesEvent(OpenActivitiesEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("projectactivity"));
+	}
+
+	@Subscribe
+	public void onOpenCostEvent(OpenCostsEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("projectdetails"));
+	}
+
+	@Subscribe
+	public void onOpenRemarksEvent(OpenRemarksEvent event) {
+		this.getUI().ifPresent(ui -> ui.navigate("remarkmanagement"));
 	}
 
 }

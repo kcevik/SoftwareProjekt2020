@@ -35,12 +35,11 @@ public class ProjectAnalyticsComponent extends AbstractPresenter <IProjectAnalyt
 		
 		if(event.getSource() == this.view) {
 			this.project = event.getProject();
-			System.out.println(" abfeuern 1" +event.getProject().getProjectID());
 			this.model.setProject(this.project);
 			activities = this.model.getActivties(this.project);
 			costs = this.model.getCosts(this.project);
 			eventBus.post(new TransportAnalyticsData(this.view, project, costs, activities));
-			System.out.println("abfeuern 2");
+			
 		}
 		
 	}

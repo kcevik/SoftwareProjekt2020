@@ -28,13 +28,10 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 	EventBus eventBus;
 	DefaultPieDataset datasetCostPie;
 	DefaultPieDataset datasetTimePie;
+	DefaultPieDataset datasetFullfillmentPie;
 	Project project;
 	List<Costs> costs;
 	List<ProjectActivity> activities;
-
-	/*Double incurredCosts = 2.0;
-	int availableHours = 1;
-	int extendedHours = 2;*/
 
 	public VaadinProjectAnalyticsViewLogic(VaadinProjectAnalyticsView view, EventBus eventBus) {
 		if (view == null) {
@@ -46,30 +43,38 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		}
 		this.eventBus = eventBus;
 		this.eventBus.register(this);
-		//getData();
-		//createCharts();
-
+		registerViewListener();
+	}
+	
+	void registerViewListener() {
+		
+		this.view.getBtnBackToProjectmanagement().addClickListener(event -> this.view.getUI().ifPresent(ui -> ui.navigate("projectmanagement")));
 	}
 
 	public void createCharts() {
 		System.out.println("trying to create chart");
 		datasetCostPie = createCostPieDataset();
 		datasetTimePie = createTimePieDataset();
+		datasetFullfillmentPie = createFullFillmentPieDataset();
 		JFreeChart costPieChart = ChartFactory.createPieChart("Kostendiagramm", datasetCostPie);
 		JFreeChart timePieChart = ChartFactory.createPieChart("Stundendiagramm", datasetCostPie);
-		// TODO erfüllungsgrad
+		JFreeChart fullfillmentPieChart = ChartFactory.createPieChart("Erfüllungsgraddiagramm", datasetFullfillmentPie);
+	
 		try {
 			File costFile = new File("src/main/webapp/img/Cost_pie_chart.png");
 			File timeFile = new File("src/main/webapp/img/Time_pie_chart.png");
+			File fullfillmentFile = new File("src/main/webapp/img/Fullfillment_pie_chart.png");
+			
 			costFile.createNewFile();
 			timeFile.createNewFile();
-			
+
 			ChartUtils.saveChartAsPNG(costFile, costPieChart, 450, 400);
 			ChartUtils.saveChartAsPNG(timeFile, timePieChart, 450, 400);
-			
-			
+			ChartUtils.saveChartAsPNG(fullfillmentFile, fullfillmentPieChart, 450, 400);
+
 			this.view.getCostsImage().setSrc("img/Cost_pie_chart.png");
 			this.view.getTimeImage().setSrc("img/Time_pie_chart.png");
+			this.view.getFullfillmentImage().setSrc("img/Fullfillment_pie_chart.png");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,19 +82,18 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 	}
 
 	public void getData(Project project) {
-		System.out.println("was ist hier los?");
 		this.project = project;
 		this.eventBus.post(new GetAnalyticsData(this, this.project));
 	}
 
 	@Subscribe
 	public void onTransportAnalyticsData(TransportAnalyticsData event) {
-		//if (event.getSource() == this.view) {
-			System.out.println("projektid: " +event.getProject().getProjectID());
-			this.costs = event.getCosts();
-			this.activities = event.getActivities();
-			this.project = event.getProject();
-		//}
+		// if (event.getSource() == this.view) {
+		System.out.println("projektid: " + event.getProject().getProjectID());
+		this.costs = event.getCosts();
+		this.activities = event.getActivities();
+		this.project = event.getProject();
+		// }
 		createCharts();
 	}
 
@@ -99,33 +103,64 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		dataset.setValue("bisherige Kosten", calcIncurredCosts());
 		return dataset;
 	}
+	
+	public DefaultPieDataset createFullFillmentPieDataset() {
+		DefaultPieDataset dataset = new DefaultPieDataset();
+		dataset.setValue(" Erfüllungsgrad ", calcFullfillment());
+		dataset.setValue("max. Fortschritt", 200);
+		return dataset;
+	}
 
 	public DefaultPieDataset createTimePieDataset() {
+
 		DefaultPieDataset dataset = new DefaultPieDataset();
+
 		dataset.setValue("verfügbare Stunden", calcAvailableHours());
 		dataset.setValue("bisher aufgewendete Stunden", calcExtendedHours());
 		return dataset;
 	}
-
+	
+	public int calcFullfillment() {
+		
+		int spentTime = calcExtendedHours();
+	    int timeAvailable = calcAvailableHours();
+	    
+	    double cost = calcIncurredCosts();
+	    double budget = project.getBudget();
+	    
+	    int fullfillmentTime =  (int) (budget/100 * cost);
+	    int fullfillmentCost = timeAvailable/100 * spentTime;
+	    
+	    return fullfillmentTime + fullfillmentCost;
+	    
+		
+	}
+	
 	int calcAvailableHours() {
 		int tmp = 0;
-
-		for (ProjectActivity pa : activities) {
-			if (pa.getProject().getProjectID() == this.project.getProjectID())
-				tmp += pa.getHoursAvailable();
+		if (activities != null) {
+			for (ProjectActivity pa : activities) {
+				if (pa.getProject().getProjectID() == this.project.getProjectID())
+					tmp += pa.getHoursAvailable();
+			}
+		} else {
+			tmp = 0;
 		}
 
 		return tmp;
 	}
-	
+
 	int calcExtendedHours() {
 		int tmp = 0;
-
-		for (ProjectActivity pa : activities) {
-			if (pa.getProject().getProjectID() == this.project.getProjectID())
-				tmp += pa.getHoursExpended();
+		if (activities != null) {
+			for (ProjectActivity pa : activities) {
+				if (pa.getProject().getProjectID() == this.project.getProjectID())
+					tmp += pa.getHoursExpended();
+			}
+		} else {
+			tmp = 0;
 		}
-
+		
 		return tmp;
 	}
 

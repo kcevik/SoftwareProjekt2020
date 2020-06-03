@@ -12,4 +12,5 @@ public interface IProjectAnalyticsModel {
 	void setProject(Project project);
 	List<Costs> getCosts(Project project);
 	List<ProjectActivity> getActivties(Project project);
+	
 }

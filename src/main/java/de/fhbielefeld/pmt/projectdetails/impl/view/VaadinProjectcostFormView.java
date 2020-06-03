@@ -29,13 +29,14 @@ public class VaadinProjectcostFormView extends FormLayout {
 	Button btnCancel = new Button("Abbrechen");
 	
 	VaadinProjectcostFormView(){
-		addClassName("cost-form");
+		addClassName("client-form");
 		lblDescr.add("Anlegen/Bearbeiten");
 		lblDescr.addClassName("lbl-heading-form");
 		cbCostType.setItems("Kosten externe Dienstleister", "Materialkosten", "Lohnkosten");
 		setSizeFull();
 		this.configureCostFormFields();
-		this.add(new VerticalLayout(lblDescr, cbCostType, tfIncurredCosts, taDescription, configureButtons()));
+		this.add(lblDescr, cbCostType, tfIncurredCosts, taDescription, configureButtons());
+		//this.add(new VerticalLayout(lblDescr, cbCostType, tfIncurredCosts, taDescription, configureButtons()));
 		
 	}
 	

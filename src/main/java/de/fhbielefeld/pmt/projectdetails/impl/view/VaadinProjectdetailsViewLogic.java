@@ -20,6 +20,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
@@ -102,8 +103,26 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 		this.view.getBtnCreateCostPDF()
 				.addClickListener(event -> eventBus.post(new GenerateTotalCostsEvent(this, this.project)));
 		this.view.getBtnCreateCostPosition().setId("id");
+		this.view.getFilterText().addValueChangeListener(event -> this.filterList(this.view.getFilterText().getValue()));
 	}
-
+	
+	private void filterList(String filter) {
+		List<Costs> filtered = new ArrayList<>();
+		for (Costs c : this.costs) {
+			System.out.println(c.toString());
+			if (String.valueOf(c.getCostsID()).contains(filter)) {
+				filtered.add(c);
+			} else if (c.getDescription() != null && c.getDescription().contains(filter)) {
+				filtered.add(c);
+			} else if (c.getCostType() != null && c.getCostType().contains(filter)) {
+				filtered.add(c);
+			} else if (String.valueOf(c.getIncurredCosts()).contains(filter)) {
+				filtered.add(c);
+			}
+		}
+		this.view.getCostGrid().setItems(filtered);
+	}
+	
 	public void resetForm() {
 		this.selectedCost = null;
 		this.view.getCostForm().resetCostForm();
@@ -112,10 +131,7 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	public void initReadFromDB(Project project) {
 		this.project = project;
-		System.out.println("upper gehts");
 		this.eventBus.post(new ReadCurrentProjectEvent(this, project));
-		// this.eventBus.post(new ReadAllCostsEvent(thist));*/
-
 		this.updateGrid();
 	}
 
@@ -168,12 +184,6 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	@Subscribe
 	public void setCostItems(TransportAllCostsEvent event) {
-		System.out.println("PRojekt " + this.project.getProjectID());
-		/*
-		 * List<Costs> list = event.getCostList(); for (Costs t : list) { if
-		 * (t.getProject().getProjectID() == (this.project.getProjectID())) {
-		 * this.costs.add(t); } }
-		 */
 		this.costs = event.getCostList();
 		this.calculateForAllCostInfo(this.costs);
 		this.updateGrid();
@@ -183,13 +193,14 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 	private void saveCostPosition() {
 		if (this.binderT.validate().isOk()) {
 			try {
+				binderT.writeBean(this.selectedCost);
 				this.eventBus.post(new SendCostToDBEvent(this, this.selectedCost));
 				this.view.getCostForm().setVisible(false);
 				this.addCost(selectedCost);
 				this.updateGrid();
 				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-			} catch (NumberFormatException nfe) {
+			} catch (NumberFormatException | ValidationException nfe) {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
@@ -222,15 +233,16 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 	private void createNewCostPosition() {
 		try {
 			this.selectedCost = new Costs();
+			this.selectedCost.setProject(this.project);
 			this.selectedCost.setCostType(this.view.getCostForm().getCbCostType().getValue());
 			this.selectedCost.setDescription(this.view.getCostForm().getTaDescription().getValue());
 			this.selectedCost
 					.setIncurredCosts(Double.parseDouble(this.view.getCostForm().getTfIncurredCosts().getValue()));
 			this.selectedCost.setProject(this.project);
 		} catch (NumberFormatException e) {
-			System.out.println("leeeere");
+			
 		}
-		// saveCostPosition();
+		
 	}
 
 //	/**

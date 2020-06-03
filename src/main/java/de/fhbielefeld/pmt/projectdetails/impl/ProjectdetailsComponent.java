@@ -107,7 +107,7 @@ public class ProjectdetailsComponent extends AbstractPresenter<IProjectdetailsMo
 	
 	@Subscribe
 	public void onSendCostToDBEvent(SendCostToDBEvent event) {
-		System.out.println("im ttrying to  persist ");
+		System.out.println("im ttrying to  persist " +event.getCost().getProject().getProjectID());
 		this.model.persistCost(event.getCost());
 	}
 	

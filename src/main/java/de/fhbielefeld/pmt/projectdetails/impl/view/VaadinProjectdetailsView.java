@@ -68,7 +68,7 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 	
 	public void builtUI() {
 		// TODO Auto-generated method stub
-		//setSpacing(true);
+		
 		Div content = new Div(costGrid, costForm);
 		content.addClassName("content"); 	
 		content.setSizeFull();

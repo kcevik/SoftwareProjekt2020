@@ -29,22 +29,26 @@ public class ProjectAnalyticsModel implements IProjectAnalyticsModel {
 
 	@Override
 	public List<ProjectActivity> getActivties(Project project) {
-		System.out.println("im model: "+project.getProjectID());
-		List<ProjectActivity> list = this.dbService.readProjectActivity();
-		System.out.println(list.toString());
-		/*List<ProjectActivity> list = new ArrayList<>();
+		
+		List<ProjectActivity> list = new ArrayList<>();
 		
 		try {
 			list = this.dbService.readProjectActivity();
+			System.out.println("GRÖ?E: " +list.size());
 			for (ProjectActivity pa : list) {
-				if (pa.getProject().getProjectID() != this.project.getProjectID())
+				System.out.println("activityID: " +pa.getProjectActivityID());
+				if (pa.getProject().getProjectID() != this.project.getProjectID()) {
 					list.remove(pa);
+					
+				}
+				
 			}
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			System.out.println("wtf");
 		}
-		return list;*/
+		System.out.println("" +list);
 		return list;
+		
 	}
 
 	@Override
