@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Cacheable(false)
 public class Employee implements Serializable {
-	
+	 
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -262,20 +262,5 @@ public class Employee implements Serializable {
 	public String toString() {
 		return "(" + this.employeeID + ") " + this.getFirstName() + " " + this.getLastName();
 	}
-
-	public String getProjectIDsAsString() {
-		String projectIDs = "";
-		for (Project p : this.getProjectList()) {
-			projectIDs += p.getProjectID() + " ";
-		}
-		return projectIDs;
-	}
 	
-	public String getTeamIDsAsString() {
-		String teamIDs = "";
-		for (Team t : this.getTeamList()) {
-			teamIDs += t.getTeamID() + " ";
-		}
-		return teamIDs;
-	}
 }
