@@ -9,6 +9,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+/**
+ * Vaadin View, die den Hauptinhalt der Seite erstelt. 
+ * @author LucasEickmann
+ *
+ */
 public class VaadinModuleChooserView extends VerticalLayout{
 
 	private static final long serialVersionUID = 1L;
@@ -26,18 +31,23 @@ public class VaadinModuleChooserView extends VerticalLayout{
 	 * @author David Bistron
 	 */
 	private final Icon icon = new Icon(VaadinIcon.CHART_GRID);
-	// TODO: back-Button mit routing verbinden, damit wir 1. tatsächlich zurück kommen, 2. ein korrekter Logout stattfindet
 	private Button btnLogout = new Button("Logout",new Icon(VaadinIcon.BACKWARDS));
-	// TODO: User mit echtem User verknüpfen
 	private Label lblWelcome = new Label("Willkommen zurück, User!");
 	
+	
+	/**
+	 * Konstruktor.
+	 */
 	public VaadinModuleChooserView() {
 	
 		this.builtUI();
 		this.initUI();
 	}
 	
-
+	
+	/**
+	 * Konfiguriert die Vaadin Komponenten
+	 */
 	private void builtUI() {
 		btnLogout.setText("Logout");
 		HorizontalLayout header = new HorizontalLayout(icon, lblWelcome, btnLogout);
@@ -58,12 +68,15 @@ public class VaadinModuleChooserView extends VerticalLayout{
 		buttonLayout.add(this.btnSuperviseTeams);
 		buttonLayout.add(this.btnSupervisePersonalDetails);
 		buttonLayout.setPadding(true);
-		// buttonLayout.setSpacing(true);
 		
 		this.add(buttonLayout);
 		this.setWidth(null);
 	}
-
+	
+	
+	/**
+	 * Konfiguriert die Vaadin Komponenten
+	 */
 	private void initUI() {
 		btnSuperviseProjects.setSizeFull();
 		btnSuperviseEmployees.setSizeFull();
@@ -72,7 +85,9 @@ public class VaadinModuleChooserView extends VerticalLayout{
 		btnSupervisePersonalDetails.setSizeFull();
 	}
 	
-
+	
+	//Getter und Setter:
+	
 	public Button getBtnSuperviseProjects() {
 		return this.btnSuperviseProjects;
 	}

@@ -7,7 +7,7 @@ import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.project.IProjectView;
 
 /**
- * Liefert alle Clients der DB zurück
+ * Event, das alle aus der Datenbank ausgelesenen Clients vom Model zum Presenter transportiert.
  * 
  * @author Lucas Eickmann
  *

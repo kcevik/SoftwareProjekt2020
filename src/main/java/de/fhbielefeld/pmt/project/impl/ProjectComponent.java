@@ -24,19 +24,31 @@ import de.fhbielefeld.pmt.project.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.project.impl.event.SendProjectToDBEvent;
 import de.fhbielefeld.pmt.project.impl.event.SendStreamResourceInvoiceEvent;
 
+/**
+ * Hauptsteuerungsklasse.Ist für die Kommunikation zwischen View und Model verantwortlich und implementiert keinerlei Gechäftslogik. 
+ * Über diese Klasse dürfen keine Vaadin eigenen Datentypen an das Model weitergegeben wedern. 
+ * @author LucasEickmann
+ *
+ */
 public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectView> implements IProjectComponent {
-
+	
+	/**
+	 * Konstruktor.
+	 * @param model Zugehöriges Model-Interface bezüglich des MVP-Musters.
+	 * @param view Zugehöriges View-Iterface bezüglich des MVP-Musters.
+	 * @param eventBus	Eventbus der Funktionseinhait/Ansicht.
+	 */
 	public ProjectComponent(IProjectModel model, IProjectView view, EventBus eventBus) {
 		super(model, view, eventBus);
 		this.eventBus.register(this);
 	}
 
 	/**
-	 * Nimmt ReadAllProjectEvent entgegen und stößt anschließend über das Model die
+	 * Nimmt ein ReadAllProjectEvent entgegen und stößt anschließend über das Model die
 	 * DB Anfrage an. Verpackt die vom Model erhalteten Daten in ein neues Event zum
 	 * Datentransport
 	 * 
-	 * @param event
+	 * @param event Event auf das reagiert werden soll.
 	 */
 	@Subscribe
 	public void onReadNonEditableProjectsEvent(ReadAllProjectsEvent event) {
@@ -51,17 +63,24 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 			}
 		}
 	}
-
+	
+	
+	/**
+	 * Nimmt ein SendAllProjectsToDBEvent entgegen und initiiert über 
+	 * das Model das persistieren des im Event gespeicherten Projektes.
+	 * @param event Event auf das reagiert werden soll.
+	 */
 	@Subscribe
 	public void onSendProjectToDBEvent(SendProjectToDBEvent event) {
 		this.model.persistProject(event.getSelectedProject());
 	}
+	
 
 	/**
-	 * Nimmt ReadAllClientsEvent entgegen und stößt anschließend über das Model die
-	 * DB Anfrage an. Gibt die Liste zurück an die ViewLogic
+	 * Nimmt ein ReadAllClientsEvent entgegen und stößt anschließend über das Model die
+	 * DB Anfrage an. Gibt die Liste zurück an die ViewLogic.
 	 * 
-	 * @param event
+	 * @param event Event auf das reagiert werden soll.
 	 */
 	@Subscribe
 	public void onReadAllClientsEvent(ReadAllClientsEvent event) {
@@ -71,12 +90,13 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 			}
 		}
 	}
+	
 
 	/**
 	 * Nimmt ReadAllManagersEvent entgegen und stößt anschließend über das Model die
 	 * DB Anfrage an. Gibt die Liste zurück an die ViewLogic
 	 * 
-	 * @param event
+	 * @param event Event auf das reagiert werden soll.
 	 */
 	@Subscribe
 	public void onReadAllManagersEvent(ReadAllManagersEvent event) {
@@ -97,7 +117,7 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 	 * Nimmt ReadAllEmployeesEvent entgegen und stößt anschließend über das Model
 	 * die DB Anfrage an. Gibt die Liste zurück an die ViewLogic
 	 * 
-	 * @param event
+	 * @param event Event auf das reagiert werden soll.
 	 */
 	@Subscribe
 	public void onReadAllEmployeesEvent(ReadAllEmployeesEvent event) {
@@ -122,7 +142,13 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 			}
 		}
 	}
-
+	
+	
+	/**
+	 * Nimmt ein GenerateInvoiceEvent entgegen, initiiert das erstellen einer 
+	 * Rechnung im PDF-Format und postet ein neues Event, das eine SteamResource enthält.
+	 * @param event Event auf das reagiert werden soll.
+	 */
 	@Subscribe
 	public void onGenerateInvoicePDF(GenerateInvoiceEvent event) {
 		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
@@ -139,9 +165,10 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 		});
 		this.eventBus.post(new SendStreamResourceInvoiceEvent(this.view, res, timeStamp));
 	}
+	
 
 	/**
-	 * Delegiert den Aufruf an die ViewLogic Klasse
+	 * Delegiert den Aufruf an die ViewLogic Klasse.
 	 */
 	@Override
 	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {

@@ -5,15 +5,15 @@ import de.fhbielefeld.pmt.modelViewComponent.IModel;
 public interface ILoginModel  extends IModel{
 	
 	/**
-	 * Führt den Anmeldevorgang durch.
+	 * Schnitstellendefinition für den Zugriff auf das ProjectModel.
 	 * 
 	 * @param userId
 	 *            die Kennung des anzumeldenden Benutzers.
 	 * @param password
 	 *            das Passwort des anzumeldenden Benutzers.
 	 * 
-	 * @return <code>true</code>, wenn der Anmeldevorgang erfolgreich war.
-	 *         Andernfalls <code>false</code>.
+	 * @return true, wenn der Anmeldevorgang erfolgreich war.
+	 *         Andernfalls false.
 	 */
 	boolean loginUser(String userId, String password);
 	String getUserRole(String userID);

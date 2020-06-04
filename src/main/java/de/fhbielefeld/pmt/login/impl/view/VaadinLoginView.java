@@ -24,14 +24,13 @@ import de.fhbielefeld.pmt.login.ILoginComponent;
 import de.fhbielefeld.pmt.login.ILoginView;
 
 /**
- * Die Implementierung der reinen Oberfläche für die Anmeldekomponente.<br/>
+ * Die Implementierung der reinen Oberfläche für die Anmeldekomponente.
  * Sie beinhaltet ausschließlich den Aufbau der Oberfläche und die
  * Grundkonfiguration der einzelnen Oberflächenelemente.  Die
  * Logik der Oberfläche ist in {@link VaadinLoginViewLogic} implementiert.
  * 
- * @author Lucas Eickmann
+ * @author LucasEickmann
  * 
- * @see VaadinLoginViewLogic
  */
 
 
@@ -41,21 +40,10 @@ public class VaadinLoginView extends VerticalLayout{
 	
 	private final LoginForm loginForm = new LoginForm();
 	
-	/*
-	 *
-	 * @author David Bistron
-	 *
-	 *
-	Button toogleButton = new Button("Do you like it dark?", click -> {
-		ThemeList darkTheme = UI.getCurrent().getElement().getThemeList();
-			if (darkTheme.contains(Lumo.DARK)) {
-				darkTheme.remove(Lumo.DARK);
-			} else {
-				darkTheme.add(Lumo.DARK);
-			}
-	});
-	*/
 	
+	/**
+	 * Konstruktor.
+	 */
 	public VaadinLoginView() {
 		this.initUI();
 		this.builtUI();
@@ -81,7 +69,9 @@ public class VaadinLoginView extends VerticalLayout{
 	private void initUI() {
 		this.loginForm.setForgotPasswordButtonVisible(false);
 		}
-
+	
+	//Getter und Setter:
+	
 	public LoginForm getLoginForm() {
 		return this.loginForm;
 	}

@@ -4,6 +4,11 @@ import java.util.EventObject;
 
 import de.fhbielefeld.pmt.project.IProjectView;
 
+/**
+ * Event, das versendet wird, um das lesen aller sich in der Datenbak befindlichen Magager zu lesen. 
+ * @author LucasEickmann
+ *
+ */
 public class ReadAllManagersEvent extends EventObject{
 
 	/**

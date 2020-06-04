@@ -9,7 +9,8 @@ import de.fhbielefeld.pmt.project.IProjectView;
 
 /**
  * 
- * @author Sebastian Siegmann, Lucas Eickmann
+ * @author Sebastian Siegmann
+ * @author LucasEickmann
  *
  */
 public class SendStreamResourceInvoiceEvent extends EventObject {

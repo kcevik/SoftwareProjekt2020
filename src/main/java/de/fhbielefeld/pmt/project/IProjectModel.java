@@ -9,8 +9,8 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.modelViewComponent.IModel;
 
-/** Interfacedefinition für das ProjectModel
- * @author Lucas Eickmann
+/** Schnitstellendefinition für den Zugriff auf das ProjectModel.
+ * @author LucasEickmann
  */
 public interface IProjectModel  extends IModel{
 	

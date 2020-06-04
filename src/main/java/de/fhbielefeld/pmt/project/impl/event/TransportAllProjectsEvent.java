@@ -8,7 +8,7 @@ import de.fhbielefeld.pmt.project.IProjectView;
 
 
 /**
- * 
+ * Event, das alle aus der Datenbank ausgelesenen Projekte vom Model zum Presenter transportiert.
  * @author Lucas Eickmann
  *
  */

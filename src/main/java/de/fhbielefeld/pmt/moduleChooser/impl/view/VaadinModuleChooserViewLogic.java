@@ -11,11 +11,23 @@ import de.fhbielefeld.pmt.moduleChooser.event.EmployeesModuleChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.PersonalDetailsChosenEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ProjectsModuleChosenEvent;
 
+/**
+ * Vaadin Logik Klasse. Steuert den zugehörigen VaadinView und alle
+ * Unterkomponenten. In diesem Fall Steuerung der ModuleChooserView Klasse inklusive
+ * Formular.
+ * @author LucasEickmann
+ *
+ */
 public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 
 	private final VaadinModuleChooserView view;
 	private final EventBus eventBus;
 
+	/**
+	 * Konstruktor.
+	 * @param view zugehöriges View Objekt.
+	 * @param eventBus EventBus an dem sich das Objekt registrieren soll. 
+	 */
 	public VaadinModuleChooserViewLogic(VaadinModuleChooserView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View!");
@@ -27,7 +39,11 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 		this.eventBus = eventBus;
 		this.registerViewListener();
 	}
-
+	
+	
+	/**
+	 * Fügt den Komponenten der View die entsprechenden Listener hinzu.
+	 */
 	private void registerViewListener() {
 
 		this.view.getBtnSuperviseClients().addClickListener(e -> this.eventBus.post(new ClientModuleChosenEvent(this)));
@@ -49,6 +65,12 @@ public class VaadinModuleChooserViewLogic implements IModuleChooserView {
 		this.view.getBtnLogout().addClickListener(event -> this.eventBus.post(new LogoutAttemptEvent(this)));
 	}
 
+	
+	/**
+	 * Gibt die zugehörige View Typsicher zurück. 
+	 * @param type Klasse von den, Typ als der die View zurückgegeben werden soll. 
+	 * @return zugehörige View.
+	 */
 	@Override
 	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {
 		if (type.isAssignableFrom(this.view.getClass())) {
