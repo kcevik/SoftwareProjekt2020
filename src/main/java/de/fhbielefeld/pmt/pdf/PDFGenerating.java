@@ -27,7 +27,9 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
  * Klasse, die für die Erstellung der Gesamtkostenübersicht und der Rechnung verantwortlich ist
- * @author Sebastian Siegmann, Lucas Eickmann, David Bistron
+ * @author Sebastian Siegmann
+ * @author Lucas Eickmann
+ * @author David Bistron
  * @version 1.2
  */
 public class PDFGenerating {

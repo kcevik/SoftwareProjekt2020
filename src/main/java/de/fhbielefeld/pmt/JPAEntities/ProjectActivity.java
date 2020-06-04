@@ -161,6 +161,16 @@ public class ProjectActivity implements Serializable {
 	public String toString() {
 		return "(" + this.projectActivityID + ") " + this.description;
 	}
+	
+	/**
+	 * @author David Bistron
+	 * Gibt alle zugehörigen Projekt IDs als zusammenhängenden String zurück
+	 * @return String projectIDs
+	 */
+	public String getProjectIDsAsString() {
+		Project p = this.getProject(); 
+		return p.getProjectName(); 
+	}
 
 	/**
 	 * @author David Bistron

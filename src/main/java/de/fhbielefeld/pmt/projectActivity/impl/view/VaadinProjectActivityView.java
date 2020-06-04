@@ -97,21 +97,16 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	 */
 	private void configureGrid() {
 		this.projectActivityGrid.addClassName("projectActivity-grid");
-		
 		this.projectActivityGrid.removeColumnByKey("project");
-		
 		this.projectActivityGrid.setColumns("projectActivityID", "category", "description", "hoursAvailable", "hourlyRate", "hoursExpended");
 		
-		//TODO: Die Projekt-ID vom gewählten Projekt muss da stehen!
+		//TODO: Die Projekt-ID vom gewählten Projekt muss da stehen! Funktioniert nicht! Rausschmeißen???
+		/*
 		this.projectActivityGrid.addColumn(ProjectActivity -> {
-			String projectActivityString = "";
-			projectActivityString += ProjectActivity.getProject() + "";
-			
-			// TODO: TEST
-			System.out.println(ProjectActivity.getProject());
-			
-			return projectActivityString;
+			ProjectActivity.getProjectIDsAsString();
+			return ProjectActivity;
 		}).setHeader("Projekt ID");
+		*/
 		
 		// this.projectActivityGrid.getColumnByKey("project").setHeader("Projekt ID");
 		this.projectActivityGrid.getColumnByKey("projectActivityID").setHeader("Aktivitäts ID");
