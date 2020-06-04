@@ -22,6 +22,11 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.error.AuthorizationChecker;
 
+/**
+ * VaadinView Klasse, welche das Formular erstellt.
+ * @author LucasEickmann
+ *
+ */
 public class VaadinProjectViewForm extends FormLayout{
 	
 	private static final long serialVersionUID = 1L;
@@ -45,7 +50,9 @@ public class VaadinProjectViewForm extends FormLayout{
 	private final Button btnExtendedOptions = new Button("Projektdetails");
 	
 	
-	
+	/**
+	 * Konstruktor.
+	 */
 	public VaadinProjectViewForm() {
 		addClassName("client-form");
 
@@ -83,7 +90,9 @@ public class VaadinProjectViewForm extends FormLayout{
 	
 
 	
-	
+	/**
+	 * Aktiviert die Textfelder des Bearbeitenformulars und setzt den Bearbeiten Button unsichtbar
+	 */
 	public void prepareEdit() {
 		this.tfProjectName.setReadOnly(false);
 		this.cbProjectManager.setReadOnly(false);
@@ -102,6 +111,9 @@ public class VaadinProjectViewForm extends FormLayout{
 	}
 	
 	
+	/**
+	 * Gegenstück zu {@link #prepareEdit()}. Macht Formular unsichtbar und Button sichtbar
+	 */
 	public void closeEdit() {
 		this.tfProjectName.setReadOnly(true);
 		this.cbProjectManager.setReadOnly(true);
@@ -120,7 +132,7 @@ public class VaadinProjectViewForm extends FormLayout{
 	}
 
 	
-	//Getters:
+	//Getter und Setter:
 	
 	public Label getLblBeschreibung() {
 		return lblBeschreibung;

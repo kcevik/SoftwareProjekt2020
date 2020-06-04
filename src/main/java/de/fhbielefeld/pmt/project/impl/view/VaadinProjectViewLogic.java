@@ -1,16 +1,9 @@
 package de.fhbielefeld.pmt.project.impl.view;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -21,12 +14,8 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
-import com.vaadin.flow.data.converter.StringToDoubleConverter;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
-import com.vaadin.flow.data.validator.StringLengthValidator;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Client;
@@ -34,14 +23,12 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
-import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
-import de.fhbielefeld.pmt.error.AuthorizationChecker;
+import de.fhbielefeld.pmt.login.impl.view.VaadinLoginViewLogic;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
-import de.fhbielefeld.pmt.pdf.PDFGenerating;
 import de.fhbielefeld.pmt.project.IProjectView;
 import de.fhbielefeld.pmt.project.impl.event.GenerateInvoiceEvent;
 import de.fhbielefeld.pmt.project.impl.event.ProjectDetailsModuleChoosenEvent;
-import de.fhbielefeld.pmt.project.impl.event.ProjectDetailsModuleChoosenEvent;
+
 import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
@@ -52,6 +39,10 @@ import de.fhbielefeld.pmt.validator.StartEndValidator;
 import de.fhbielefeld.pmt.project.impl.event.SendStreamResourceInvoiceEvent;
 
 /**
+ * Die Implementierung der reinen Oberfläche für die Projektkomponente.
+ * Sie beinhaltet ausschließlich den Aufbau der Oberfläche und die
+ * Grundkonfiguration der einzelnen Oberflächenelemente.  Die
+ * Logik der Oberfläche ist in {@link VaadinProjectViewLogic} implementiert.
  * 
  * @author LucasEickmann
  *
@@ -69,7 +60,13 @@ public class VaadinProjectViewLogic implements IProjectView {
 	private List<Project> nonEditableProjects;
 	private List<Project> editableProjects;
 	private List<Project> projects = new ArrayList<Project>();
-
+	
+	
+	/**
+	 * Konstruktor
+	 * @param view zugehöriges View Objekt.
+	 * @param eventBus EventBus an dem sich das Objekt registrieren soll. 
+	 */
 	public VaadinProjectViewLogic(VaadinProjectView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException();
@@ -83,7 +80,11 @@ public class VaadinProjectViewLogic implements IProjectView {
 		this.registerViewListeners();
 		this.bindToFields();
 	}
-
+	
+	/**
+	 * 	Konfiguration des Vaadin Binders. 
+	 * 	Verknüpft die Instanzvariablen und deren Getter und Setter Methoden mit den Ein- und Ausgabefeldern der Formulars.
+	 */
 	private void bindToFields() {
 		this.binder.forField(this.view.getProjectForm().getNfProjectId()).withConverter(new StringToLongConverter(""))
 				.bind(Project::getProjectID, null);
@@ -108,7 +109,10 @@ public class VaadinProjectViewLogic implements IProjectView {
 				.bind(Project::getBudget, Project::setBudget);
 		this.binder.bind(this.view.getProjectForm().getCkIsActive(), "active");
 	}
-
+	
+	/**
+	 * Fügt den Komponenten der View die entsprechenden Listener hinzu.
+	 */
 	private void registerViewListeners() {
 		this.view.getProjectGrid().asSingleSelect().addValueChangeListener(event -> {
 			this.selectedProject = event.getValue();
@@ -125,7 +129,8 @@ public class VaadinProjectViewLogic implements IProjectView {
 	}
 
 	/**
-	 * setzt das zuvor selektierte Project beim verlassen des formViews zurück
+	 * setzt das zuvor selektierte Project beim verlassen des formViews zurück und blendet das Formular aus.
+	 * 
 	 */
 	private void cancelForm() {
 		resetSelectedProject();
@@ -134,7 +139,9 @@ public class VaadinProjectViewLogic implements IProjectView {
 
 
 	
-	
+	/**
+	 * Zeigt Daten des aktuell Ausgewählten Clients im Bearbeitungsformular an.
+	 */
 	private void displayProject(){
 		if (this.selectedProject != null ) {
 			
@@ -166,7 +173,7 @@ public class VaadinProjectViewLogic implements IProjectView {
 
 	/**
 	 * Aktualisiert die Client Instanzvariable mit den aktuellen werten aus den
-	 * Formularfeldern und verschickt den das Client Objekt mit einem Bus
+	 * Formularfeldern und verschickt den das Client Objekt mit einem EventBus
 	 */
 	private void saveProject() {
 
@@ -187,7 +194,10 @@ public class VaadinProjectViewLogic implements IProjectView {
 			}
 		}
 	}
-
+	
+	/**
+	 * Setzt das als selektiertes Projekt ausgewählte Projekt auf null zurück.
+	 */
 	private void resetSelectedProject() {
 		this.selectedProject = null;
 	}
@@ -204,7 +214,7 @@ public class VaadinProjectViewLogic implements IProjectView {
 	 * Filterfunktion für das Textfeld. Fügt einen Datensatz der Liste hinzu, falls
 	 * der String parameter enthalten ist.
 	 * 
-	 * @param filter
+	 * @param filter String nach dem gefiltert/gesucht werden soll.
 	 */
 	private void filterList(String filter) {
 		List<Project> filtered = new ArrayList<>();
@@ -234,7 +244,7 @@ public class VaadinProjectViewLogic implements IProjectView {
 
 	/**
 	 * Erstellt Events, welche die DB Abfragen anstößt. Wird von der RootView
-	 * aufgerufen.
+	 * nach dem Erstellen aller benötigten Objekte aufgerufen.
 	 */
 	public void initReadFromDB() {
 		this.eventBus.post(new ReadAllEmployeesEvent(this));
@@ -264,7 +274,12 @@ public class VaadinProjectViewLogic implements IProjectView {
 		}
 		this.updateGrid();
 	}
-
+	
+	
+	/**
+	 * Fügt die Listen {@link #nonEditableProjects} und {@link #editableProjects} zusammen, damit sie gemeinsam dem Grid hinzugefügt werden können.
+	 * Die getrennte Speicherung ist notwendig um zur Laufzeit entscheiden zu können, ob der Benutzer die Stammdaten eines Projektes bearbeiten darf.
+	 */
 	private void mergeProjectLists() {
 		if (this.nonEditableProjects != null) {
 			for (Project p : nonEditableProjects) {
@@ -283,6 +298,7 @@ public class VaadinProjectViewLogic implements IProjectView {
 		}
 	}
 
+	
 	/**
 	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
 	 */
@@ -300,8 +316,9 @@ public class VaadinProjectViewLogic implements IProjectView {
 
 
 	/**
-	 * @author Sebastian Siegmann, Lucas Eickmann
-	 * @param event
+	 * @author Sebastian Siegmann
+	 * @author LucasEickmann
+	 * @param event	
 	 */
 	@Subscribe
 	public void onSendStreamResourceInvoiceEvent(SendStreamResourceInvoiceEvent event) {
@@ -313,7 +330,13 @@ public class VaadinProjectViewLogic implements IProjectView {
 		Page page = UI.getCurrent().getPage();
 		page.executeJs("document.getElementById('" + event.getTimeStamp().toString() + "').click()");
 	}
-
+	
+	
+	/**
+	 * Gibt die zugehörige View Typsicher zurück. 
+	 * @param type Klasse von den, Typ als der die View zurückgegeben werden soll. 
+	 * @return zugehörige View.
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {
@@ -322,6 +345,7 @@ public class VaadinProjectViewLogic implements IProjectView {
 		}
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
+	
 
 	// Getter und Setter:
 

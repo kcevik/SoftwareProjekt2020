@@ -11,6 +11,9 @@ import de.fhbielefeld.pmt.login.event.LoginAttemptEvent;
 import de.fhbielefeld.pmt.login.event.LoginFailedEvent;
 
 /**
+ * Vaadin Logik Klasse. Steuert den zugehörigen VaadinView und alle
+ * Unterkomponenten. In diesem Fall Steuerung der LoginView Klasse inklusive
+ * Formular.
  * @author LucasEickmann
  *
  */
@@ -19,6 +22,12 @@ public class VaadinLoginViewLogic implements ILoginView{
 	private final VaadinLoginView view;
 	private final EventBus eventBus;
 
+	
+	/**
+	 * Konstruktor.
+	 * @param view zugehöriges View Objekt.
+	 * @param eventBus EventBus an dem sich das Objekt registrieren soll. 
+	 */
 	public VaadinLoginViewLogic(VaadinLoginView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View");
@@ -42,7 +51,11 @@ public class VaadinLoginViewLogic implements ILoginView{
 	}
 	
 
-
+	/**
+	 * Gibt die zugehörige View Typsicher zurück. 
+	 * @param type Klasse von den, Typ als der die View zurückgegeben werden soll. 
+	 * @return zugehörige View.
+	 */
 	@Override
 	public <T> T getViewAs(Class<T> type) throws UnsupportedViewTypeException {
 		if (type.isAssignableFrom(this.view.getClass())) {
@@ -50,11 +63,16 @@ public class VaadinLoginViewLogic implements ILoginView{
 		}
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
-
+	
+	
+	/**
+	 * Eventhandler-Methode, die aufgerufen wird, wenn der Loginversuch erfolglos war.
+	 * @param event Eintreffendes LoginFaildEvent
+	 */
 	 @Subscribe
 	    public void onLoginFailed(LoginFailedEvent event) {
 	    	this.view.getLoginForm().setError(true);
-	    	System.out.println("error");
+
 	    }
 
 

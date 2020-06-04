@@ -36,11 +36,16 @@ public class VaadinProjectView extends VerticalLayout {
 	private final Button btnCreateInvoice = new Button();
 	private final VaadinProjectViewForm projectForm = new VaadinProjectViewForm();
 	
+	
+	/**
+	 * Konstruktor.
+	 */
 	public VaadinProjectView() {
 		
 		this.initUI();
 		this.buitUI();
 	}	
+	
 	
 	/**
 	 * Erzeugt die Vaadin Komponenten
@@ -76,15 +81,6 @@ public class VaadinProjectView extends VerticalLayout {
 	}
 	
 	
-//	/**
-//	 * Setzt die Tabelle und das Forular zurück
-//	 */
-//	public void clearGridAndForm() {
-//		this.projectGrid.deselectAll();
-//		this.projectForm.clearProjectForm();
-//	}
-	
-	
 	/**
 	 * Setzt Eigenschaften für das Grid fest.
 	 */
@@ -116,28 +112,29 @@ public class VaadinProjectView extends VerticalLayout {
 	
 
 	
-	//Getters
-		public Grid<Project> getProjectGrid() {
-			return projectGrid;
-		}
+	//Getter und Setter:
+	
+	public Grid<Project> getProjectGrid() {
+		return projectGrid;
+	}
 
-		public TextField getTfFilter() {
-			return this.tfFilter;
-		}
+	public TextField getTfFilter() {
+		return this.tfFilter;
+	}
 
-		public Button getBtnBackToMainMenu() {
-			return this.btnBackToMainMenu;
-		}
+	public Button getBtnBackToMainMenu() {
+		return this.btnBackToMainMenu;
+	}
 
-		public Button getBtnCreateProject() {
-			return this.btnCreateProject;
-		}
+	public Button getBtnCreateProject() {
+		return this.btnCreateProject;
+	}
 
-		public VaadinProjectViewForm getProjectForm() {
-			return this.projectForm;
-		}
+	public VaadinProjectViewForm getProjectForm() {
+		return this.projectForm;
+	}
 
-		public Button getBtnCreateInvoice() {
-			return btnCreateInvoice;
-		}	
+	public Button getBtnCreateInvoice() {
+		return btnCreateInvoice;
+	}	
 }

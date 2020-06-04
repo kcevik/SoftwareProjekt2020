@@ -9,6 +9,11 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 
+/**
+ * Schnitstellendefinition für den Zugriff auf die ProjectViewLogic. 
+ * @author LucasEickmann
+ *
+ */
 public interface IProjectView extends IViewAccessor {
 	
 	public void setClients(List<Client> clients);

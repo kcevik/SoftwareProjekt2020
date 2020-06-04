@@ -13,16 +13,30 @@ import de.fhbielefeld.pmt.login.event.LoginFailedEvent;
 import de.fhbielefeld.pmt.login.event.LoginSuccessEvent;
 
 /**
+ * Hauptsteuerungsklasse.Ist für die Kommunikation zwischen View und Model verantwortlich und implementiert keinerlei Gechäftslogik. 
+ * Über diese Klasse dürfen keine Vaadin eigenen Datentypen an das Model weitergegeben wedern. 
  * @author LucasEickmann
  *
  */
-
 public class LoginComponent extends AbstractPresenter<ILoginModel, ILoginView> implements ILoginComponent {
-
+	
+	/**
+	 * Konstruktor.
+	 * @param model Zugehöriges Model-Interface bezüglich des MVP-Musters.
+	 * @param view Zugehöriges View-Iterface bezüglich des MVP-Musters.
+	 * @param eventBus	Eventbus der Funktionseinhait/Ansicht.
+	 */
 	public LoginComponent(ILoginModel model, ILoginView view, EventBus eventBus) {
 		super(model, view, eventBus);
 	}
-
+	
+	
+	/**
+	 * Eventhandler Methode die auf ein LoginAttemptEvent von der View reagiert und die Anfrage an das Model weiterleitet. 
+	 * Bei erfolgreichem Login wird ein LoginSuccessEvent an die View zurückgeschickt.
+	 * Bei fehlgeschlagenem Login wird ein LoginFaildEvent zurückgeschickt.
+	 * @param event Event auf das der Handler reagieren soll.
+	 */
 	@Subscribe
 	public void onLoginAttempt(LoginAttemptEvent event) {
 		if (event.getSource() == this.view) {

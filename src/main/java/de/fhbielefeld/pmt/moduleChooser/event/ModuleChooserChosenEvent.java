@@ -4,7 +4,7 @@ import java.util.EventObject;
 
 import de.fhbielefeld.pmt.IViewAccessor;
 /**
- * 
+ * Event das verschickt wird, wenn in einer View das ModulChooser Modul aufgerufen wird.
  * @author Sebastian Siegmann
  *
  */

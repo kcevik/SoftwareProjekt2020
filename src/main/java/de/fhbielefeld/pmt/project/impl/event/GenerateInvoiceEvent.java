@@ -6,8 +6,9 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.project.IProjectView;
 
 /**
- * 
- * @author Sebastian Siegmann, Lucas Eickmann
+ * Event das versendet wird, wenn das erstellen einer Rechnung angestoßen wird, 
+ * @author Sebastian Siegmann
+ * @author LucasEickmann
  *
  */
 public class GenerateInvoiceEvent extends EventObject {

@@ -4,7 +4,7 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.client.IClientView;
 import de.fhbielefeld.pmt.project.IProjectView;
 /**
- * 
+ * Event, das versendet wird, um das lesen aller sich in der Datenbak befindlichen Projekte zu lesen. 
  * @author Lucas Eickmann
  *
  */
