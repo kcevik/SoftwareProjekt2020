@@ -131,12 +131,13 @@ public class VaadinClientViewLogic implements IClientView {
 		if (this.binder.validate().isOk()) {
 			try {
 				this.binder.writeBean(this.selectedClient);
-				// TODO Wenn von mehreren Projekten eins gelöscht wird, dass ist die Liste nicht leer aber das Projekt hat trotzdem keinen Client mehr
-				//TODO For schleife und gucken ob jedes Projekt nen Kunden hat und wenn nich denn fehler?
-				
 				if (this.selectedClient.getProjectList().isEmpty()) {
 					Notification.show("Projekt benötigt Kunden", 5000, Notification.Position.TOP_CENTER)
 							.addThemeVariants(NotificationVariant.LUMO_ERROR);
+					return;
+				} else if (this.selectedClient.isActive() == false && !this.selectedClient.getProjectList().isEmpty()) {
+					Notification.show("Inaktive Kunden können keine Projekte beinhalten", 5000,
+							Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 					return;
 				} else {
 
@@ -147,17 +148,18 @@ public class VaadinClientViewLogic implements IClientView {
 							}
 						}
 					}
-
 					this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
 					this.view.getCLIENTFORM().setVisible(false);
 					this.addClient(selectedClient);
 					this.updateGrid();
+					resetSelectedClient();
 				}
 			} catch (NumberFormatException | ValidationException e) {
-				Notification.show("NumberFormatException oder ValidationException", 5000,
-						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+				Notification
+						.show("NumberFormatException oder ValidationException", 5000, Notification.Position.TOP_CENTER)
+						.addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
-				resetSelectedClient();
+				
 			}
 		}
 	}
@@ -186,7 +188,6 @@ public class VaadinClientViewLogic implements IClientView {
 	 * @param filter
 	 */
 	private void filterList(String filter) {
-		// TODO: Cast Exception
 		List<Client> filtered = new ArrayList<Client>();
 		for (Client c : this.clients) {
 			if (c.getName() != null && c.getName().contains(filter)) {

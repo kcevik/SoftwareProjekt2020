@@ -89,9 +89,10 @@ public class ClientRootView extends VerticalLayout {
 	}
 
 	/**
-	 * TODO: Checkt ob ein User Authorisiert ist eine Seite aufzurufen
+	 * Checkt ob ein User Authorisiert ist eine Seite aufzurufen
 	 * Falls nicht wird eine Error Seite dargestellt
 	 */
+	@SuppressWarnings("unused") //RootView-Zugriff ist jeder Rolle gestattet!
 	private boolean rootViewAuthorizationCheck() {
 		if (AuthorizationChecker.checkIsAuthorizedManager(session, session.getAttribute("LOGIN_USER_ROLE"))) {
 			return true;

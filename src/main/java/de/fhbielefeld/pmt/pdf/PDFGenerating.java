@@ -274,8 +274,7 @@ public class PDFGenerating {
 			throws DocumentException {
 		document.add(new Paragraph(project.getClient().getName()));
 		document.add(new Paragraph(project.getClient().getStreet() + " " + project.getClient().getHouseNumber()));
-		// TODO: Warum macht er Probleme? document.add(new
-		// Paragraph(ProjectID1.getClient().getZipCode()));
+		document.add(new Paragraph(project.getClient().getZipCode()));
 		document.add(new Paragraph(project.getClient().getTown()));
 		document.add(Chunk.NEWLINE);
 	}

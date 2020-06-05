@@ -57,6 +57,8 @@ public class VaadinClientView extends VerticalLayout {
 	 */
 	private void initUI() {
 		addClassName("list-view");
+		this.btnCreateClient.addClassName("btnCreateClient");
+		this.btnBackToMainMenu.addClassName("btnBackToMainMenu");
 		setSizeFull();
 		this.btnCreateClient.setText("Neuen Kunden anlegen");
 		this.CLIENTFORM.setVisible(false);

@@ -48,7 +48,8 @@ public class DatabaseService {
 			databaseService = new DatabaseService();
 		}
 		//TODO: ToFix: Braucht new DatabaseService falls SQL Aktualisierungen durchkommen sollen!
-		return new DatabaseService();// databaseService;
+		return databaseService;
+		//return new DatabaseService();
 	}
 
 	/**

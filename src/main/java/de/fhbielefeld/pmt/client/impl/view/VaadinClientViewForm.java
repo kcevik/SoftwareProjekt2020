@@ -31,7 +31,8 @@ public class VaadinClientViewForm extends FormLayout {
 	private final TextField tfZipCode = new TextField("PLZ:");
 	private final TextField tfTown = new TextField("Ort:");
 	private final Checkbox ckIsActive = new Checkbox("Aktiv");
-	private final MultiselectComboBox<Project> mscbProjects = new MultiselectComboBox<Project>("Projekte neu zuordnen:");
+	private final MultiselectComboBox<Project> mscbProjects = new MultiselectComboBox<Project>(
+			"Projekte neu zuordnen:");
 
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
@@ -77,6 +78,21 @@ public class VaadinClientViewForm extends FormLayout {
 		btnSave.addClickShortcut(Key.ENTER);
 		btnClose.addClickShortcut(Key.ESCAPE);
 
+		this.lblBeschreibung.addClassName("lblBeschreibung");
+		this.tfClientID.addClassName("tfClientID");
+		this.tfName.addClassName("tfName");
+		this.tfTelephonenumber.addClassName("tfTelephonenumber");
+		this.tfStreet.addClassName("tfStreet");
+		this.tfHouseNumber.addClassName("tfHouseNumber");
+		this.tfZipCode.addClassName("tfZipCode");
+		this.tfTown.addClassName("tfTown");
+		this.ckIsActive.addClassName("ckIsActive");
+		this.mscbProjects.addClassName("mscbProjects");
+		this.btnSave.addClassName("btnSave");
+		this.btnEdit.addClassName("btnEdit");
+		this.btnClose.addClassName("btnClose");
+		this.tfClientID.setId("idtfname");
+
 		return new HorizontalLayout(btnSave, btnEdit, btnClose);
 	}
 
@@ -98,7 +114,8 @@ public class VaadinClientViewForm extends FormLayout {
 	}
 
 	/**
-	 * Aktiviert die Textfelder des Bearbeitenformulars und setzt den Bearbeiten Button unsichtbar
+	 * Aktiviert die Textfelder des Bearbeitenformulars und setzt den Bearbeiten
+	 * Button unsichtbar
 	 */
 	public void prepareEdit() {
 		this.tfName.setEnabled(true);
@@ -129,8 +146,7 @@ public class VaadinClientViewForm extends FormLayout {
 		this.btnEdit.setVisible(true);
 	}
 
-	
-	//Getter und Setter
+	// Getter und Setter
 	public TextField getTfClientID() {
 		return tfClientID;
 	}

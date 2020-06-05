@@ -56,6 +56,11 @@ public class VaadinModuleChooserView extends VerticalLayout{
 		header.setPadding(true);
 		header.setSpacing(true);
 		lblChooseOption.addClassName("lblWelcome");
+		btnSuperviseClients.addClassName("btnClientmanagement");
+		btnSuperviseEmployees.addClassName("btnEmployeemanagement");
+		btnSupervisePersonalDetails.addClassName("btnPersonalDetails");
+		btnSuperviseProjects.addClassName("btnProjects");
+		btnSuperviseTeams.addClassName("btnTeams");
 		
 		this.add(header);
 		
