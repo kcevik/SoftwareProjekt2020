@@ -43,9 +43,7 @@ public class ClientModel implements IClientModel {
 	 */
 	@Override
 	public void persistClient(Client client) {
-		//TODO: Random Contraint violation bei Projekt 38?
 		if (client.getProjectList().isEmpty()) {
-			System.out.println("ich mache das");
 			for (Project p : this.dbService.readProjectsForClient(client)){
 				p.setClient(null);
 				this.dbService.persistProject(p);
@@ -59,21 +57,6 @@ public class ClientModel implements IClientModel {
 		this.dbService.persistClient(client);
 		Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 		.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-
-//		for (Project p : client.getProjectList()) {
-//			System.out.println("Prüfe: " + p);
-//			if (p.getClient() == client ) { 
-//				this.dbService.persistClient(client);
-//				System.out.println(
-//						"Gespeichert! " + p + " Hat " + client + " schon als Client");
-//			} else if (p.getClient() == null)  {
-//				this.dbService.persistClient(client);
-//				System.out.println(
-//						"Gespeichert! Client von " + p + " ist null");
-//			} else {
-//				System.out.println("NICHT Gespeichert");
-//			}
-//		}
 	}
 
 	/**

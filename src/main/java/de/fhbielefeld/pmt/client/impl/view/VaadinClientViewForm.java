@@ -32,7 +32,7 @@ public class VaadinClientViewForm extends FormLayout {
 	private final TextField tfTown = new TextField("Ort:");
 	private final Checkbox ckIsActive = new Checkbox("Aktiv");
 	private final MultiselectComboBox<Project> mscbProjects = new MultiselectComboBox<Project>(
-			"Projekte neu zuordnen:");
+			"Zugeordnete Projekte:");
 
 	private final Button btnSave = new Button("Speichern");
 	private final Button btnEdit = new Button("Bearbeiten");
@@ -52,15 +52,15 @@ public class VaadinClientViewForm extends FormLayout {
 	 * Nimmt Einstellungen an der Textfeldern vor
 	 */
 	private void configureTextFields() {
-		this.tfClientID.setEnabled(false);
-		this.tfName.setEnabled(false);
-		this.tfTelephonenumber.setEnabled(false);
-		this.tfStreet.setEnabled(false);
-		this.tfHouseNumber.setEnabled(false);
-		this.tfZipCode.setEnabled(false);
-		this.tfTown.setEnabled(false);
-		this.ckIsActive.setEnabled(false);
-		this.mscbProjects.setEnabled(false);
+		this.tfClientID.setReadOnly(true);
+		this.tfName.setReadOnly(true);
+		this.tfTelephonenumber.setReadOnly(true);
+		this.tfStreet.setReadOnly(true);
+		this.tfHouseNumber.setReadOnly(true);
+		this.tfZipCode.setReadOnly(true);
+		this.tfTown.setReadOnly(true);
+		this.ckIsActive.setReadOnly(true);
+		this.mscbProjects.setReadOnly(true);
 	}
 
 	/**
@@ -78,20 +78,20 @@ public class VaadinClientViewForm extends FormLayout {
 		btnSave.addClickShortcut(Key.ENTER);
 		btnClose.addClickShortcut(Key.ESCAPE);
 
-		this.lblBeschreibung.addClassName("lblBeschreibung");
-		this.tfClientID.addClassName("tfClientID");
-		this.tfName.addClassName("tfName");
-		this.tfTelephonenumber.addClassName("tfTelephonenumber");
-		this.tfStreet.addClassName("tfStreet");
-		this.tfHouseNumber.addClassName("tfHouseNumber");
-		this.tfZipCode.addClassName("tfZipCode");
-		this.tfTown.addClassName("tfTown");
-		this.ckIsActive.addClassName("ckIsActive");
-		this.mscbProjects.addClassName("mscbProjects");
+		this.lblBeschreibung.setId("lblBeschreibung");
+		this.tfClientID.setId("tfClientID");
+		this.tfName.setId("tfName");
+		this.tfTelephonenumber.setId("tfTelephonenumber");
+		this.tfStreet.setId("tfStreet");
+		this.tfHouseNumber.setId("tfHouseNumber");
+		this.tfZipCode.setId("tfZipCode");
+		this.tfTown.setId("tfTown");
+		this.ckIsActive.setId("ckIsActive");
+		this.mscbProjects.setId("mscbProjects");
 		this.btnSave.addClassName("btnSave");
 		this.btnEdit.addClassName("btnEdit");
 		this.btnClose.addClassName("btnClose");
-		this.tfClientID.setId("idtfname");
+	
 
 		return new HorizontalLayout(btnSave, btnEdit, btnClose);
 	}
@@ -118,14 +118,14 @@ public class VaadinClientViewForm extends FormLayout {
 	 * Button unsichtbar
 	 */
 	public void prepareEdit() {
-		this.tfName.setEnabled(true);
-		this.tfTelephonenumber.setEnabled(true);
-		this.tfStreet.setEnabled(true);
-		this.tfHouseNumber.setEnabled(true);
-		this.tfZipCode.setEnabled(true);
-		this.tfTown.setEnabled(true);
-		this.ckIsActive.setEnabled(true);
-		this.mscbProjects.setEnabled(true);
+		this.tfName.setReadOnly(false);
+		this.tfTelephonenumber.setReadOnly(false);
+		this.tfStreet.setReadOnly(false);
+		this.tfHouseNumber.setReadOnly(false);
+		this.tfZipCode.setReadOnly(false);
+		this.tfTown.setReadOnly(false);
+		this.ckIsActive.setReadOnly(false);
+		this.mscbProjects.setReadOnly(true);
 		this.btnSave.setVisible(true);
 		this.btnEdit.setVisible(false);
 	}
@@ -134,14 +134,14 @@ public class VaadinClientViewForm extends FormLayout {
 	 * Gegenstück zu prepareEdit(). Formular unsichtbar, Button sichtbar
 	 */
 	public void closeEdit() {
-		this.tfName.setEnabled(false);
-		this.tfTelephonenumber.setEnabled(false);
-		this.tfStreet.setEnabled(false);
-		this.tfHouseNumber.setEnabled(false);
-		this.tfZipCode.setEnabled(false);
-		this.tfTown.setEnabled(false);
-		this.ckIsActive.setEnabled(false);
-		this.mscbProjects.setEnabled(false);
+		this.tfName.setReadOnly(true);
+		this.tfTelephonenumber.setReadOnly(true);
+		this.tfStreet.setReadOnly(true);
+		this.tfHouseNumber.setReadOnly(true);
+		this.tfZipCode.setReadOnly(true);
+		this.tfTown.setReadOnly(true);
+		this.ckIsActive.setReadOnly(true);
+		this.mscbProjects.setReadOnly(true);
 		this.btnSave.setVisible(false);
 		this.btnEdit.setVisible(true);
 	}

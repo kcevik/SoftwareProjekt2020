@@ -25,7 +25,7 @@ public class TestLoggedIn {
 	public void buildBrowser() {
 		System.setProperty("webdriver.gecko.driver", "driver\\geckodriver.exe");
 		FirefoxOptions firefoxOptions = new FirefoxOptions();
-		//firefoxOptions.addArguments("--headless");
+		firefoxOptions.addArguments("--headless");
 		driver = new FirefoxDriver(firefoxOptions);
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	}

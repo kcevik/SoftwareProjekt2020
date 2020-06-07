@@ -8,15 +8,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.interactions.SendKeysAction;
-
-import com.vaadin.flow.component.textfield.testbench.TextFieldElement;
-
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Client;
 
@@ -51,44 +48,45 @@ public class TestClientInDB {
 		btnClientmanagement.click();
 		WebElement btnCreateClient = driver.findElement(By.cssSelector(".btnCreateClient"));
 		btnCreateClient.click();
-		WebElement tfName = driver.findElement(By.cssSelector(".tfName"));
-		WebElement tfTelephonenumber = driver.findElement(By.cssSelector(".tfTelephonenumber"));
-		WebElement tfStreet = driver.findElement(By.cssSelector(".tfStreet"));
-		WebElement tfHouseNumber = driver.findElement(By.cssSelector(".tfHouseNumber"));
-		WebElement tfZipCode = driver.findElement(By.cssSelector(".tfZipCode"));
-		WebElement tfTown = driver.findElement(By.cssSelector(".tfTown"));
-		WebElement btnSave = driver.findElement(By.cssSelector(".btnSave"));
-		tfName.click();
-		tfName.sendKeys("JUnitTestKunde");
-		tfTelephonenumber.click();
-		tfTelephonenumber.sendKeys("0123456789");
-		tfStreet.click();
-		tfStreet.sendKeys("JUnitTestKunde");
-		tfHouseNumber.click();
-		tfHouseNumber.sendKeys("1234");
-		tfZipCode.click();
-		tfZipCode.sendKeys("1234");
-		tfTown.click();
-		tfTown.sendKeys("JUnitTestKunde");
-		btnSave.click();
+		
+		JavascriptExecutor jse = (JavascriptExecutor)driver;
+		jse.executeScript("document.getElementById('tfName').value='JUnitTestClient';");
+		jse.executeScript("document.getElementById('tfTelephonenumber').value='123456';");
+		jse.executeScript("document.getElementById('tfStreet').value='JUnitTestClientStreet';");
+		jse.executeScript("document.getElementById('tfHouseNumber').value='1234';");
+		jse.executeScript("document.getElementById('tfZipCode').value='1000';");
+		jse.executeScript("document.getElementById('tfTown').value='JUnitTestClientTown';");
+
+		//Daten können nicht Submitted werden weil Regex?
+		
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-//		List<Client> allClients = DatabaseService.DatabaseServiceGetInstance().readClient();
-//		boolean comparative = false;
-//		for(Client c : allClients) {
-//			if(c.getName() == "JUnitTestKunde") {
-//				comparative = true;
-//			}
-//		}
-//		assertTrue(comparative);
+		
+		WebElement btnSave = driver.findElement(By.cssSelector("#btnSave"));
+		btnSave.click();
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		List<Client> allClients = DatabaseService.DatabaseServiceGetInstance().readClient();
+		boolean comparative = false;
+		for(Client c : allClients) {
+			if(c.getName() == "JUnitTestKunde") {
+				comparative = true;
+			}
+		}
+		assertTrue(comparative);
 		
 	}
 	
 	@After
-	public void killBrowser() {
+	public void closeBrowser() {
 		//driver.close();
 	}
 }

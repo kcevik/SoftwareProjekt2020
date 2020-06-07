@@ -2,6 +2,9 @@ package de.fhbielefeld.pmt.client.impl.view;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.ConstraintViolationException;
+
 import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -63,7 +66,13 @@ public class VaadinClientViewLogic implements IClientView {
 		this.view.getBtnBackToMainMenu().addClickListener(event -> eventBus.post(new ModuleChooserChosenEvent(this)));
 		this.view.getBtnCreateClient().addClickListener(event -> newClient());
 		this.view.getCLIENTFORM().getBtnSave().addClickListener(event -> this.saveClient());
-		this.view.getCLIENTFORM().getBtnEdit().addClickListener(event -> this.view.getCLIENTFORM().prepareEdit());
+		this.view.getCLIENTFORM().getBtnEdit().addClickListener(event -> {
+			this.view.getCLIENTFORM().prepareEdit();
+			if(!this.selectedClient.isActive()) {
+				this.view.getCLIENTFORM().getMscbProjects().setEnabled(false);
+			}
+			
+		});
 		this.view.getCLIENTFORM().getBtnClose().addClickListener(event -> cancelForm());
 		this.view.getFilterText().addValueChangeListener(event -> filterList(this.view.getFilterText().getValue()));
 	}
@@ -129,9 +138,11 @@ public class VaadinClientViewLogic implements IClientView {
 	 */
 	private void saveClient() {
 		if (this.binder.validate().isOk()) {
+			//Validierung für das Ändern von Projekten -> Wird wahrscheinlich nicht mehr benötigt, aus Zeitgründen nicht mehr implementiert
 			try {
+				Client old = this.selectedClient;
 				this.binder.writeBean(this.selectedClient);
-				if (this.selectedClient.getProjectList().isEmpty()) {
+				if (this.selectedClient.getProjectList().isEmpty() && old != null && !old.getProjectList().isEmpty()) {
 					Notification.show("Projekt benötigt Kunden", 5000, Notification.Position.TOP_CENTER)
 							.addThemeVariants(NotificationVariant.LUMO_ERROR);
 					return;
@@ -152,14 +163,13 @@ public class VaadinClientViewLogic implements IClientView {
 					this.view.getCLIENTFORM().setVisible(false);
 					this.addClient(selectedClient);
 					this.updateGrid();
-					resetSelectedClient();
 				}
-			} catch (NumberFormatException | ValidationException e) {
+			} catch (NumberFormatException | ValidationException | ConstraintViolationException e) {
 				Notification
-						.show("NumberFormatException oder ValidationException", 5000, Notification.Position.TOP_CENTER)
+						.show("ValidationException bzw ConstraintViolationException", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
-				
+				resetSelectedClient();
 			}
 		}
 	}
