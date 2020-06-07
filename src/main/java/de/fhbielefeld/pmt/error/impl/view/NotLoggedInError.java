@@ -18,6 +18,7 @@ public class NotLoggedInError {
 		btnBackToLogin.setText("Zurück zum Login");
 		btnBackToLogin.addClickListener(e -> eventBus.post(new LogoutAttemptEvent(component)));
 		Label lblBackToLogin = new Label("Bitte melden Sie sich an:");
+		lblBackToLogin.setClassName("lblBackToLogin");
 		VerticalLayout layout = new VerticalLayout(lblBackToLogin, btnBackToLogin);
 		layout.setAlignSelf(Alignment.CENTER);
 		layout.addClassName("notLoggedInErrorSite");
