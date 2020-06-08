@@ -63,8 +63,9 @@ public class ProjectAnalyticsRootView extends VerticalLayout {
 	VaadinSession session = VaadinSession.getCurrent();
 
 	public ProjectAnalyticsRootView() {
+		this.eventBus.register(this);
 		if (rootViewLoginCheck()) {
-			this.eventBus.register(this);
+			
 			IProjectAnalyticsComponent projectAnalyticsComponent = this.createProjectAnalyticsComponent();
 			Component projectAnalyticsView = projectAnalyticsComponent.getViewAs(Component.class);
 
@@ -80,12 +81,14 @@ public class ProjectAnalyticsRootView extends VerticalLayout {
 			this.add(topBarView);
 			this.add(navigatorBoxView);
 			this.add(projectAnalyticsView);
+
 		}
+		
 		this.setHeightFull();
 		this.addClassName("root-view");
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-
+		
 	}
 
 	private INavigatorBoxComponent createNavigatorBoxComponent() {

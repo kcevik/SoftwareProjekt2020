@@ -164,9 +164,9 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 				.withValidator((string -> string != null && !string.isEmpty()),
 						"Bitte geben Sie eine Beschreibung ein!")
 				.bind(Costs::getDescription, Costs::setDescription);
-
+		
+		
 	}
-
 	void displayCost() {
 		if (this.selectedCost != null) {
 			try {

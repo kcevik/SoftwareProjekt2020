@@ -72,7 +72,7 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 		Div content = new Div(costGrid, costForm);
 		content.addClassName("content"); 	
 		content.setSizeFull();
-		this.add(new HorizontalLayout(filterText, btnCreateCostPosition, btnCreateCostPDF), content , costForm, new HorizontalLayout( btnBackToProjectview, allCostInfo));//new HorizontalLayout(btnBackToProjectview, allCostInfo));
+		this.add(new HorizontalLayout(filterText, btnCreateCostPosition, btnCreateCostPDF), content , allCostInfo , btnBackToProjectview);
 		
 	}
 
@@ -94,6 +94,7 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 	public void createCostInfo(Double currentCost, Double budget) {
 		this.allCostInfo.removeAll();
 		this.allCostInfo.add("bisher enstandene Kosten: " + currentCost + " Gesamtbudget: " + budget);
+		
 	}
 
 	public void createFilter() {

@@ -4,6 +4,13 @@
    https://vaadin.com/themes/lumo for more information.
 */
 
+
+
+.analyticsDiv{
+	margin-top: 4%;
+}
+
+
 /*
 /*@author Sebastian Siegmann, David Bistron
 /*Style f�r die Navigator-Box definiert, damit diese Korrekt dargestellt wird
@@ -12,7 +19,7 @@
 .navigatorBox{
 	border: white 1px dashed;
 	background-color: #F8F8FF;
-	z-index: 1;
+	z-index: 1;  
 	align-self: flex-end;
 	position: absolute;
 	top: 136px;	
@@ -106,8 +113,6 @@ html {
   .list-view {
   	padding-top: 75px;
 }
-
-
 
 
 

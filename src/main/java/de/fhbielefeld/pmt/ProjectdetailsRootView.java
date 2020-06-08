@@ -68,9 +68,10 @@ public class ProjectdetailsRootView extends VerticalLayout {
 	VaadinSession session = VaadinSession.getCurrent();
 
 	public ProjectdetailsRootView() {
+
+		this.eventBus.register(this);
 		if (rootViewLoginCheck()) {
 
-			this.eventBus.register(this);
 			IProjectdetailsComponent projectdetailsComponent = this.createProjectdetailsComponent();
 			Component projectdetailsView = projectdetailsComponent.getViewAs(Component.class);
 
