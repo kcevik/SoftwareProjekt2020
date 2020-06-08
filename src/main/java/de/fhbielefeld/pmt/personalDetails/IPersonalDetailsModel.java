@@ -4,8 +4,8 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 
 /**
  * Interfacedefinition für das ClientModel
- * 
- * @author David Bistron, Sebastian Siegmann
+ * @author David Bistron
+ * @author Sebastian Siegmann
  * @version 1.0
  */
 public interface IPersonalDetailsModel {

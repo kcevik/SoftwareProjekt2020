@@ -20,4 +20,7 @@ public interface IProjectActivityModel extends IModel {
 	boolean isReadProjectActivitySuccessfull();
 	public void persistProjectActivity(ProjectActivity projectActivity);
 	
+	public void setProject(Project project);
+	public Project getProject();
+	
 }

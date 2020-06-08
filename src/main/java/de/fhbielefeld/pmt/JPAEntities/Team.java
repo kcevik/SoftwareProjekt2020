@@ -1,4 +1,5 @@
 package de.fhbielefeld.pmt.JPAEntities;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,10 +45,8 @@ public class Team implements Serializable {
 		super();
 		this.teamName = teamName;
 		this.isActive = true;
-		//TODO: https://www.codeflow.site/de/article/java-hashset-vs-treeset Deswegen Hashset weil speed
 		this.employeeList = new HashSet<Employee>();
 		this.projectList  = new HashSet<Project>();
-		// this.employeeList.add(employee);
 	}
 
 	public boolean isActive() {
@@ -89,6 +88,7 @@ public class Team implements Serializable {
 	/**
 	 * @author David Bistron
 	 * @param employeeList
+	 * Methode setEmployeeList hinzugefügt
 	 * setter-Methode wird benötigt und von der Klasse VaadinTeamViewLogic aufgerufen, damit in der MultiselectComboBox
 	 * neue Mitarbeiter hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
 	 * bearbeitet werden
@@ -123,6 +123,7 @@ public class Team implements Serializable {
 	/**
 	 * @author David Bistron
 	 * @param projectList
+	 * Methode setProjectList hinzugefügt
 	 * setter-Methode wird benötigt und von der Klasse VaadinTeamViewLogic aufgerufen, damit in der MultiselectComboBox
 	 * neue Projekte hinzugefügt werden können! Ohne die setter-Methode ist das Feld "gebindet", kann aber nicht
 	 * bearbeitet werden

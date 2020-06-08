@@ -6,7 +6,7 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.team.ITeamView;
 
 /**
- * Klasse, die das Event der Speicherung eines neuen Teams steuert (Speicherung von neuen Teams in der Datenbank)
+ * Klasse, die das Event der Speicherung eines neuen Teams steuert (Speicherung von neuen Teams in der Datenbank) 
  * @author David Bistron
  *
  */
@@ -17,6 +17,7 @@ public class SendTeamToDBEvent extends EventObject  {
 	
 	/**
 	 * Konstruktor sowie get-/ set-Methoden
+	 * @param selectedTeam
 	 * @param selectedTeam
 	 */
 	public SendTeamToDBEvent(ITeamView view, Team selectedTeam) {

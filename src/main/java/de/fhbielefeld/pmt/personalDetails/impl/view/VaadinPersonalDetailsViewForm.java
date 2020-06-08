@@ -20,8 +20,8 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 
 /**
  * Klasse, die die PersonalDetailsForm (rechts innerhalb der View) erstellt
- * 
- * @author David Bistron, Sebastian Siegmann
+ * @author David Bistron
+ * @author Sebastian Siegmann
  * @version 1.1
  */
 public class VaadinPersonalDetailsViewForm extends FormLayout {
@@ -60,20 +60,20 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 	}
 
 	private void configureTextFields() {
-		this.tfEmployeeID.setEnabled(false);
-		this.pfPassword.setEnabled(false);
-		this.tfFirstName.setEnabled(false);
-		this.tfLastName.setEnabled(false);
-		this.tfOccupation.setEnabled(false);
-		this.cbRole.setEnabled(false);
-		this.ckIsSuitabilityProjectManager.setEnabled(false);
-		this.ckIsActive.setEnabled(false);
-		this.tfStreet.setEnabled(false);
-		this.tfHouseNumber.setEnabled(false);
-		this.tfZipCode.setEnabled(false);
-		this.tfTown.setEnabled(false);
-		this.mscbEmployeeProject.setEnabled(false);
-		this.mscbEmployeeProject.setEnabled(false);
+		this.tfEmployeeID.setReadOnly(true);
+		this.pfPassword.setReadOnly(true);
+		this.tfFirstName.setReadOnly(true);
+		this.tfLastName.setReadOnly(true);
+		this.tfOccupation.setReadOnly(true);
+		this.cbRole.setReadOnly(true);
+		this.ckIsSuitabilityProjectManager.setReadOnly(true);
+		this.ckIsActive.setReadOnly(true);
+		this.tfStreet.setReadOnly(true);
+		this.tfHouseNumber.setReadOnly(true);
+		this.tfZipCode.setReadOnly(true);
+		this.tfTown.setReadOnly(true);
+		this.mscbEmployeeProject.setReadOnly(true);
+		this.mscbEmployeeProject.setReadOnly(true);
 	}
 
 	/**
@@ -118,42 +118,44 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 	}
 
 	public void prepareEdit() {
-		this.tfEmployeeID.setEnabled(false);
-		this.pfPassword.setEnabled(true);
-		this.tfFirstName.setEnabled(true);
-		this.tfLastName.setEnabled(true);
-		this.tfOccupation.setEnabled(false);
-		this.cbRole.setEnabled(false);
-		this.ckIsSuitabilityProjectManager.setEnabled(false);
-		this.ckIsActive.setEnabled(false);
-		this.tfStreet.setEnabled(true);
-		this.tfHouseNumber.setEnabled(true);
-		this.tfZipCode.setEnabled(true);
-		this.tfTown.setEnabled(true);
+		this.tfEmployeeID.setReadOnly(true);
+		this.pfPassword.setReadOnly(false);
+		this.tfFirstName.setReadOnly(false);
+		this.tfLastName.setReadOnly(false);
+		this.tfOccupation.setReadOnly(true);
+		this.cbRole.setReadOnly(true);
+		this.ckIsSuitabilityProjectManager.setReadOnly(true);
+		this.ckIsActive.setReadOnly(true);
+		this.tfStreet.setReadOnly(false);
+		this.tfHouseNumber.setReadOnly(false);
+		this.tfZipCode.setReadOnly(false);
+		this.tfTown.setReadOnly(false);
+		this.mscbEmployeeProject.setReadOnly(true);
+		this.mscbEmployeeProject.setReadOnly(true);
 		this.btnSave.setVisible(true);
 		this.btnEdit.setVisible(false);
-		this.mscbEmployeeProject.setEnabled(false);
-		this.mscbEmployeeProject.setEnabled(false);
+		
 
 	}
 
 	public void closeEdit() {
-		this.tfEmployeeID.setEnabled(false);
-		this.pfPassword.setEnabled(false);
-		this.tfFirstName.setEnabled(false);
-		this.tfLastName.setEnabled(false);
-		this.tfOccupation.setEnabled(false);
-		this.cbRole.setEnabled(false);
-		this.ckIsSuitabilityProjectManager.setEnabled(false);
-		this.ckIsActive.setEnabled(false);
-		this.tfStreet.setEnabled(false);
-		this.tfHouseNumber.setEnabled(false);
-		this.tfZipCode.setEnabled(false);
-		this.tfTown.setEnabled(false);
+		this.tfEmployeeID.setReadOnly(true);
+		this.pfPassword.setReadOnly(true);
+		this.tfFirstName.setReadOnly(true);
+		this.tfLastName.setReadOnly(true);
+		this.tfOccupation.setReadOnly(true);
+		this.cbRole.setReadOnly(true);
+		this.ckIsSuitabilityProjectManager.setReadOnly(true);
+		this.ckIsActive.setReadOnly(true);
+		this.tfStreet.setReadOnly(true);
+		this.tfHouseNumber.setReadOnly(true);
+		this.tfZipCode.setReadOnly(true);
+		this.tfTown.setReadOnly(true);
+		this.mscbEmployeeProject.setReadOnly(true);
+		this.mscbEmployeeProject.setReadOnly(true);
 		this.btnSave.setVisible(false);
 		this.btnEdit.setVisible(true);
-		this.mscbEmployeeProject.setEnabled(false);
-		this.mscbEmployeeProject.setEnabled(false);
+		
 	}
 
 	public Label getLblBeschreibung() {
@@ -220,7 +222,6 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 		return btnClose;
 	}
 
-	// DAVID
 	public MultiselectComboBox<Project> getMscbEmployeeProject() {
 		return mscbEmployeeProject;
 	}

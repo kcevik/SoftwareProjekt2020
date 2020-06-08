@@ -76,12 +76,11 @@ public class PersonalDetailsRootView extends VerticalLayout {
 		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
 				session.getAttribute("LOGIN_USER_FIRSTNAME"), session.getAttribute("LOGIN_USER_LASTNAME"),
 				session.getAttribute("LOGIN_USER_ROLE"))) {
-			return true;
-//			if (rootViewAuthorizationCheck()) {
-//				return true;
-//			} else {
-//				return false;
-//			}
+			if (rootViewAuthorizationCheck()) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			this.removeAll();
 			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
@@ -94,7 +93,7 @@ public class PersonalDetailsRootView extends VerticalLayout {
 	 * wird eine Error Seite dargestellt
 	 */
 	private boolean rootViewAuthorizationCheck() {
-		if (AuthorizationChecker.checkIsAuthorizedEmployee(session, session.getAttribute("LOGIN_USER_ROLE"))) {
+		if (AuthorizationChecker.checkIsMinAuthorizedEmployee(session, session.getAttribute("LOGIN_USER_ROLE"))) {
 			return true;
 		} else {
 			this.removeAll();

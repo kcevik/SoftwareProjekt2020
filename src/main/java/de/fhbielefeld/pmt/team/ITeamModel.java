@@ -8,7 +8,7 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.modelViewComponent.IModel;
 
 /**
- * Interface für das ProjectModel
+ * Interface für das TeamModel
  * @author David Bistron
  * 
  */

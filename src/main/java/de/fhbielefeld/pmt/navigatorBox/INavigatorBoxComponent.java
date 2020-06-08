@@ -3,7 +3,7 @@ package de.fhbielefeld.pmt.navigatorBox;
 import de.fhbielefeld.pmt.IViewAccessor;
 
 /**
- * 
+ * Interface für die NavigatorBoxComponent
  * @author David Bistron
  *
  */

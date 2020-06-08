@@ -12,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
-import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 
 /**
@@ -98,7 +97,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	private void configureGrid() {
 		this.projectActivityGrid.addClassName("projectActivity-grid");
 		this.projectActivityGrid.removeColumnByKey("project");
-		this.projectActivityGrid.setColumns("projectActivityID", "category", "description", "hoursAvailable", "hourlyRate", "hoursExpended");
+		this.projectActivityGrid.setColumns("project", "projectActivityID", "category", "description", "hoursAvailable", "hourlyRate", "hoursExpended");
 		
 		//TODO: Die Projekt-ID vom gewählten Projekt muss da stehen! Funktioniert nicht! Rausschmeißen???
 		/*
@@ -108,7 +107,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		}).setHeader("Projekt ID");
 		*/
 		
-		// this.projectActivityGrid.getColumnByKey("project").setHeader("Projekt ID");
+		this.projectActivityGrid.getColumnByKey("project").setHeader("Projekt ID");
 		this.projectActivityGrid.getColumnByKey("projectActivityID").setHeader("Aktivitäts ID");
 		this.projectActivityGrid.getColumnByKey("category").setHeader("Tätigkeitskategorie");
 		this.projectActivityGrid.getColumnByKey("description").setHeader("Tätigkeitsbeschreibung");

@@ -8,5 +8,5 @@ import de.fhbielefeld.pmt.IViewAccessor;
  *
  */
 public interface IProjectActivityComponent extends IViewAccessor {
-
+	// spezielle Methoden optional möglich
 }

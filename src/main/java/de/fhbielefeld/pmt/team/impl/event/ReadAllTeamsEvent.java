@@ -5,6 +5,7 @@ import de.fhbielefeld.pmt.team.ITeamView;
 
 /**
  * EventObject = Vaadin-Komponente
+ * Event, das für das Auslesen der Teams aus der DB benötigt wird
  * @author David Bistron
  *
  */

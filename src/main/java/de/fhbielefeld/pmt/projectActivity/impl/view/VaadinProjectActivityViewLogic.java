@@ -8,10 +8,13 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
+import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
+import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity.ActivityCategories;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
 import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
@@ -19,6 +22,7 @@ import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.projectActivity.IProjectActivityView;
 import de.fhbielefeld.pmt.projectActivity.impl.event.ReadAllProjectActivitiesEvent;
 import de.fhbielefeld.pmt.projectActivity.impl.event.ReadAllProjectsEvent;
+import de.fhbielefeld.pmt.projectActivity.impl.event.ReadCurrentProjectEvent;
 import de.fhbielefeld.pmt.projectActivity.impl.event.SendProjectActivityToDBEvent;
 
 /**
@@ -36,6 +40,7 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	BeanValidationBinder<ProjectActivity> binder = new BeanValidationBinder<ProjectActivity>(ProjectActivity.class);
 	private final VaadinProjectActivityView view;
 	private final EventBus eventBus;
+	private Project project;
 	private ProjectActivity selectedProjectActivity;
 	private List<ProjectActivity> projectActivities = new ArrayList<ProjectActivity>();
 
@@ -81,11 +86,13 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	 * und die entsprechenden Daten werden abgefragt
 	 */
 	public void bindToFields() {
-
+		
+		this.binder.forField(this.view.getProjectActivityForm().getTfprojectActivityID())
+		.withConverter(new StringToLongConverter("")).bind(ProjectActivity::getProjectActivityID, null);
+				
 		this.binder.forField(this.view.getProjectActivityForm().getCbActivityCategory()).asRequired()
 		.bind(ProjectActivity::getCategory, ProjectActivity::setCategory);
 
-		
 		this.binder.forField(this.view.getProjectActivityForm().getTfDescription()).asRequired()
 			.withValidator(new RegexpValidator("Bitte geben Sie eine Beschreibung zwischen 1 und 50 Zeichen an", ".{1,50}"))
 			.bind(ProjectActivity::getDescription, ProjectActivity::setDescription);
@@ -213,8 +220,19 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		this.view.getProjectActivityGrid().setItems(this.projectActivities);
 	}
 	
+	/**
+	 * Methode, die das aktuell ausgewählte Projekt auslesen und im Grid wiedergeben soll!
+	 * @param project
+	 */
+	public void initReadCurrentProjectFromDB(Project project) {
+		this.project = project;
+		this.eventBus.post(new ReadCurrentProjectEvent (this, project));
+		this.updateGrid();
+	}
+	
 	public void initReadFromDB() {
-		this.eventBus.post(new ReadAllProjectsEvent(this));
+		// TODO: ReadAllProjectsEvent nicht notwendig, da nicht alle Projekte gelesen werden sollen!
+		// this.eventBus.post(new ReadAllProjectsEvent(this));
 		this.eventBus.post(new ReadAllProjectActivitiesEvent(this));	
 		if (this.projectActivities != null) {
 			this.view.getProjectActivityForm().getCbActivityCategory().setItems(ActivityCategories.values());

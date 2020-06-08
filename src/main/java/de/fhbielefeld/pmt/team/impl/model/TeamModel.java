@@ -9,7 +9,7 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.team.ITeamModel;
 
 /**
- * Klasse, die den Datenbankzugriff kontrolliert / Auslesen von Daten aus der Datenbank
+ * Klasse, die den Datenbankzugriff kontrolliert / Auslesen und Speichern von Daten aus der Datenbank
  * @author David Bistron
  *
  */
@@ -17,6 +17,10 @@ public class TeamModel implements ITeamModel {
 
 	private DatabaseService dbService;
 
+	/**
+	 * Konstruktor
+	 * @param dbService = Datenbank-Klasse an die DB-Aufrufe delegiert werden können
+	 */
 	public TeamModel(DatabaseService dbService) {
 		if (dbService == null) {
 			throw new NullPointerException("Undefinierter DBService!");
@@ -24,16 +28,26 @@ public class TeamModel implements ITeamModel {
 		this.dbService = dbService;
 	}
 
+	/**
+	 * Ließt über DB-Service alle Teams aus
+	 */
 	@Override
 	public List<Team> getTeamListFromDatabase() {
 		return dbService.readTeam();
 	}
 
+	/**
+	 * Persistiert ein Team-Objekt über den DB-Service in die DB.
+	 */
 	@Override
 	public void persistTeam(Team team) {
 		this.dbService.persistTeam(team);
 	}
 	
+	/**
+	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
+	 * Hier bezogen auf das Team!
+	 */
 	@Override
 	public boolean isReadSuccessfull() {
 		if (this.getTeamListFromDatabase() != null) {
@@ -42,14 +56,18 @@ public class TeamModel implements ITeamModel {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Ließt über DB-Service alle Projekte aus
+	 */
 	@Override
 	public List<Project> getProjectListFromDatabase() {
 		return dbService.readproject();
 	}
 	
-	
-
+	/**
+	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
+	 */
 	@Override
 	public boolean isReadProjectSuccessfull() {
 		if(this.getProjectListFromDatabase()!=null) {
@@ -59,11 +77,17 @@ public class TeamModel implements ITeamModel {
 		}
 	}	
 
+	/**
+	 * Ließt über DB-Service alle Mitarbeiter aus
+	 */
 	@Override
 	public List<Employee> getEmployeeListFromDatabase() {
 		return dbService.readEmployee();
 	}
 
+	/**
+	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
+	 */
 	@Override
 	public boolean isEmployeeReadSuccessfull() {
 		if(this.getEmployeeListFromDatabase()!=null) {
@@ -72,6 +96,5 @@ public class TeamModel implements ITeamModel {
 			return false;
 		}
 	}	
-
 }
 

@@ -10,7 +10,9 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
+import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.error.LoginChecker;
+import de.fhbielefeld.pmt.error.impl.view.NotAuthorizedError;
 import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
@@ -58,6 +60,7 @@ public class TeamRootView extends VerticalLayout {
 		}
 		
 		this.setHeightFull();
+		// TODO: this.addClassName("root-view"); ???
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 		
@@ -72,10 +75,34 @@ public class TeamRootView extends VerticalLayout {
 		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
 				session.getAttribute("LOGIN_USER_FIRSTNAME"), session.getAttribute("LOGIN_USER_LASTNAME"),
 				session.getAttribute("LOGIN_USER_ROLE"))) {
-			return true;
+			if (rootViewAuthorizationCheck()) {
+				System.out.println("User ist korrekt angemeldet");
+				return true;
+			} else {
+				System.out.println("User ist nicht angemeldet");
+				return false;
+			}
 		} else {
 			this.removeAll();
 			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
+			return false;
+		}
+	}
+	
+	/**
+	 * Methode, die die Rolle überprüft. Die Person, die ein Team erfassen möchte, muss mindestens die Rolle
+	 * Mitarbeiter haben. Sofern weitere Rollen hinzugefügt werden sollten, wie bspw. Praktikant, könnten diese Rolle
+	 * kein Team erfassen. 
+	 * @return
+	 */
+	private boolean rootViewAuthorizationCheck() {
+		if (AuthorizationChecker.checkIsMinAuthorizedEmployee(session, session.getAttribute("LOGIN_USER_ROLE"))) {
+			System.out.println("User hat Berechtigung");
+			return true;
+		} else {
+			System.out.println("User keine Berechtigung");
+			this.removeAll();
+			this.add(NotAuthorizedError.getErrorSite(this.eventBus, this));
 			return false;
 		}
 	}

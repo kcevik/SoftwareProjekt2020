@@ -5,7 +5,8 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsView;
 
 /**
- * @author David Bistron, Sebastian Siegmann
+ * @author David Bistron
+ * @author Sebastian Siegmann
  * @param view
  * @version 1.0
  */

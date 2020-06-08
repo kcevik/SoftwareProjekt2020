@@ -13,7 +13,8 @@ import de.fhbielefeld.pmt.personalDetails.impl.event.SendEmployeeDataToDBEvent;
 
 /**
  * 
- * @author David Bistron, Sebastian Siegmann
+ * @author David Bistron
+ * @author Sebastian Siegmann
  * @version 1.0
  */ 
 public class PersonalDetailsComponent extends AbstractPresenter<IPersonalDetailsModel, IPersonalDetailsView> implements IPersonalDetailsComponent {

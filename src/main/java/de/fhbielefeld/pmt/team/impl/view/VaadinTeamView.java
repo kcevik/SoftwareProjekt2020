@@ -132,7 +132,7 @@ public class VaadinTeamView extends VerticalLayout {
 	}
 	
 	/**
-	 * Aktualisierung des Grid. Wie? Die darzustellende Liste wird neu übergeben
+	 * Aktualisierung des Grid, indem die darzustellende Liste neu übergeben wird
 	 */
 	public void updateGrid() {
 		this.teamGrid.setItems(this.teamList);

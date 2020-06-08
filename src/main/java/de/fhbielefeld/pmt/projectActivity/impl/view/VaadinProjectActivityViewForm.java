@@ -27,6 +27,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	private final ComboBox<ActivityCategories> cbActivityCategory = new ComboBox<ActivityCategories>("Tätigkeitskategorie:");		
 		
 	private final TextField tfProjectID = new TextField("Projekt-ID: ");
+	private final TextField tfprojectActivityID = new TextField("Projektaktivitäts-ID: ");
 	private final TextField tfDescription = new TextField("Tätigkeitsbeschreibung: ");
 	private final TextField tfHoursAvailable = new TextField("max. verfügbare Stunden: ");
 	private final TextField tfHourlyRates = new TextField("Stundensatz: ");
@@ -40,25 +41,26 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 		configureProjectActivityFormTextFields();
 		add(lblCreateEdit);		
 		lblCreateEdit.addClassName("lbl-heading-form");
-		add(tfProjectID, cbActivityCategory, tfDescription, tfHoursAvailable, tfHourlyRates, cbIsActive, configureProjectActivityFormButtons());
+		add(tfProjectID, tfprojectActivityID, cbActivityCategory, tfDescription, tfHoursAvailable, tfHourlyRates, cbIsActive, configureProjectActivityFormButtons());
 	}
 	
 	public void configureProjectActivityFormTextFields() {
 		this.lblCreateEdit.setEnabled(false);
-		this.tfProjectID.setEnabled(false);
-		this.cbActivityCategory.setEnabled(false);
-		this.tfDescription.setEnabled(false);
-		this.tfHoursAvailable.setEnabled(false);
-		this.tfHourlyRates.setEnabled(false);
-		this.cbIsActive.setEnabled(false);
+		this.tfProjectID.setReadOnly(true);
+		this.tfprojectActivityID.setReadOnly(true);
+		this.cbActivityCategory.setReadOnly(false);
+		this.tfDescription.setReadOnly(false);
+		this.tfHoursAvailable.setReadOnly(false);
+		this.tfHourlyRates.setReadOnly(false);
+		this.cbIsActive.setReadOnly(false);
 		
 	
 }
 	public Component configureProjectActivityFormButtons() {
 		btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 		btnSave.setVisible(false);
-		btnEdit.addThemeVariants(ButtonVariant.LUMO_ERROR);
-		btnClose.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		btnEdit.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		btnClose.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		btnSave.addClickShortcut(Key.ENTER);
 		btnClose.addClickShortcut(Key.ESCAPE);
 		return new HorizontalLayout(btnSave, btnEdit, btnClose);
@@ -67,23 +69,25 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	
 	public void prepareProjectActivityFormFields() {
 		this.lblCreateEdit.setEnabled(true);
-		this.tfProjectID.setEnabled(false);
-		this.cbActivityCategory.setEnabled(true);
-		this.tfDescription.setEnabled(true);
-		this.tfHoursAvailable.setEnabled(true);
-		this.tfHourlyRates.setEnabled(true);
-		this.cbIsActive.setEnabled(true);
+		this.tfProjectID.setReadOnly(true);
+		this.tfprojectActivityID.setReadOnly(true);
+		this.cbActivityCategory.setReadOnly(false);
+		this.tfDescription.setReadOnly(false);
+		this.tfHoursAvailable.setReadOnly(false);
+		this.tfHourlyRates.setReadOnly(false);
+		this.cbIsActive.setReadOnly(false);
 		this.btnSave.setVisible(true);
 		this.btnEdit.setVisible(false);
 	}
 	
 	public void closeProjectActivityFormFields() {
-		this.cbActivityCategory.setEnabled(false);
-		this.tfProjectID.setEnabled(false);
-		this.tfDescription.setEnabled(false);
-		this.tfHoursAvailable.setEnabled(false);
-		this.tfHourlyRates.setEnabled(false);
-		this.cbIsActive.setEnabled(false);
+		this.cbActivityCategory.setReadOnly(true);
+		this.tfProjectID.setReadOnly(true);
+		this.tfprojectActivityID.setReadOnly(true);
+		this.tfDescription.setReadOnly(true);
+		this.tfHoursAvailable.setReadOnly(true);
+		this.tfHourlyRates.setReadOnly(true);
+		this.cbIsActive.setReadOnly(true);
 		this.btnSave.setVisible(false);
 		this.btnEdit.setVisible(true);
 	}
@@ -134,6 +138,14 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	
 	public Checkbox getIsActive() {
 		return cbIsActive;
+	}
+	
+	public TextField getTfprojectActivityID() {
+		return tfprojectActivityID;
+	}
+	
+	public TextField getTfProjectID() {
+		return tfProjectID;
 	}
 	
 }
