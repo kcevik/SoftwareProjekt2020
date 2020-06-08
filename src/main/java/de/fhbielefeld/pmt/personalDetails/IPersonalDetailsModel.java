@@ -11,7 +11,7 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 public interface IPersonalDetailsModel {
 
 	Employee getSingleEmployeeFromDatabase(long employeeID);
-
+	public void persistEmployee(Employee employee);
 	boolean isSingleEmployeeReadSuccessfull(long employeeID);
 
 }

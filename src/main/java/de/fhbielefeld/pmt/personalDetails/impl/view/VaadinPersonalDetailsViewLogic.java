@@ -81,8 +81,11 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfOccupation(), "occupation");
 
 		this.binder.forField(this.view.getPERSONALDETAILSFORM().getPfPassword())
-				.withValidator(new RegexpValidator("Bitte ein Passwort mit mindestens 8 Zeichen eingeben", "/^.{7,}$/"))
-				.bind(Employee::getPassword, Employee::setPassword);
+        .withValidator(new RegexpValidator("Bitte ein Passwort mit mindestens 8 Zeichen eingeben. "
+                + "Das Passwort muss mindestens 8 Zeichen lang sein und " + 
+                "darf nur die Buchstaben von a bis z in Groß- oder " + 
+                "Kleinschreibung und Ziffern enthalten. ", "[0-9a-zA-Z]{8,}"))
+        .bind(Employee::getPassword, Employee::setPassword);
 
 		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfStreet())
 				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
@@ -156,12 +159,10 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 
 		if (this.binder.validate().isOk()) {
 			try {
+				System.out.println(this.selectedEmployee);
 				this.eventBus.post(new SendEmployeeDataToDBEvent(this, this.selectedEmployee));
 				this.view.getPERSONALDETAILSFORM().setVisible(false);
-
 				this.updateGrid();
-				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
-						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 			} catch (NumberFormatException e) {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);

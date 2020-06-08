@@ -3,13 +3,13 @@ package de.fhbielefeld.pmt.personalDetails.impl;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.server.VaadinSession;
-
 import de.fhbielefeld.pmt.AbstractPresenter;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsComponent;
 import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsModel;
 import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsView;
 import de.fhbielefeld.pmt.personalDetails.impl.event.ReadEmployeeDataFromDBEvent;
+import de.fhbielefeld.pmt.personalDetails.impl.event.SendEmployeeDataToDBEvent;
 
 /**
  * 
@@ -39,6 +39,16 @@ public class PersonalDetailsComponent extends AbstractPresenter<IPersonalDetails
 			}
 		}
 	}	
+	
+	/**
+	 * Sendet den enthaltenen Employee an das Model
+	 * 
+	 * @param event
+	 */
+	@Subscribe
+	public void onSendClientToDBEvent(SendEmployeeDataToDBEvent event) {
+		this.model.persistEmployee(event.getSelectedEmployee());
+	}
 	
 	/**
 	 * Delegiert den Aufruf an die ViewLogic Klasse

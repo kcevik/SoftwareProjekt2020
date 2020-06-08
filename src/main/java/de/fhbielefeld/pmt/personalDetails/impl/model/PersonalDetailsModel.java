@@ -1,5 +1,8 @@
 package de.fhbielefeld.pmt.personalDetails.impl.model;
 
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsModel;
@@ -34,5 +37,12 @@ public class PersonalDetailsModel implements IPersonalDetailsModel {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public void persistEmployee(Employee employee) {
+		this.dbService.persistEmployee(employee);
+		Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
+		.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 	}
 }
