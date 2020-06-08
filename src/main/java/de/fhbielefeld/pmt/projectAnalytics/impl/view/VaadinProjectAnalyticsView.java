@@ -1,12 +1,15 @@
 package de.fhbielefeld.pmt.projectAnalytics.impl.view;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 
+@CssImport("./styles/shared-styles.css")
 public class VaadinProjectAnalyticsView extends VerticalLayout {
 
 	/**
@@ -20,7 +23,7 @@ public class VaadinProjectAnalyticsView extends VerticalLayout {
 	private Image timeImage = new Image();
 	private Image costsImage = new Image();
 	
-
+ 
 	public VaadinProjectAnalyticsView() {
 		this.initUI();
 		this.builtUI();
@@ -30,13 +33,13 @@ public class VaadinProjectAnalyticsView extends VerticalLayout {
 		
 		Div content = new Div(fullfillmentImage, timeImage, costsImage);
 		content.addClassName("content");
-		this.addClassName("list-view");
-		this.addClassName("client-grid");
+		content.addClassName("analyticsDiv");
 		this.add(content, btnBackToProjectmanagement);
 	}
-	
+	  
 	private void builtUI() {
-		addClassName("center-content");
+		addClassName("list-view");
+		setSizeFull();
 	}
 
 	public Image getFullfillmentImage() {

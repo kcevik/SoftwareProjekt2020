@@ -129,7 +129,7 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 	    double budget = project.getBudget();
 	    
 	    int fullfillmentTime =  (int) (budget/100 * cost);
-	    int fullfillmentCost = timeAvailable/100 * spentTime;
+	    int fullfillmentCost = (timeAvailable/100) * spentTime;
 	    
 	    return fullfillmentTime + fullfillmentCost;
 	    
