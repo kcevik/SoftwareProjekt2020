@@ -9,7 +9,7 @@ import de.fhbielefeld.pmt.navigatorBox.INavigatorBoxComponent;
 import de.fhbielefeld.pmt.navigatorBox.INavigatorBoxView;
 
 /**
- * Klasse für die Icon-Auswahl-Box
+ * Klasse für die Icon-Auswahl-Box (Navigator-Box)
  * @author David Bistron
  *
  */

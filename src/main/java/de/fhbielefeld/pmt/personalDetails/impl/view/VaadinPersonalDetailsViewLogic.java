@@ -6,6 +6,7 @@ import com.google.common.eventbus.EventBus;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
@@ -19,8 +20,8 @@ import de.fhbielefeld.pmt.personalDetails.impl.event.ReadEmployeeDataFromDBEvent
 import de.fhbielefeld.pmt.personalDetails.impl.event.SendEmployeeDataToDBEvent;
 
 /**
- * 
- * @author David Bistron, Sebastian Siegmann
+ * @author David Bistron
+ * @author Sebastian Siegmann
  * @version 1.1
  */
 public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
@@ -65,7 +66,7 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 
 	/**
 	 * Stellt Verbindung zwischen Employee Objekt und den Feldern des Formulars her
-	 */
+	 */ 
 	private void bindToFields() {
 		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfEmployeeID())
 				.withConverter(new StringToLongConverter("")).bind(Employee::getEmployeeID, null);
@@ -81,7 +82,10 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 		this.binder.bind(this.view.getPERSONALDETAILSFORM().getTfOccupation(), "occupation");
 
 		this.binder.forField(this.view.getPERSONALDETAILSFORM().getPfPassword())
-				.withValidator(new RegexpValidator("Bitte ein Passwort mit mindestens 8 Zeichen eingeben", "/^.{7,}$/"))
+				.withValidator(new RegexpValidator("Bitte ein Passwort mit mindestens 8 Zeichen eingeben. "
+						+ "Das Passwort muss mindestens 8 Zeichen lang sein und " + 
+						"darf nur die Buchstaben von a bis z in Groß- oder " + 
+						"Kleinschreibung und Ziffern enthalten. ", "[0-9a-zA-Z]{8,}"))
 				.bind(Employee::getPassword, Employee::setPassword);
 
 		this.binder.forField(this.view.getPERSONALDETAILSFORM().getTfStreet())
@@ -136,7 +140,7 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 					this.view.getPERSONALDETAILSFORM().getMscbEmployeeTeam().setItems(this.teams);
 				}
 				// TODO: DB Level Bidirektional Setter und Getter aufrufen -> Is das bereits passiert? ©Siggi
-				this.binder.setBean(this.selectedEmployee);
+				this.binder.readBean(this.selectedEmployee);
 				this.view.getPERSONALDETAILSFORM().closeEdit();
 				this.view.getPERSONALDETAILSFORM().setVisible(true);
 			} catch (NumberFormatException e) {
@@ -156,13 +160,14 @@ public class VaadinPersonalDetailsViewLogic implements IPersonalDetailsView {
 
 		if (this.binder.validate().isOk()) {
 			try {
+				this.binder.writeBean(this.selectedEmployee);
 				this.eventBus.post(new SendEmployeeDataToDBEvent(this, this.selectedEmployee));
 				this.view.getPERSONALDETAILSFORM().setVisible(false);
 
 				this.updateGrid();
 				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-			} catch (NumberFormatException e) {
+			} catch (NumberFormatException | ValidationException e) {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {

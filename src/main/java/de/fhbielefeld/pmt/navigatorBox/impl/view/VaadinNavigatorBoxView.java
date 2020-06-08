@@ -20,6 +20,9 @@ public class VaadinNavigatorBoxView extends HorizontalLayout {
 	private final Button btnAnalytics = new Button(new Icon(VaadinIcon.BAR_CHART));
 	private final Button btnCosts = new Button(new Icon(VaadinIcon.CASH));
 
+	/**
+	 * Konstruktor
+	 */
 	public VaadinNavigatorBoxView() {
 		this.initUI();
 		this.builtUI();
@@ -38,6 +41,7 @@ public class VaadinNavigatorBoxView extends HorizontalLayout {
 
 	/**
 	 * Legt Eigenschaften der Komponenten fest
+	 * Hier werden Buttons hinzugefügt und beschriftet
 	 */
 	private void initUI() {
 		this.btnActivities.setText("Projektaktivitäten");
@@ -49,7 +53,10 @@ public class VaadinNavigatorBoxView extends HorizontalLayout {
 		
 	}
 
-	//Getter und Setter
+	/**
+	 * get- und set-Methoden
+	 * @return
+	 */
 	public Button getBtnRemark() {
 		return btnRemarks;
 	}

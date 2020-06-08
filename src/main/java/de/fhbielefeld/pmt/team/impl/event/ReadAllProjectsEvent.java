@@ -1,12 +1,12 @@
 package de.fhbielefeld.pmt.team.impl.event;
 
 import java.util.EventObject;
-
 import de.fhbielefeld.pmt.team.ITeamView;
 
 /**
  * EventObject = Vaadin-Komponente
- * Klasse, die das Event zum Auslesen aller Projekte aus der DB verantwortlich ist
+ * Event, das für das Auslesen der Projekte aus der DB benötigt wird
+ * Erforderlich für die MultiSelektListBox, damit dort eine Datenverbindung möglich ist
  * @author David Bistron
  *
  */
@@ -17,6 +17,5 @@ public class ReadAllProjectsEvent extends EventObject {
 	public ReadAllProjectsEvent(ITeamView view) {
 		super(view);
 	}
-
 }
 

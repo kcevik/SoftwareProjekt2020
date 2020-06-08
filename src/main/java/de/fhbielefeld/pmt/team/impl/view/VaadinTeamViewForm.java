@@ -48,11 +48,11 @@ public class VaadinTeamViewForm extends FormLayout {
 	 */
 	public void configureTeamFormTextFields() {
 		this.lblCreateEdit.setEnabled(false);
-		this.tfTeamID.setEnabled(false);
-		this.tfTeamName.setEnabled(false);
-		this.mscbTeamProject.setEnabled(false);
-		this.mscbTeamEmployee.setEnabled(false);
-		this.cbIsActive.setEnabled(false);
+		this.tfTeamID.setReadOnly(true);
+		this.tfTeamName.setReadOnly(true);
+		this.mscbTeamProject.setReadOnly(true);
+		this.mscbTeamEmployee.setReadOnly(true);
+		this.cbIsActive.setReadOnly(true);
 		
 	}
 	/**
@@ -63,8 +63,8 @@ public class VaadinTeamViewForm extends FormLayout {
 	public Component configureTeamFormButtons() {
 		btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 		btnSave.setVisible(false);
-		btnEdit.addThemeVariants(ButtonVariant.LUMO_ERROR);
-		btnClose.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		btnEdit.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		btnClose.addThemeVariants(ButtonVariant.LUMO_ERROR);
 		btnSave.addClickShortcut(Key.ENTER);
 		btnClose.addClickShortcut(Key.ESCAPE);
 		return new HorizontalLayout(btnSave, btnEdit, btnClose);
@@ -75,24 +75,24 @@ public class VaadinTeamViewForm extends FormLayout {
 	 * TODO: Methode, die die Bearbeitungsmöglichkeit der Felder in der TeamForm steuert
 	 */
 	public void prepareTeamFormFields() {
-		this.tfTeamID.setEnabled(false);
-		this.tfTeamName.setEnabled(true);
-		this.mscbTeamEmployee.setEnabled(true);
-		this.mscbTeamProject.setEnabled(true);
-		this.cbIsActive.setEnabled(true);
+		this.tfTeamID.setReadOnly(true);
+		this.tfTeamName.setReadOnly(false);
+		this.mscbTeamEmployee.setReadOnly(false);
+		this.mscbTeamProject.setReadOnly(false);
+		this.cbIsActive.setReadOnly(false);
 		this.btnSave.setVisible(true);
-		this.btnEdit.setVisible(false);
+		this.btnEdit.setVisible(false); 
 	}
 	
 	/**
 	 * Methode, die die TeamForm ausblended
 	 */
 	public void closeTeamFormFields() {
-		this.tfTeamID.setEnabled(false);
-		this.tfTeamName.setEnabled(false);
-		this.mscbTeamEmployee.setEnabled(false);
-		this.mscbTeamProject.setEnabled(false);
-		this.cbIsActive.setEnabled(false);
+		this.tfTeamID.setReadOnly(true);
+		this.tfTeamName.setReadOnly(true);
+		this.mscbTeamEmployee.setReadOnly(true);
+		this.mscbTeamProject.setReadOnly(true);
+		this.cbIsActive.setReadOnly(true);
 		this.btnSave.setVisible(false);
 		this.btnEdit.setVisible(true);
 	}

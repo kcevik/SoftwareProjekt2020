@@ -9,7 +9,7 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 
 /**
  * Interface, das den IViewAccessor erweitert, damit Views in einem gegebenen Typen ausgegeben werden können
- * @author David Bistron
+ * @author David Bistron 
  *
  */
 public interface ITeamView extends IViewAccessor {

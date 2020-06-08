@@ -15,7 +15,12 @@ import de.fhbielefeld.pmt.projectActivity.IProjectActivityModel;
 public class ProjectActivityModel implements IProjectActivityModel {
 
 	private DatabaseService dbService;
+	public Project project;
 	
+	/**
+	 * Konstruktor
+	 * @param dbService = Datenbank-Klasse an die DB-Aufrufe delegiert werden können
+	 */
 	public ProjectActivityModel(DatabaseService dbService) {
 		if (dbService == null) {
 			throw new NullPointerException("Undefinierter DBService!");
@@ -23,11 +28,18 @@ public class ProjectActivityModel implements IProjectActivityModel {
 		this.dbService = dbService;
 	}
 	
+	/**
+	 * Ließt über DB-Service alle Projekte aus
+	 */
 	@Override
 	public List<Project> getProjectListFromDatabase() {
 		return dbService.readproject();
 	}
 
+	/**
+	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
+	 * Hier bezogen auf das Projekt!
+	 */
 	@Override
 	public boolean isReadProjectSuccessfull() {
 		if(this.getProjectListFromDatabase()!=null) {
@@ -37,11 +49,18 @@ public class ProjectActivityModel implements IProjectActivityModel {
 		}
 	}
 
+	/**
+	 * Ließt über DB-Service alle Projektaktivitäten aus
+	 */
 	@Override
 	public List<ProjectActivity> getProjectActivitiesListFromDatabase() {
 		return dbService.readProjectActivity();
 	}
 
+	/**
+	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
+	 * Hier bezogen auf das Projekt!
+	 */
 	@Override
 	public boolean isReadProjectActivitySuccessfull() {
 		if(this.getProjectActivitiesListFromDatabase()!=null) {
@@ -51,10 +70,30 @@ public class ProjectActivityModel implements IProjectActivityModel {
 		}
 	}	
 
+	/**
+	 * Persistiert ein Projektaktivitäts-Objekt über den DB-Service in die DB.
+	 */
 	@Override
 	public void persistProjectActivity(ProjectActivity projectActivity) {
 		this.dbService.persistProjectActivity(projectActivity);
-		
+	}
+
+	// TODO: Das ist nicht so ganz richtig
+	
+	/**
+	 * Methode, die das aktuelle Projekt zu dem die Projektaktivität gespeichert werden soll holt
+	 */
+	@Override
+	public Project getProject() {
+		return this.project;
+	}
+	
+	/**
+	 * Methode, die das aktuelle Projekt zu dem die Projektaktivität gespeichert werden soll festlegt
+	 */
+	@Override
+	public void setProject(Project project) {
+		this.project = project;
 	}
 	
 }

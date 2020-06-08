@@ -2,9 +2,7 @@ package de.fhbielefeld.pmt.navigatorBox.impl.view;
 
 import com.google.common.eventbus.EventBus;
 
-import de.fhbielefeld.pmt.ModuleChooserRootView;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
-import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.navigatorBox.INavigatorBoxView;
 import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenActivitiesEvent;
 import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenAnalyticsEvent;
@@ -21,6 +19,11 @@ public class VaadinNavigatorBoxLogic implements INavigatorBoxView {
 	private final VaadinNavigatorBoxView view;
 	private final EventBus eventBus;
 
+	/**
+	 * Konstruktor
+	 * @param view
+	 * @param eventBus
+	 */
 	public VaadinNavigatorBoxLogic(VaadinNavigatorBoxView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View");

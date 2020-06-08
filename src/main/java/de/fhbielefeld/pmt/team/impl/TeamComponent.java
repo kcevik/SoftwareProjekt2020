@@ -15,20 +15,28 @@ import de.fhbielefeld.pmt.team.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.team.impl.event.SendTeamToDBEvent;
 
 /**
- * Klasse, die den gesamten Bus-Transfer steuert (Kernstück!)
+ * Klasse, die den gesamten Event-Transfer steuert (Kernstück!)
+ * Sämtliche Events werden hier erfasst und durch die @Subscribe Annotation erkannt!
  * @author David Bistron
  *
  */
 public class TeamComponent extends AbstractPresenter<ITeamModel, ITeamView> implements ITeamComponent{
 
+	/**
+	 * Konstruktor
+	 * @param model
+	 * @param view
+	 * @param eventBus
+	 */
 	public TeamComponent(ITeamModel model, ITeamView view, EventBus eventBus) {
 		super(model, view, eventBus);
 		this.eventBus.register(this);
 	}
 
-
 	/**
 	 * Methode, die alle Teams aus der DB ausliest
+	 * nimmt das Event ReadAllTeams entgegen, das in der Klasse VaadinTeamViewLogic in der Methode 
+	 * initReadFromDB() ausgelöst wird
 	 * @param event
 	 */
 	@Subscribe
@@ -42,6 +50,12 @@ public class TeamComponent extends AbstractPresenter<ITeamModel, ITeamView> impl
 		}
 	} 
 	
+	/**
+	 * Methode, die alle Projekte aus der DB ausliest
+	 * nimmt das Event ReadAllProjects entgegen, das in der Klasse VaadinTeamViewLogic in der Methode 
+	 * initReadFromDB() ausgelöst wird
+	 * @param event
+	 */
 	@Subscribe
 	public void onReadAllProjectsEvent(ReadAllProjectsEvent event) {
 		if (event.getSource() == this.view) {
@@ -51,6 +65,12 @@ public class TeamComponent extends AbstractPresenter<ITeamModel, ITeamView> impl
 		}
 	}
 	
+	/**
+	 * Methode, die alle Mitarbeiter aus der DB ausliest
+	 * nimmt das Event ReadAllEmployees entgegen, das in der Klasse VaadinTeamViewLogic in der Methode 
+	 * initReadFromDB() ausgelöst wird
+	 * @param event
+	 */
 	@Subscribe
 	public void onReadAllEmployeesEvent(ReadAllEmployeesEvent event) {
 		if (event.getSource() == this.view) {
@@ -60,6 +80,11 @@ public class TeamComponent extends AbstractPresenter<ITeamModel, ITeamView> impl
 		}
 	}
 	
+	/**
+	 * Methode, die das aktuelle Team an die DB sendet
+	 * das Event wird in der Klasse VaadinTeamViewLogic in der Methode saveTeam() ausgelöst
+	 * @param event
+	 */
 	@Subscribe
 	public void onSendTeamToDBEvent(SendTeamToDBEvent event) {
 		this.model.persistTeam(event.getSelectedTeam());

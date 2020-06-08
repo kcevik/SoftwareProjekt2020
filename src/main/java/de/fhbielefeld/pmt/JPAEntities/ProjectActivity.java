@@ -78,10 +78,12 @@ public class ProjectActivity implements Serializable {
 		this.hourlyRate = hourlyRate;
 		this.project = project;
 		this.isActive = true;
-		//this.enumCat = new ArrayList<ActivityCategories>();
 	}
 
-	// Set-Methode nicht vorhanden, soll nicht veraendert werden
+	/**
+	 * Set-Methode nicht vorhanden, da die ID nicht geändert werden soll
+	 * @return
+	 */
 	public long getProjectActivityID() {
 		return projectActivityID;
 	}

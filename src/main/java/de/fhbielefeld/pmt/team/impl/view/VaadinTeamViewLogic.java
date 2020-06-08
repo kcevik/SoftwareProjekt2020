@@ -107,7 +107,6 @@ public class VaadinTeamViewLogic implements ITeamView{
 		
 	}
 	 
-	// TODO: Cast Exception
 	private void filterList(String filter) {
 		List<Team> filtered = new ArrayList<>();
 		for (Team t : this.teams) {

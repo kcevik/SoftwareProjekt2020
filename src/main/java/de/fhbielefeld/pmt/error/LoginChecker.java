@@ -2,6 +2,11 @@ package de.fhbielefeld.pmt.error;
 
 import com.vaadin.flow.server.VaadinSession;
 
+/**
+ * 
+ * @author Sebastian Siegmann
+ *
+ */
 public class LoginChecker {
 
 	public static boolean checkIsLoggedIn(VaadinSession session, Object userID, Object userFirstName,

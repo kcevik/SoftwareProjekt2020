@@ -5,8 +5,8 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 
 /**
  * Die Interfacedefinition für die View der Clientkomponente.
- * 
- * @author David Bistron, Sebastian Siegmann
+ * @author David Bistron
+ * @author Sebastian Siegmann
  * @version 1.0
  */
 public interface IPersonalDetailsView extends IViewAccessor {

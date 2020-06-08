@@ -1,12 +1,12 @@
 package de.fhbielefeld.pmt.team.impl.event;
 
 import java.util.EventObject;
-
 import de.fhbielefeld.pmt.team.ITeamView;
 
 /**
  * EventObject = Vaadin-Komponente
- * Klasse, die für die MultiSelektListBox benötigt wird
+ * Event, das für das Auslesen der Mitarbeiter aus der DB benötigt wird
+ * Erforderlich für die MultiSelektListBox, damit dort eine Datenverbindung möglich ist
  * @author David Bistron
  *
  */
@@ -17,5 +17,4 @@ public class ReadAllEmployeesEvent extends EventObject {
 	public ReadAllEmployeesEvent(ITeamView view) {
 		super(view);
 	}
-
 }

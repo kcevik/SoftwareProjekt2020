@@ -5,10 +5,9 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.personalDetails.IPersonalDetailsModel;
 
 /**
- * Model Klasse regelt DB Zugriffe und gibt Daten von der DB an Controller
- * Klassen weiter
- * 
- * @author David Bistron, Sebastian Siegmann
+ * Model Klasse regelt DB Zugriffe und gibt Daten von der DB an Controller Klassen weiter
+ * @author David Bistron
+ * @author Sebastian Siegmann
  * @version 1.0
  */
 public class PersonalDetailsModel implements IPersonalDetailsModel {
