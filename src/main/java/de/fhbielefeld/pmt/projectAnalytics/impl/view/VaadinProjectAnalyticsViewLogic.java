@@ -45,10 +45,11 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		this.eventBus.register(this);
 		registerViewListener();
 	}
-	
+
 	void registerViewListener() {
-		
-		this.view.getBtnBackToProjectmanagement().addClickListener(event -> this.view.getUI().ifPresent(ui -> ui.navigate("projectmanagement")));
+
+		this.view.getBtnBackToProjectmanagement()
+				.addClickListener(event -> this.view.getUI().ifPresent(ui -> ui.navigate("projectmanagement")));
 	}
 
 	public void createCharts() {
@@ -119,29 +120,37 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		dataset.setValue("bisher aufgewendete Stunden", calcExtendedHours());
 		return dataset;
 	}
-	
+
 	public int calcFullfillment() {
-		
+
 		int spentTime = calcExtendedHours();
-	    int timeAvailable = calcAvailableHours();
-	    
-	    double cost = calcIncurredCosts();
-	    double budget = project.getBudget();
-	    
-	    int fullfillmentTime =  (int) (budget/100 * cost);
-	    int fullfillmentCost = (timeAvailable/100) * spentTime;
-	    
-	    return fullfillmentTime + fullfillmentCost;
-	    
-		
+		int timeAvailable = calcAvailableHours();
+
+		double cost = calcIncurredCosts();
+		double budget = project.getBudget();
+
+		int fullfillmentTime = (int) (budget / 100 * cost);
+		int fullfillmentCost = (timeAvailable / 100) * spentTime;
+
+		return fullfillmentTime + fullfillmentCost;
+
 	}
-	
+
 	int calcAvailableHours() {
 		int tmp = 0;
+	//	System.out.println("PROJEKT: " + this.project);
+		//System.out.println("AKTIVTIÄTEN: " + activities.get(0).getProject());
 		if (activities != null) {
 			for (ProjectActivity pa : activities) {
-				if (pa.getProject().getProjectID() == this.project.getProjectID())
-					tmp += pa.getHoursAvailable();
+				if (pa != null && pa.getProject() != null) {
+					
+					/*System.out.println("TEST1 " +pa.getProjectActivityID() +"  " +pa.getDescription());
+					System.out.println("TEST2 " +pa.getProject());
+					System.out.println("TEST3 " +pa.getProject().getProjectID());*/
+					
+					if (pa.getProject().getProjectID() == this.project.getProjectID())
+						tmp += pa.getHoursAvailable();
+				}
 			}
 		} else {
 			tmp = 0;
@@ -154,13 +163,15 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		int tmp = 0;
 		if (activities != null) {
 			for (ProjectActivity pa : activities) {
-				if (pa.getProject().getProjectID() == this.project.getProjectID())
-					tmp += pa.getHoursExpended();
+				if (pa != null && pa.getProject() != null) {
+					if (pa.getProject().getProjectID() == this.project.getProjectID())
+						tmp += pa.getHoursExpended();
+				}
 			}
 		} else {
 			tmp = 0;
 		}
-		
+
 		return tmp;
 	}
 
@@ -168,8 +179,10 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		double tmp = 0;
 
 		for (Costs c : costs) {
-			if (c.getProject().getProjectID() == this.project.getProjectID())
-				tmp += c.getIncurredCosts();
+			if (c != null && c.getProject() != null) {
+				if (c.getProject().getProjectID() == this.project.getProjectID())
+					tmp += c.getIncurredCosts();
+			}
 		}
 
 		return tmp;

@@ -23,7 +23,7 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
  */
 
 public class DatabaseService {
-
+	
 	private EntityManager em;
 	private EntityManagerFactory emf;
 	private static DatabaseService databaseService;
@@ -43,8 +43,9 @@ public class DatabaseService {
 	 * @return DatabaseService Instanz
 	 */
 	public static DatabaseService DatabaseServiceGetInstance() {
-
+		
 		if (databaseService == null) {
+			
 			databaseService = new DatabaseService();
 		}
 		//TODO: ToFix: Braucht new DatabaseService falls SQL Aktualisierungen durchkommen sollen!
