@@ -170,15 +170,6 @@ public class PDFGenerating {
 		document.add(new Chunk());
 	}
 
-//	 /$$$$$$                               /$$                            /$$$$$$  /$$             /$$       /$$                    
-//	 |_  $$_/                              |__/                           /$$__  $$| $$            | $$      |__/                    
-//	   | $$   /$$$$$$$  /$$    /$$ /$$$$$$  /$$  /$$$$$$$  /$$$$$$       | $$  \ $$| $$$$$$$       | $$$$$$$  /$$  /$$$$$$   /$$$$$$ 
-//	   | $$  | $$__  $$|  $$  /$$//$$__  $$| $$ /$$_____/ /$$__  $$      | $$$$$$$$| $$__  $$      | $$__  $$| $$ /$$__  $$ /$$__  $$
-//	   | $$  | $$  \ $$ \  $$/$$/| $$  \ $$| $$| $$      | $$$$$$$$      | $$__  $$| $$  \ $$      | $$  \ $$| $$| $$$$$$$$| $$  \__/
-//	   | $$  | $$  | $$  \  $$$/ | $$  | $$| $$| $$      | $$_____/      | $$  | $$| $$  | $$      | $$  | $$| $$| $$_____/| $$      
-//	  /$$$$$$| $$  | $$   \  $/  |  $$$$$$/| $$|  $$$$$$$|  $$$$$$$      | $$  | $$| $$$$$$$/      | $$  | $$| $$|  $$$$$$$| $$      
-//	 |______/|__/  |__/    \_/    \______/ |__/ \_______/ \_______/      |__/  |__/|_______/       |__/  |__/|__/ \_______/|__/      
-//	                                                                                                                                 
 
 	/**
 	 * Generiert das PDF Dokument für eine Rechnung mit Hilfe eines Projekts und
@@ -274,7 +265,6 @@ public class PDFGenerating {
 			throws DocumentException {
 		document.add(new Paragraph(project.getClient().getName()));
 		document.add(new Paragraph(project.getClient().getStreet() + " " + project.getClient().getHouseNumber()));
-		document.add(new Paragraph(project.getClient().getZipCode()));
 		document.add(new Paragraph(project.getClient().getTown()));
 		document.add(Chunk.NEWLINE);
 	}

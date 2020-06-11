@@ -12,6 +12,7 @@ import com.vaadin.flow.server.VaadinSession;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
+ * VaadinView Klasse die den Inhalt der TopBar darstellt
  * 
  * @author Sebastian Siegmann
  * @version 1.1
@@ -35,8 +36,6 @@ public class VaadinTopBarView extends HorizontalLayout {
 	 * Baut das Layout auf und fügt Komponenten hinzu
 	 */
 	private void buildUI() {
-		// Falls Elemente identifiziert werden müssen, einfacher mit border
-		// this.setClassName("testingborder");
 		this.setClassName("topBar");
 		this.setAlignItems(Alignment.CENTER);
 		this.setWidthFull();

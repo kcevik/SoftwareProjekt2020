@@ -68,10 +68,10 @@ public class VaadinClientViewLogic implements IClientView {
 		this.view.getCLIENTFORM().getBtnSave().addClickListener(event -> this.saveClient());
 		this.view.getCLIENTFORM().getBtnEdit().addClickListener(event -> {
 			this.view.getCLIENTFORM().prepareEdit();
-			if(!this.selectedClient.isActive()) {
+			if (!this.selectedClient.isActive()) {
 				this.view.getCLIENTFORM().getMscbProjects().setEnabled(false);
 			}
-			
+
 		});
 		this.view.getCLIENTFORM().getBtnClose().addClickListener(event -> cancelForm());
 		this.view.getFilterText().addValueChangeListener(event -> filterList(this.view.getFilterText().getValue()));
@@ -94,7 +94,6 @@ public class VaadinClientViewLogic implements IClientView {
 		this.binder.bind(this.view.getCLIENTFORM().getTfStreet(), "street");
 		this.binder.forField(this.view.getCLIENTFORM().getTfHouseNumber())
 				.withValidator(new RegexpValidator("Hausnummer korrekt angeben bitte", "([0-9]+)([^0-9]*)"))
-				.withConverter(new plainStringToIntegerConverter(""))
 				.bind(Client::getHouseNumber, Client::setHouseNumber);
 		this.binder.forField(this.view.getCLIENTFORM().getTfZipCode()).withValidator(new RegexpValidator(
 				"Bitte eine PLZ mit 4 oder 5 Zahlen eingeben",
@@ -138,36 +137,35 @@ public class VaadinClientViewLogic implements IClientView {
 	 */
 	private void saveClient() {
 		if (this.binder.validate().isOk()) {
-			//Validierung für das Ändern von Projekten -> Wird wahrscheinlich nicht mehr benötigt, aus Zeitgründen nicht mehr implementiert
+			// Validierung für das Ändern von Projekten -> Wird wahrscheinlich nicht mehr
+			// benötigt, aus Zeitgründen nicht mehr implementiert
 			try {
-				Client old = this.selectedClient;
+				//Client old = this.selectedClient;
 				this.binder.writeBean(this.selectedClient);
-				if (this.selectedClient.getProjectList().isEmpty() && old != null && !old.getProjectList().isEmpty()) {
-					Notification.show("Projekt benötigt Kunden", 5000, Notification.Position.TOP_CENTER)
-							.addThemeVariants(NotificationVariant.LUMO_ERROR);
-					return;
-				} else if (this.selectedClient.isActive() == false && !this.selectedClient.getProjectList().isEmpty()) {
-					Notification.show("Inaktive Kunden können keine Projekte beinhalten", 5000,
-							Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
-					return;
-				} else {
-
-					for (Client c : this.clients) {
-						for (Project p : this.selectedClient.getProjectList()) {
-							if (c.getProjectList().contains(p) && c != this.selectedClient) {
-								c.removeProject(p);
-							}
-						}
-					}
+//				if (this.selectedClient.getProjectList().isEmpty() && old != null && !old.getProjectList().isEmpty()) {
+//					Notification.show("Projekt benötigt Kunden", 5000, Notification.Position.TOP_CENTER)
+//							.addThemeVariants(NotificationVariant.LUMO_ERROR);
+//					return;
+//				} else if (this.selectedClient.isActive() == false && !this.selectedClient.getProjectList().isEmpty()) {
+//					Notification.show("Inaktive Kunden können keine Projekte beinhalten", 5000,
+//							Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+//					return;
+//				} else {
+//					for (Client c : this.clients) {
+//						for (Project p : this.selectedClient.getProjectList()) {
+//							if (c.getProjectList().contains(p) && c != this.selectedClient) {
+//								c.removeProject(p);
+//							}
+//						}
+//					}
 					this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
 					this.view.getCLIENTFORM().setVisible(false);
 					this.addClient(selectedClient);
 					this.updateGrid();
-				}
+//				}
 			} catch (NumberFormatException | ValidationException | ConstraintViolationException e) {
-				Notification
-						.show("ValidationException bzw ConstraintViolationException", 5000, Notification.Position.TOP_CENTER)
-						.addThemeVariants(NotificationVariant.LUMO_ERROR);
+				Notification.show("Ungültige Eingabe, Kunde nicht gespeichert", 5000,
+						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
 				resetSelectedClient();
 			}

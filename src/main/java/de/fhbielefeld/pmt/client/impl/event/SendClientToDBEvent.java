@@ -4,6 +4,7 @@ import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.client.IClientView;
 
 /**
+ * Event, dass den enthaltenen Client an die Datenbank übermittelt
  * 
  * @author Sebastian Siegmann
  *

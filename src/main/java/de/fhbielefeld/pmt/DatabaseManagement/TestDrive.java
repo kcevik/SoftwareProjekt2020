@@ -56,10 +56,10 @@ public class TestDrive {
 		 * public Client(String name, String street, int housenumber, String town, int,
 		 * zipCode, int telephoneNumber)
 		 */
-		Client clientProdukt = new Client("Produktdesing GmbH", "Stroksweg", 23, "Herzebrock", 18668, "051244981");
-		Client clientMesse = new Client("Messestand AG", "Torfweg", 23, "Rietberg", 61886, "015713654");
-		Client clientKFZ = new Client("KFZ Heinrichs", "Oekamp", 77, "Haselbach", 71656, "011457897");
-		Client clientEis = new Client("Eishersteller GmbH und Co. KG", "Leineweberweg", 223, "Spenge", 66321,
+		Client clientProdukt = new Client("Produktdesing GmbH", "Stroksweg", "23", "Herzebrock", 18668, "051244981");
+		Client clientMesse = new Client("Messestand AG", "Torfweg", "23", "Rietberg", 61886, "015713654");
+		Client clientKFZ = new Client("KFZ Heinrichs", "Oekamp", "77", "Haselbach", 71656, "011457897");
+		Client clientEis = new Client("Eishersteller GmbH und Co. KG", "Leineweberweg", "223", "Spenge", 66321,
 				"0154778168");
 
 		/**

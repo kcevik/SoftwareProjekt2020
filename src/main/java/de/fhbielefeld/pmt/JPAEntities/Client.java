@@ -23,7 +23,7 @@ public class Client implements Serializable {
 	private String name;
 	private String telephoneNumber;
 	private String street;
-	private int houseNumber;
+	private String houseNumber;
 	private int zipCode;
 	private String town;
 	private boolean isActive;
@@ -46,7 +46,7 @@ public class Client implements Serializable {
 	 * @param zipCode
 	 * @param telephoneNumber
 	 */
-	public Client(String name, String street, int housenumber, String town, int zipCode, String telephoneNumber) {
+	public Client(String name, String street, String housenumber, String town, int zipCode, String telephoneNumber) {
 		super();
 		this.name = name;
 		this.street = street;
@@ -104,11 +104,11 @@ public class Client implements Serializable {
 		this.street = street;
 	}
 
-	public int getHouseNumber() {
+	public String getHouseNumber() {
 		return houseNumber;
 	}
 
-	public void setHouseNumber(int housenumber) {
+	public void setHouseNumber(String housenumber) {
 		this.houseNumber = housenumber;
 	}
 

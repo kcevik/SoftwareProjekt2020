@@ -5,6 +5,7 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.topBar.ITopBarView;
 
 /**
+ * Event, dass beim Klicken des Logout Buttons versendet wird
  * 
  * @author Sebastian Siegmann
  * @version 1.0

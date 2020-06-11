@@ -198,5 +198,4 @@ public class VaadinClientViewForm extends FormLayout {
 	public Label getLblBeschreibung() {
 		return lblBeschreibung;
 	}
-
 }

@@ -6,6 +6,7 @@ import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.client.IClientView;
 
 /**
+ * Event, dass die Abfrage Liste der Clients enthält
  * 
  * @author Sebastian Siegmann
  *

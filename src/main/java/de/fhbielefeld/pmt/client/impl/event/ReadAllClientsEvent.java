@@ -4,6 +4,7 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.client.IClientView;
 
 /**
+ * Event, dass die Abfrage alle Clients aus der Datenbank anstößt
  * 
  * @author Sebastian Siegmann
  *

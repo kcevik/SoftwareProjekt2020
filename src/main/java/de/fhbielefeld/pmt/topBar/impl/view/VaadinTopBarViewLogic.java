@@ -7,6 +7,8 @@ import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.topBar.ITopBarView;
 
 /**
+ * Vaadin Logik Klasse. Steuert den zugehörigen VaadinView und alle
+ * Unterkomponenten. In diesem Fall Steuerung der TopBar
  * 
  * @author Sebastian Siegmann
  * @version 1.1

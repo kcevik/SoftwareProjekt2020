@@ -4,16 +4,19 @@
    https://vaadin.com/themes/lumo for more information.
 */
 
-
-
 .analyticsDiv{
 	margin-top: 4%;
 }
 
+/* Example: CSS class name to center align the content . */
+.centered-content {
+	margin: 0 auto;
+	max-width: 250px;
+}
 
 /*
 /*@author Sebastian Siegmann, David Bistron
-/*Style f�r die Navigator-Box definiert, damit diese Korrekt dargestellt wird
+/*Style fuer die Navigator-Box definiert, damit diese Korrekt dargestellt wird
 */
 
 .navigatorBox{
@@ -27,11 +30,6 @@
 	
 }
 
-/* Example: CSS class name to center align the content . */
-.centered-content {
-	margin: 0 auto;
-	max-width: 250px;
-}
 
 /*@author Sebastian Siegmann*/
 /* List view */
@@ -113,8 +111,3 @@ html {
   .list-view {
   	padding-top: 75px;
 }
-
-
-
-
-

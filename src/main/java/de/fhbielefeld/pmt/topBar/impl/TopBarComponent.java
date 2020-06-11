@@ -8,6 +8,7 @@ import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.ITopBarView;
 
 /**
+ * Hauptsteuerungsklasse für die TopBar.
  * 
  * @author Sebastian Siegmann
  * @version 1.1
