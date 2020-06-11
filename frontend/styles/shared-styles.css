@@ -52,8 +52,7 @@
 */
 
 .navigatorBox{
-	border: white 1px dashed;
-	background-color: #F8F8FF;
+	
 	z-index: 1;  
 	align-self: flex-end;
 	position: absolute;
