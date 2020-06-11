@@ -123,137 +123,136 @@ public class TestDrive {
 
 		// public Costs(String costType, String description, double incurredCosts,
 		// Project project)
-		Costs costEis = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 130.00, projectEiswebsite);
-		Costs costEis1 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 18.00, projectEiswebsite);
-		Costs costEis2 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 70.00, projectEiswebsite);
-		Costs costEis3 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 158.00, projectEiswebsite);
-		Costs costEis4 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 130.00, projectEiswebsite);
-		Costs costEis5 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 18.00, projectEiswebsite);
-		Costs costEis6 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 70.00, projectEiswebsite);
-		Costs costEis7 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 158.00, projectEiswebsite);
+		Costs costEis = new Costs("Lohnkosten",
+				"Lohn April", 130.00, projectEiswebsite);
+		Costs costEis1 = new Costs("Materialkosten",
+				"Stehtische", 18.00, projectEiswebsite);
+		Costs costEis2 = new Costs("Kosten externe Dienstleister",
+				"Reinigung", 70.00, projectEiswebsite);
+		Costs costEis3 = new Costs("Materialkosten",
+				"CPU", 158.00, projectEiswebsite);
+		Costs costEis4 = new Costs("Kosten externe Dienstleister",
+				"Designer für Logos", 130.00, projectEiswebsite);
+		Costs costEis5 = new Costs("Materialkosten",
+				"Tastatur", 18.00, projectEiswebsite);
+		Costs costEis6 = new Costs("Kosten externe Dienstleister",
+				"Entwicklung Farbschema der Anwendung", 70.00, projectEiswebsite);
+		Costs costEis7 = new Costs("Materialkosten",
+				"Monitor", 158.00, projectEiswebsite);
 
-		Costs costKFZ = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 122.00, projectKFZRestwert);
-		Costs costKFZ2 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 1858.00, projectKFZWebsite);
-		Costs costKFZ3 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 155.55, projectKFZSchadenswert);
-		Costs costKFZ4 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 157.99, projectKFZWebsite);
-		Costs costKFZ5 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 122.00, projectKFZRestwert);
-		Costs costKFZ6 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 1858.00, projectKFZWebsite);
-		Costs costKFZ7 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 155.55, projectKFZSchadenswert);
-		Costs costKFZ8 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 157.99, projectKFZWebsite);
+		Costs costKFZ = new Costs("Lohnkosten",
+				"Lohnzahlung an Mitarbeiter", 122.00, projectKFZRestwert);
+		Costs costKFZ2 = new Costs("Lohnkosten",
+				"Lohnzahlung an Mitarbeiter", 1858.00, projectKFZWebsite);
+		Costs costKFZ3 = new Costs("Kosten externe Dienstleister",
+				"Reinigung der Gebäudefassade", 155.55, projectKFZSchadenswert);
+		Costs costKFZ4 = new Costs("Kosten externe Dienstleister",
+				"Datensicherung", 157.99, projectKFZWebsite);
+		Costs costKFZ5 = new Costs("Materialkosten",
+				"Grafikkarte", 122.00, projectKFZRestwert);
+		Costs costKFZ6 = new Costs("Lohnkosten",
+				"Lohnzahlung an Mitarbeiter Mai", 1858.00, projectKFZWebsite);
+		Costs costKFZ7 = new Costs("Materialkosten",
+				"Monitor", 155.55, projectKFZSchadenswert);
+		Costs costKFZ8 = new Costs("Lohnkosten",
+				"Lohnzahlung an alle", 157.99, projectKFZWebsite);
 
-		Costs costProd = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 122.00, projectProdukt);
-		Costs costProd2 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 1858.00, projectProdukt);
-		Costs costProd3 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 155.55, projectProdukt);
-		Costs costProd4 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 157.99, projectProdukt);
-		Costs costProd5 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 122.00, projectProdukt);
-		Costs costProd6 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 1858.00, projectProdukt);
-		Costs costProd7 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 155.55, projectProdukt);
-		Costs costProd8 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 157.99, projectProdukt);
+		Costs costProd = new Costs("Kosten externe Dienstleister",
+				"Webhosting", 122.00, projectProdukt);
+		Costs costProd2 = new Costs("Lohnkosten",
+				"Lohnzahlung an CEO", 1858.00, projectProdukt);
+		Costs costProd3 = new Costs("Materialkosten",
+				"All-In-One PC", 155.55, projectProdukt);
+		Costs costProd4 = new Costs("Materialkosten",
+				"Maus und Tastatur", 157.99, projectProdukt);
+		Costs costProd5 = new Costs("Lohnkosten",
+				"Lohnzahlung an Manager", 122.00, projectProdukt);
+		Costs costProd6 = new Costs("Kosten externe Dienstleister",
+				"Webhosting", 1858.00, projectProdukt);
+		Costs costProd7 = new Costs("Kosten externe Dienstleister",
+				"Webhosting", 155.55, projectProdukt);
+		Costs costProd8 = new Costs("Kosten externe Dienstleister",
+				"Datenwiederherstellung", 157.99, projectProdukt);
 
-		Costs costMesse = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 990.99, projectMesse);
-		Costs costMesse1 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 990.99, projectMesse);
-		Costs costMesse2 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 990.99, projectMesse);
-		Costs costMesse3 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 990.99, projectMesse);
-		Costs costMesse4 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 990.99, projectMesse);
-		Costs costMesse5 = new Costs("Kostenart fehlt noch keine Ahnung welche es geben wird",
-				"Beschreibung der Kostenart fehlt ebenfalls", 990.99, projectMesse);
-
+		Costs costMesse = new Costs("Kosten externe Dienstleister",
+				"Austausch defekter PC", 990.99, projectMesse);
+		Costs costMesse1 = new Costs("Materialkosten",
+				"Monitor", 990.99, projectMesse);
+		Costs costMesse2 = new Costs("Materialkosten",
+				"CPU", 990.99, projectMesse);
+		Costs costMesse3 = new Costs("Lohnkosten",
+				"Lohnzahlung", 990.99, projectMesse);
+		Costs costMesse4 = new Costs("Lohnkosten",
+				"Lohnzahlung für Azubis", 990.99, projectMesse);
+		Costs costMesse5 = new Costs("Kosten externe Dienstleister",
+				"Webhosting", 990.99, projectMesse);
 		/*
 		 * public ProjectActivity(String category, String description, int
 		 * hoursAvailable, int hoursExpended, boolean isActive, Project project)
 		 */
 		ProjectActivity activityEis = new ProjectActivity(ActivityCategories.Ausbildung_Praktikum,
-				"Beschreibung der Activity fehlt ebenfalls", 130, 00, 40.0, projectEiswebsite);
+				"Eissorte überarbeiten", 130, 00, 40.0, projectEiswebsite);
 		ProjectActivity activityEis1 = new ProjectActivity(ActivityCategories.Fertigung_Produktion,
-				"Beschreibung der Activity fehlt ebenfalls", 18, 00, 150.0, projectEiswebsite);
+				"Farben anpassen", 18, 00, 150.0, projectEiswebsite);
 		ProjectActivity activityEis2 = new ProjectActivity(ActivityCategories.Facility_Management,
-				"Beschreibung der Activity fehlt ebenfalls", 70, 00, 30.0, projectEiswebsite);
+				"Eissorten testen", 70, 00, 30.0, projectEiswebsite);
 		ProjectActivity activityEis3 = new ProjectActivity(ActivityCategories.Ausbildung_Praktikum,
-				"Beschreibung der Activity fehlt ebenfalls", 158, 00, 40.0, projectEiswebsite);
+				"Überarbeitung Desing", 158, 00, 40.0, projectEiswebsite);
 		ProjectActivity activityEis4 = new ProjectActivity(ActivityCategories.Facility_Management,
-				"Beschreibung der Activity fehlt ebenfalls", 130, 00, 50.5, projectEiswebsite);
+				"JavaScript Implementierung", 130, 00, 50.5, projectEiswebsite);
 		ProjectActivity activityEis5 = new ProjectActivity(ActivityCategories.Ausbildung_Praktikum,
-				"Beschreibung der Activity fehlt ebenfalls", 18, 00, 50.5, projectEiswebsite);
+				"Datenbankanbindung erstellen", 18, 00, 50.5, projectEiswebsite);
 		ProjectActivity activityEis6 = new ProjectActivity(ActivityCategories.Marketing,
-				"Beschreibung der Activity fehlt ebenfalls", 70, 00, 56.0, projectEiswebsite);
+				"Layout überarbeiten", 70, 00, 56.0, projectEiswebsite);
 		ProjectActivity activityEis7 = new ProjectActivity(ActivityCategories.Fertigung_Produktion,
-				"Beschreibung der Activity fehlt ebenfalls", 158, 00, 50.0, projectEiswebsite);
+				"Sounddesign entwickeln", 158, 00, 50.0, projectEiswebsite);
 
 		ProjectActivity activityKFZ = new ProjectActivity(ActivityCategories.Forschung_Entwicklung,
-				"Beschreibung der Activity fehlt ebenfalls", 122, 00, 9.0, projectKFZRestwert);
+				"Benötigte Zahlen ermitteln", 122, 00, 9.0, projectKFZRestwert);
 		ProjectActivity activityKFZ2 = new ProjectActivity(ActivityCategories.Fertigung_Produktion,
-				"Beschreibung der Activity fehlt ebenfalls", 1858, 00, 90.0, projectKFZWebsite);
+				"JavaScript Implementierung", 1858, 00, 90.0, projectKFZWebsite);
 		ProjectActivity activityKFZ3 = new ProjectActivity(ActivityCategories.IT,
-				"Beschreibung der Activity fehlt ebenfalls", 155, 55, 50.0, projectKFZSchadenswert);
+				"Formel für Errechnung umsetzten", 155, 55, 50.0, projectKFZSchadenswert);
 		ProjectActivity activityKFZ4 = new ProjectActivity(ActivityCategories.Buchhaltung,
-				"Beschreibung der Activity fehlt ebenfalls", 157, 99, 53.0, projectKFZWebsite);
+				"Kosten verbuchen", 157, 99, 53.0, projectKFZWebsite);
 		ProjectActivity activityKFZ5 = new ProjectActivity(ActivityCategories.Fertigung_Produktion,
-				"Beschreibung der Activity fehlt ebenfalls", 122, 00, 30.0, projectKFZRestwert);
+				"Restwert Berechnung testen", 122, 00, 30.0, projectKFZRestwert);
 		ProjectActivity activityKFZ6 = new ProjectActivity(ActivityCategories.Personal,
-				"Beschreibung der Activity fehlt ebenfalls", 1858, 00, 20.0, projectKFZWebsite);
+				"Mitarbeiterauslastung berechnen", 1858, 00, 20.0, projectKFZWebsite);
 		ProjectActivity activityKFZ7 = new ProjectActivity(ActivityCategories.Marketing,
-				"Beschreibung der Activity fehlt ebenfalls", 155, 55, 54.0, projectKFZSchadenswert);
+				"Benutzeroberfläche evaluieren", 155, 55, 54.0, projectKFZSchadenswert);
 		ProjectActivity activityKFZ8 = new ProjectActivity(ActivityCategories.Fertigung_Produktion,
-				"Beschreibung der Activity fehlt ebenfalls", 157, 99, 90.0, projectKFZWebsite);
+				"Hosting Unternehmen auswählen", 157, 99, 90.0, projectKFZWebsite);
 
 		ProjectActivity activityProd = new ProjectActivity(ActivityCategories.Consulting,
-				"Beschreibung der Activity fehlt ebenfalls", 122, 00, 50.0, projectProdukt);
+				"Produktdesigner Planung", 122, 00, 50.0, projectProdukt);
 		ProjectActivity activityProd2 = new ProjectActivity(ActivityCategories.Forschung_Entwicklung,
-				"Beschreibung der Activity fehlt ebenfalls", 1858, 00, 50.0, projectProdukt);
+				"Preiskalkulation Entwurf", 1858, 00, 50.0, projectProdukt);
 		ProjectActivity activityProd3 = new ProjectActivity(ActivityCategories.IT,
-				"Beschreibung der Activity fehlt ebenfalls", 155, 55, 50.0, projectProdukt);
+				"3D-Ansicht des Produkts entworfen", 155, 55, 50.0, projectProdukt);
 		ProjectActivity activityProd4 = new ProjectActivity(ActivityCategories.Buchhaltung,
-				"Beschreibung der Activity fehlt ebenfalls", 157, 99, 50.0, projectProdukt);
+				"3D-Ansicht Kosten verbuchen", 157, 99, 50.0, projectProdukt);
 		ProjectActivity activityProd5 = new ProjectActivity(ActivityCategories.Ausbildung_Praktikum,
-				"Beschreibung der Activity fehlt ebenfalls", 122, 00, 50.0, projectProdukt);
+				"3d-Ansicht getestet", 122, 00, 50.0, projectProdukt);
 		ProjectActivity activityProd6 = new ProjectActivity(ActivityCategories.Qualitätssicherung,
-				"Beschreibung der Activity fehlt ebenfalls", 1858, 00, 50.0, projectProdukt);
+				"3d-Ansicht dokumentiert", 1858, 00, 50.0, projectProdukt);
 		ProjectActivity activityProd7 = new ProjectActivity(ActivityCategories.Recht,
-				"Beschreibung der Activity fehlt ebenfalls", 155, 55, 50.0, projectProdukt);
+				"Patent angemeldet", 155, 55, 50.0, projectProdukt);
 		ProjectActivity activityProd8 = new ProjectActivity(ActivityCategories.Recht,
-				"Beschreibung der Activity fehlt ebenfalls", 157, 99, 50.0, projectProdukt);
+				"Markenrechte geklärt", 157, 99, 50.0, projectProdukt);
 
 		ProjectActivity activityMesse = new ProjectActivity(ActivityCategories.Facility_Management,
-				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 54.0, projectMesse);
+				"Standhaftigkeit messen", 990, 99, 54.0, projectMesse);
 		ProjectActivity activityMesse1 = new ProjectActivity(ActivityCategories.Forschung_Entwicklung,
-				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 55.0, projectMesse);
+				"Befestigungssystem entwickeln", 990, 99, 55.0, projectMesse);
 		ProjectActivity activityMesse2 = new ProjectActivity(ActivityCategories.Management,
-				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 59.0, projectMesse);
+				"Entwicklung von Meilensteinen", 990, 99, 59.0, projectMesse);
 		ProjectActivity activityMesse3 = new ProjectActivity(ActivityCategories.Marketing,
-				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 10.0, projectMesse);
+				"Farbschema überarbeiten", 990, 99, 10.0, projectMesse);
 		ProjectActivity activityMesse4 = new ProjectActivity(ActivityCategories.Personal,
-				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 20.0, projectMesse);
+				"Mitarbeiterauslastung berechnen", 990, 99, 20.0, projectMesse);
 		ProjectActivity activityMesse5 = new ProjectActivity(ActivityCategories.Consulting,
-				"Beschreibung der Activity fehlt ebenfalls", 990, 99, 50.0, projectMesse);
+				"Größe des Standes ermitteln", 990, 99, 50.0, projectMesse);
 
 		// Erstellung Teams
 		Team teamCeos = new Team("Geschäftsleitung", ceo);

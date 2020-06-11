@@ -1,6 +1,6 @@
-package de.fhbielefeld.pmt.testing;
+package com.example.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
@@ -11,13 +11,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-
 /**
  * 
  * @author Sebastian Siegmann
  *
  */
-public class TestLoggedIn {
+public class TestLoginAsEmployee {
 
 	WebDriver driver;
 
@@ -25,7 +24,7 @@ public class TestLoggedIn {
 	public void buildBrowser() {
 		System.setProperty("webdriver.gecko.driver", "driver\\geckodriver.exe");
 		FirefoxOptions firefoxOptions = new FirefoxOptions();
-		//firefoxOptions.addArguments("--headless");
+		firefoxOptions.addArguments("--headless");
 		driver = new FirefoxDriver(firefoxOptions);
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	}
@@ -38,8 +37,10 @@ public class TestLoggedIn {
 		tfUser.sendKeys("21");
 		tfPassword.sendKeys("password");
 		tfPassword.sendKeys(Keys.RETURN);
-		WebElement lbl = driver.findElement(By.cssSelector("body > vaadin-vertical-layout > vaadin-vertical-layout > vaadin-vertical-layout > label"));
-		assertEquals("Bitte treffen Sie Ihre Auswahl:", lbl.getText());
+		WebElement lbl = driver.findElement(By.cssSelector("label.lblWelcome:nth-child(2)"));
+		assertTrue(lbl.getText().contains("Employee"));
+		assertTrue(!lbl.getText().contains("CEO"));
+		assertTrue(!lbl.getText().contains("Projectmanager"));
 	}
 	
 	@After

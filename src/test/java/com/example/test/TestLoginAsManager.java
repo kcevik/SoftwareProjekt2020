@@ -1,9 +1,7 @@
-package de.fhbielefeld.pmt.testing;
+package com.example.test;
 
-import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertTrue;
 import java.util.concurrent.TimeUnit;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
-public class TestClientInDB {
+public class TestLoginAsManager {
 
 	WebDriver driver;
 
@@ -22,7 +20,7 @@ public class TestClientInDB {
 	public void buildBrowser() {
 		System.setProperty("webdriver.gecko.driver", "driver\\geckodriver.exe");
 		FirefoxOptions firefoxOptions = new FirefoxOptions();
-		//firefoxOptions.addArguments("--headless");
+		firefoxOptions.addArguments("--headless");
 		driver = new FirefoxDriver(firefoxOptions);
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	}
@@ -32,17 +30,17 @@ public class TestClientInDB {
 		driver.get("http://127.0.0.1:8080/");
 		WebElement tfUser = driver.findElement(By.cssSelector("#vaadinLoginUsername > input[type=text]"));
 		WebElement tfPassword = driver.findElement(By.cssSelector("#vaadinLoginPassword > input[type=password]"));
-		tfUser.sendKeys("21");
+		tfUser.sendKeys("8");
 		tfPassword.sendKeys("password");
 		tfPassword.sendKeys(Keys.RETURN);
-		WebElement btn = driver.findElement(By.cssSelector("#button"));
-		System.out.println(btn.getText());
-		//btn.click();
-		
+		WebElement lbl = driver.findElement(By.cssSelector("label.lblWelcome:nth-child(2)"));
+		assertTrue(lbl.getText().contains("Projectmanager"));
+		assertTrue(!lbl.getText().contains("CEO"));
+		assertTrue(!lbl.getText().contains("Employee"));
 	}
 	
 	@After
 	public void killBrowser() {
-		//driver.close();
+		driver.close();
 	}
 }

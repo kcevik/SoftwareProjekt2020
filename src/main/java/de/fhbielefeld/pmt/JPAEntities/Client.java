@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 /**
  * Entity implementation class for Entity: Client
@@ -22,11 +20,9 @@ public class Client implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long clientID;
-	@NotNull
 	private String name;
 	private String telephoneNumber;
 	private String street;
-	@Min(0)
 	private int houseNumber;
 	private int zipCode;
 	private String town;
