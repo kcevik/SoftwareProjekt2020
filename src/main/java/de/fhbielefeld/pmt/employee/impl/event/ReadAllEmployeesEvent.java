@@ -4,8 +4,8 @@ import java.util.EventObject;
 
 import de.fhbielefeld.pmt.employee.IEmployeeView;
 /**
- * 
- * @author Sebastian Siegmann
+ * Event, dass die Abfrage aller Empoyees aus der Datenbank anstößt
+ * @author Fabian Oermann
  *
  */
 public class ReadAllEmployeesEvent extends EventObject {

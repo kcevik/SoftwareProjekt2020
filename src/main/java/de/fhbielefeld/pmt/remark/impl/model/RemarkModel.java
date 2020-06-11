@@ -4,17 +4,27 @@ import java.util.List;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Remark;
-import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.remark.IRemarkModel;
+import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
- * Model Klasse regelt DB Zugriffe und gibt Daten von der DB an Controller Klassen weiter
- * @author Sebastian Siegmann
+ * Model Klasse regelt DB Zugriffe und gibt Daten von der DB an Controller
+ * Klassen weiter
+ * 
+ * @author Fabian Oermann
  */
 public class RemarkModel implements IRemarkModel {
 
+	/**
+	 * Instanzvariablen
+	 */
 	private DatabaseService dbService;
-	
+	private Project project;
+
+	/**
+	 * Constructor
+	 * @param dbService
+	 */
 	public RemarkModel(DatabaseService dbService) {
 		if (dbService == null) {
 			throw new NullPointerException("Undefinierter DBService!");
@@ -23,28 +33,31 @@ public class RemarkModel implements IRemarkModel {
 	}
 
 	/**
-	 * Ließt über DatabaseService alle Remarks aus
+	 * stößt Anfrage um Remarks für ein Projekt zu lesen an die Datenbank an
 	 */
 	@Override
-	public List<Remark> getRemarkListFromDatabase() {
-		return dbService.readRemark();
+	public List<Remark> getRemarkListFromDatabase(Project project) {
+		System.out.println("im model remarks " + project.getProjectID());
+		return dbService.readRemarksOfProject(project);
 	}
-	
+
 	/**
 	 * Schreibt den übergenen Remark in die DB
+	 * 
 	 * @param Remark
 	 */
 	@Override
 	public void persistRemark(Remark remark) {
+		System.out.println("Kommen wir hier hin " + remark.getRemarkText());
 		this.dbService.persistRemark(remark);
 	}
 
 	/**
-	 * Bestätigt ob ausgelesenen Kundendaten null sind oder nicht
+	 * Bestätigt ob ausgelesenen RemarkListe null sind oder nicht
 	 */
 	@Override
 	public boolean isReadSuccessfull() {
-		if(this.getRemarkListFromDatabase()!=null) {
+		if (this.getRemarkListFromDatabase(project) != null) {
 			return true;
 		} else {
 			return false;
@@ -52,28 +65,15 @@ public class RemarkModel implements IRemarkModel {
 	}
 
 	/**
-	 * Ließt alle Projekte aus der Datenbank aus
-	 * @deprecated
-	 * Wird ggf noch benötigt, momentan nicht, aus interface entfernt
+	 * Getter/Setter
 	 */
-	public List<Project> getProjectListFromDatabase() {
-		return dbService.readproject();
+	@Override
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
-	/**
-	 * Bestätigt ob alle Projekte aus der DB ausgelesen wurden oder null 
-	 */
 	@Override
-	public boolean isReadActiveProjectSuccessfull() {
-		if(this.getActiveProjectListFromDatabase()!=null) {
-			return true;
-		} else {
-			return false;
-		}
-	}	
-	
-	@Override
-	public List<Project> getActiveProjectListFromDatabase() {
-		return dbService.readActiveProjects();
+	public Project getProject() {
+		return project;
 	}
 }

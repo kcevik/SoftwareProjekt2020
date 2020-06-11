@@ -8,18 +8,18 @@ import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
-import de.fhbielefeld.pmt.client.impl.event.ReadActiveProjectsEvent;
 import de.fhbielefeld.pmt.employee.IEmployeeComponent;
 import de.fhbielefeld.pmt.employee.IEmployeeModel;
 import de.fhbielefeld.pmt.employee.IEmployeeView;
+import de.fhbielefeld.pmt.employee.impl.event.ReadActiveProjectsEvent;
 import de.fhbielefeld.pmt.employee.impl.event.ReadActiveTeamsEvent;
 import de.fhbielefeld.pmt.employee.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.employee.impl.event.SendEmployeeToDBEvent;
 
 /**
- * Hauptsteuerungsklasse für den RootView des Employees.
+ * Hauptsteuerungsklasse für die RootView des Employees.
  * 
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  */
 public class EmployeeComponent extends AbstractPresenter<IEmployeeModel, IEmployeeView> implements IEmployeeComponent {
 
@@ -42,9 +42,6 @@ public class EmployeeComponent extends AbstractPresenter<IEmployeeModel, IEmploy
 			if (this.model.isReadSuccessfull()) {
 				for (Employee e : this.model.getEmployeeListFromDatabase()) {
 					this.view.addEmployee(e);
-//				TransportAllEmployeesEvent containsData = new TransportAllEmployeesEvent(this.view);
-//				containsData.setEmployeeList(this.model.getEmployeeListFromDatabase());
-//				this.eventBus.post(containsData);	
 				}
 			}
 		}
@@ -63,13 +60,14 @@ public class EmployeeComponent extends AbstractPresenter<IEmployeeModel, IEmploy
 			if (this.model.isReadActiveProjectSuccessfull()) {
 				for (Project p : this.model.getActiveProjectListFromDatabase()) {
 					this.view.addProjects(p);
+					System.out.println("Projektnummer: " + p.getProjectID());
 				}
 			}
 		}
 	}
 
 	/**
-	 * Nimmt ReadActiveProjectsEvent entgegen und stößt anschließend über das Model
+	 * Nimmt ReadActiveTeamsEvent entgegen und stößt anschließend über das Model
 	 * die DB Anfrage an. Fügt die vom Model erhalteten Daten einer Liste im
 	 * zugehörigen View hinzu
 	 * 
@@ -86,6 +84,12 @@ public class EmployeeComponent extends AbstractPresenter<IEmployeeModel, IEmploy
 		}
 	}
 
+	/**
+	 * Eventhandler, der das SendEmpoyeeEvent abfängt, 
+	 * und persistiert
+	 * @param event
+	 */
+	
 	@Subscribe
 	public void onSendEmployeeToDBEvent(SendEmployeeToDBEvent event) {
 		this.model.persistEmployee(event.getSelectedEmployee());

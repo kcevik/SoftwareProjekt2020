@@ -8,8 +8,8 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 
 /**
- * Die Interfacedefinition für die View der Clientkomponente.
- * @author Sebastian Siegmann
+ * Die Interfacedefinition für die View der EmployeeComponente.
+ * @author Fabian Oermann
  */
 public interface IEmployeeView extends IViewAccessor {
 

@@ -54,6 +54,8 @@ public class VaadinTeamViewForm extends FormLayout {
 		this.mscbTeamEmployee.setReadOnly(true);
 		this.cbIsActive.setReadOnly(true);
 		
+		// Hinzugefügt zum Test mit Selenium
+		this.btnSave.addClassName("btnSave");
 	}
 	
 	/**

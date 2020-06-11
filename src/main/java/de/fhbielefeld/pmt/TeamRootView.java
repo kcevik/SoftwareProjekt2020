@@ -48,7 +48,10 @@ public class TeamRootView extends VerticalLayout {
 
 		this.eventBus.register(this);
 		
-		if (rootViewLoginCheck()) {			
+		if (rootViewLoginCheck()) {		
+			
+			VaadinSession.getCurrent().setAttribute("PROJECT", null);
+			
 			ITopBarComponent topBarComponent = this.createTopBarComponent();
 			ITeamComponent teamComponent = this.createTeamComponent();
 		

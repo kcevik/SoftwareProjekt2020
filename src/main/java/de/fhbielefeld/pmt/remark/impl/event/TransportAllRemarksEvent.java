@@ -6,19 +6,24 @@ import de.fhbielefeld.pmt.JPAEntities.Remark;
 import de.fhbielefeld.pmt.remark.IRemarkView;
 /**
  * 
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  *
+ *
+ *Event, das alle Remarks in die Datenbank schickt
  */
 public class TransportAllRemarksEvent extends EventObject {
 
 
 	private static final long serialVersionUID = 1L;
 
-	public TransportAllRemarksEvent(IRemarkView view) {
-		super(view);
-	}
+	private List <Remark> remarkList;
 
-	private List<Remark> remarkList;
+	public TransportAllRemarksEvent(IRemarkView view, List <Remark> remarkList ) {
+		super(view);
+		this.remarkList = remarkList;
+		System.out.println("TransportAllRemaksEvent ist gebaut "+ remarkList.toString());
+
+	}
 
 	public List<Remark> getRemarkList() {
 		return remarkList;

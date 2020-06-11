@@ -8,13 +8,10 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
  * Die Interfacedefinition für die View der Remarkkomponente.
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  */
-public interface IRemarkView extends IViewAccessor {
-
-	public void setRemarks(List<Remark> remarks);
-	public void addRemark(Remark c);
+public interface IRemarkView extends IViewAccessor {	
 	
-	public void setProjects(List<Project> projectListFromDatabase);
-	public void addProjects(Project project);
+	void setSelectedProject(Project project);
+
 }

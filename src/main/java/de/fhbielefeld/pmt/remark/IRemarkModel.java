@@ -9,17 +9,17 @@ import de.fhbielefeld.pmt.modelViewComponent.IModel;
 /**
  * Interfacedefinition für das RemarkModel
  * 
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  */
 public interface IRemarkModel extends IModel {
-
-	List<Remark> getRemarkListFromDatabase();
+	
+	List<Remark> getRemarkListFromDatabase(Project project);
 
 	boolean isReadSuccessfull();
 
 	public void persistRemark(Remark remark);
-
-	List<Project> getActiveProjectListFromDatabase();
-
-	boolean isReadActiveProjectSuccessfull();
+	
+	void setProject(Project project);
+	
+	Project getProject();
 }
