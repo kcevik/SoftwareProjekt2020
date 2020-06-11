@@ -26,7 +26,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 
 	private final ComboBox<ActivityCategories> cbActivityCategory = new ComboBox<ActivityCategories>("Tätigkeitskategorie:");		
 		
-	private final TextField tfProjectID = new TextField("Projekt-ID: ");
+	// private final TextField tfProjectID = new TextField("Projekt-ID: ");
 	private final TextField tfprojectActivityID = new TextField("Projektaktivitäts-ID: ");
 	private final TextField tfDescription = new TextField("Tätigkeitsbeschreibung: ");
 	private final TextField tfHoursAvailable = new TextField("max. verfügbare Stunden: ");
@@ -41,7 +41,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 		configureProjectActivityFormTextFields();
 		add(lblCreateEdit);		
 		lblCreateEdit.addClassName("lbl-heading-form");
-		add(tfProjectID, tfprojectActivityID, cbActivityCategory, tfDescription, tfHoursAvailable, tfHourlyRates, cbIsActive, configureProjectActivityFormButtons());
+		add(tfprojectActivityID, cbActivityCategory, tfDescription, tfHoursAvailable, tfHourlyRates, cbIsActive, configureProjectActivityFormButtons());
 	
 	}
 	
@@ -51,7 +51,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	 */
 	public void configureProjectActivityFormTextFields() {
 		this.lblCreateEdit.setEnabled(false);
-		this.tfProjectID.setReadOnly(true);
+		// this.tfProjectID.setReadOnly(true);
 		this.tfprojectActivityID.setReadOnly(true);
 		this.cbActivityCategory.setReadOnly(false);
 		this.tfDescription.setReadOnly(false);
@@ -81,7 +81,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	 */
 	public void prepareProjectActivityFormFields() {
 		this.lblCreateEdit.setEnabled(true);
-		this.tfProjectID.setReadOnly(true);
+		// this.tfProjectID.setReadOnly(true);
 		this.tfprojectActivityID.setReadOnly(true);
 		this.cbActivityCategory.setReadOnly(false);
 		this.tfDescription.setReadOnly(false);
@@ -98,7 +98,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	 */
 	public void closeProjectActivityFormFields() {
 		this.cbActivityCategory.setReadOnly(true);
-		this.tfProjectID.setReadOnly(true);
+		// this.tfProjectID.setReadOnly(true);
 		this.tfprojectActivityID.setReadOnly(true);
 		this.tfDescription.setReadOnly(true);
 		this.tfHoursAvailable.setReadOnly(true);
@@ -114,7 +114,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	 */
 	public void resetProjectActivityForm() {
 		this.setVisible(false);
-		this.tfProjectID.clear();
+		// this.tfProjectID.clear();
 		this.cbActivityCategory.clear();
 		this.tfDescription.clear();
 		this.tfHoursAvailable.clear();
@@ -165,8 +165,10 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 		return tfprojectActivityID;
 	}
 	
+	/*
 	public TextField getTfProjectID() {
 		return tfProjectID;
 	}
+	*/
 	
 }
