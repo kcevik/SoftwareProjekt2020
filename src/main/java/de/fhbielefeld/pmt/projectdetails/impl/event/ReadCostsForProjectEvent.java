@@ -5,14 +5,14 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 
-public class ReadCostsForprojectEvent extends EventObject {
+public class ReadCostsForProjectEvent extends EventObject {
 
 	Project project;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public ReadCostsForprojectEvent(IProjectdetailsView view, Project project) {
+	public ReadCostsForProjectEvent(IProjectdetailsView view, Project project) {
 		super(view);
 		this.project = project;
 	}
