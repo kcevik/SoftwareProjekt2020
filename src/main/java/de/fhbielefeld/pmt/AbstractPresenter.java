@@ -9,6 +9,7 @@ import com.google.common.eventbus.EventBus;
  *            der Datentyp des Models.
  * @param <V>
  *            der Datentyp der View.
+ * @author LucasEickmann
  */
 public abstract class AbstractPresenter<M, V> {
 

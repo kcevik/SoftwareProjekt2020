@@ -25,6 +25,13 @@ import de.fhbielefeld.pmt.login.impl.view.VaadinLoginViewLogic;
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 
+
+/**
+ * Grundaufbau der Vaadin Seite. Startpunkt für das Erstellen einer neuen
+ * Browserseite.
+ * @author LucasEickmann
+ *
+ */
 public class LoginRootView extends VerticalLayout{
 	
 	/**
@@ -38,6 +45,10 @@ public class LoginRootView extends VerticalLayout{
 	private final EventBus eventBus = new EventBus();
 	VaadinSession session = VaadinSession.getCurrent();
 	
+	/**
+	 * Konstruktor.
+	 * 
+	 */
 	public LoginRootView() {
 		
 		this.eventBus.register(this);
@@ -52,11 +63,23 @@ public class LoginRootView extends VerticalLayout{
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 	}
 
+	/**Erstellt die Klasse LoginComponent inklusive aller zur Instantiierung notwendigen Objekte.
+	 * Wird in Konstruktor weiter verarbeitet
+	 * 
+	 * 
+	 * @return loginComponent
+	 */
     private ILoginComponent createLoginComponent() {
 		ILoginComponent loginComponent = new LoginComponent(new LoginModel(DatabaseService.DatabaseServiceGetInstance()), new VaadinLoginViewLogic(new VaadinLoginView(), this.eventBus), this.eventBus);
 		return loginComponent;
 	}
     
+    /**Methode die auf alle eintreffenden Events reagiert die vom Typ LoginSuccessEvent sind.
+     * Bei Ausführung werden diverse SessionAttribute gesetzt. 
+     * Mit diesen Attributen kann der angemeldete Benutzer im Laufe der Sitzung identifiziert werden.
+     * 
+     * @param event Eintreffendes Event.
+     */
     @Subscribe
 	public void onLoginSuccess(LoginSuccessEvent event) {
     	session.setAttribute(LOGIN_USER_ID, event.getUserId());

@@ -23,7 +23,6 @@ import de.fhbielefeld.pmt.project.impl.event.ProjectDetailsModuleChoosenEvent;
 import de.fhbielefeld.pmt.project.impl.model.ProjectModel;
 import de.fhbielefeld.pmt.project.impl.view.VaadinProjectView;
 import de.fhbielefeld.pmt.project.impl.view.VaadinProjectViewLogic;
-import de.fhbielefeld.pmt.projectdetails.impl.event.TransportProjectEvent;
 import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
@@ -31,7 +30,7 @@ import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
 
 /**
  * Grundaufbau der Vaadin Seite. Startpunkt für das Erstellen einer neuen Browserseite.
- * @author Lucas Eickmann
+ * @author LucasEickmann
  * 
  */
 @Route("projectmanagement")
@@ -44,6 +43,9 @@ public class ProjectRootView extends VerticalLayout {
 	private final EventBus eventBus = new EventBus();
 	VaadinSession session = VaadinSession.getCurrent();
 	
+	/**
+	 * Konstruktor.
+	 */
 	public ProjectRootView() {
 		
 		this.eventBus.register(this);
@@ -66,6 +68,13 @@ public class ProjectRootView extends VerticalLayout {
 
 	}
 
+	
+	/**
+	 * Erstellt die Klasse ProjectComponent inklusive aller zur Instantiierung notwendigen Objekte.
+	 * Wird in Konstruktor weiter verarbeitet
+	 * 
+	 * @return loginComponent
+	 */
 	private IProjectComponent createProjectComponent() {
 		VaadinProjectViewLogic vaadinProjectViewLogic = new VaadinProjectViewLogic(new VaadinProjectView(), this.eventBus);
 		IProjectComponent projectComponent = new ProjectComponent(new ProjectModel(DatabaseService.DatabaseServiceGetInstance()), vaadinProjectViewLogic, this.eventBus);
@@ -78,7 +87,7 @@ public class ProjectRootView extends VerticalLayout {
 	 * Views zu dem die TopBar gehört Setzt den Text entsprechend dieser RootView
 	 * Klasse
 	 * 
-	 * @return
+	 * @return topBarComponent
 	 */
 	private ITopBarComponent createTopBarComponent() {
 		VaadinTopBarView vaadinTopBarView;
@@ -90,10 +99,13 @@ public class ProjectRootView extends VerticalLayout {
 		return topBarComponent;
 	}
 	
-	
+	/**
+	 * Eventhandler, der auf Events vom Typ ModuleChooserChosenEvent reagiert.
+	 * Initiiert eine Navigation zum ModuleChooser.
+	 * @param event
+	 */
 	@Subscribe
 	public void onModuleChooserChosenEvent(ModuleChooserChosenEvent event) {
-		System.out.println("Der bus is da");
 		this.getUI().ifPresent(ui -> ui.navigate("modulechooser"));
 	}
 	
@@ -133,8 +145,9 @@ public class ProjectRootView extends VerticalLayout {
 		}
 	}
 	
+	
 	/**
-	 * TODO: Checkt ob ein User Authorisiert ist eine Seite aufzurufen
+	 * Checkt ob ein User Authorisiert ist eine Seite aufzurufen
 	 * Falls nicht wird eine Error Seite dargestellt
 	 */
 	private boolean rootViewAuthorizationCheck() {
@@ -149,6 +162,12 @@ public class ProjectRootView extends VerticalLayout {
 		}
 	}
 	
+	
+	/**
+	 * Eventhandler, der auf Events vom Typ ProjectDetailsModuleChoosenEvent reagiert.
+	 * Initiiert eine Navigation zur ProjectDetailsView.
+	 * @param event
+	 */
 	@Subscribe
 	public void onProjectDetailsModuleChoosenEvent(ProjectDetailsModuleChoosenEvent event) {
 		System.out.println("hallo bist du da?");

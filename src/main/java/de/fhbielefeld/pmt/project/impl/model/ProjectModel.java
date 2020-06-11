@@ -1,6 +1,5 @@
 package de.fhbielefeld.pmt.project.impl.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
@@ -131,7 +130,7 @@ public class ProjectModel implements IProjectModel {
 	 */
 	@Override
 	public List<Client> getClientListFromDatabase() {
-		return dbService.readClient();
+		return dbService.readActiveClients();
 	}
 
 	
@@ -155,7 +154,7 @@ public class ProjectModel implements IProjectModel {
 	 */
 	@Override
 	public List<Employee> getEmployeeListFromDatabase() {
-		return dbService.readEmployee();
+		return dbService.readActiveEmployees();
 	}
 	
 	
@@ -179,7 +178,7 @@ public class ProjectModel implements IProjectModel {
 	 */
 	@Override
 	public List<Team> getTeamListFromDatabase() {
-		return dbService.readTeam();
+		return dbService.readActiveTeams();
 	}
 	
 	
@@ -203,7 +202,7 @@ public class ProjectModel implements IProjectModel {
 	 */
 	@Override
 	public List<Employee> getManagerListFromDatabase() {
-		return dbService.readManagerRole();
+		return dbService.readActiveManagerRole();
 	}
 
 	

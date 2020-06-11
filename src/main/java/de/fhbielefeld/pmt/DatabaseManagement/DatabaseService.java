@@ -49,8 +49,8 @@ public class DatabaseService {
 			databaseService = new DatabaseService();
 		}
 		//TODO: ToFix: Braucht new DatabaseService falls SQL Aktualisierungen durchkommen sollen!
-		return databaseService;
-		//return new DatabaseService();
+		//return databaseService;
+		return new DatabaseService();
 	}
 
 	/**
@@ -571,6 +571,20 @@ public class DatabaseService {
 		 */
 		TypedQuery<Employee> query = em.createQuery(
 				"SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'Projectmanager'", Employee.class);
+		List<Employee> resultListEmployee = query.getResultList();
+		return resultListEmployee;
+	}
+	
+	/**
+	 * Gibt alle Objekte mit der Rolle Manager wieder
+	 * 
+	 * @param none
+	 * @return List<Employee>
+	 */
+	public List<Employee> readActiveManagerRole() {
+
+		TypedQuery<Employee> query = em.createQuery(
+				"SELECT e FROM Employee e Join e.role r WHERE r.DESIGNATION LIKE 'Projectmanager' and e.isActive = true", Employee.class);
 		List<Employee> resultListEmployee = query.getResultList();
 		return resultListEmployee;
 	}

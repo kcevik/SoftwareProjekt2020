@@ -186,16 +186,12 @@ public class Project implements Serializable {
 		return teamList;
 	}
 
-	/**TODO
-	 * @author ?
+	/**
+	 * @author LucasEickmann
 	 * @param teamSet
 	 */
 	public void setTeamList(Set<Team> teamSet) {
-		// Entfernt dieses Projekt aus allen Teams, die laut dem neuen übergebenen Setz
-		// nicht mehr zu diesem Projekt gehören.
-		//if (teamSet != null) {
-		//	this.teamList = (HashSet<Team>) teamSet;
-		//}
+		
 		
 		for (Team t : teamSet) {
 			if (!this.teamList.contains(t)) {

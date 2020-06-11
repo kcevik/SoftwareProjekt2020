@@ -23,7 +23,6 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
-import de.fhbielefeld.pmt.login.impl.view.VaadinLoginViewLogic;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.project.IProjectView;
 import de.fhbielefeld.pmt.project.impl.event.GenerateInvoiceEvent;

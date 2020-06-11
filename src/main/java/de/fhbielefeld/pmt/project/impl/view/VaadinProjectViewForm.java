@@ -12,7 +12,6 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 
@@ -54,7 +53,7 @@ public class VaadinProjectViewForm extends FormLayout{
 	 * Konstruktor.
 	 */
 	public VaadinProjectViewForm() {
-		addClassName("client-form");
+		addClassName("client-form");  //client-form -->> CSS Klasse, ursprünglich für Client-View entwickelt.
 
 		this.closeEdit();
 		this.tfProjectId.setReadOnly(true);

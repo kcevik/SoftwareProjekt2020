@@ -27,12 +27,22 @@ import de.fhbielefeld.pmt.moduleChooser.impl.view.VaadinModuleChooserViewLogic;
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 
+/**
+ * Grundaufbau der Vaadin Seite. Startpunkt für das Erstellen einer neuen
+ * Browserseite.
+ * 
+ * @author LucasEickmann
+ * 
+ */
 public class ModuleChooserRootView extends VerticalLayout {
 
 	private static final long serialVersionUID = 1L;
 	private final EventBus eventBus = new EventBus();
 	VaadinSession session = VaadinSession.getCurrent();
 
+	/**
+	 * Konstruktor.
+	 */
 	public ModuleChooserRootView() {
 
 		this.eventBus.register(this);
@@ -48,7 +58,8 @@ public class ModuleChooserRootView extends VerticalLayout {
 	}
  
 	/**
-	 * Guckt nach ob ein User angemeldet ist oder nicht. Je nach dem wird eine Error Seite erstellt oder die normale Seite geladen
+	 * Prüft, ob ein User angemeldet ist oder nicht. 
+	 * Je nach dem wird eine Error Seite erstellt oder die normale Seite geladen
 	 */
 	private boolean rootViewLoginCheck() {
 		if (LoginChecker.checkIsLoggedIn(session, session.getAttribute("LOGIN_USER_ID"),
@@ -61,6 +72,13 @@ public class ModuleChooserRootView extends VerticalLayout {
 		}
 	}
 
+	
+	/**
+	 * Erstellt die Klasse ModuleChooserComponent inklusive aller zur Instantiierung notwendigen Objekte.
+	 * Wird in Konstruktor weiter verarbeitet
+	 * 
+	 * @return loginComponent
+	 */
 	private IModuleChooserComponent createModuleChooserComponent() {
 		IModuleChooserComponent ModuleChooserComponent = new ModuleChooserComponent(new ModuleChooserModel(),
 				new VaadinModuleChooserViewLogic(new VaadinModuleChooserView(), this.eventBus), this.eventBus);

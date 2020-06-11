@@ -1,8 +1,5 @@
 package de.fhbielefeld.pmt.project.impl.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
@@ -11,12 +8,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.treegrid.TreeGrid;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
-import de.fhbielefeld.pmt.JPAEntities.Client;
 import de.fhbielefeld.pmt.JPAEntities.Project;
-import de.fhbielefeld.pmt.client.impl.view.VaadinClientViewForm;
 
 /**
  * VaadinView Klasse die den Inhalt des RootViews darstellt
@@ -29,7 +23,6 @@ public class VaadinProjectView extends VerticalLayout {
 
 	private static final long serialVersionUID = 1L;
 	private final Grid<Project> projectGrid = new Grid<>(Project.class);
-	private final List<Project> projectList = new ArrayList<Project>();
 	private final TextField tfFilter = new TextField();
 	private final Button btnBackToMainMenu = new Button();
 	private final Button btnCreateProject = new Button();

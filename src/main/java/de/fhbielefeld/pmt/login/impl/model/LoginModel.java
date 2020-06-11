@@ -51,7 +51,7 @@ public class LoginModel implements ILoginModel {
 			return false;
 		}
 
-		if (employee != null && password.equals(employee.getPassword())) {
+		if (employee != null && password.equals(employee.getPassword()) && employee.isActive() == true) {
 			return true;
 		} else {
 			return false;
