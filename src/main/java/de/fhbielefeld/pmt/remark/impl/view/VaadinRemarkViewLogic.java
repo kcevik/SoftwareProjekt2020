@@ -1,7 +1,5 @@
 package de.fhbielefeld.pmt.remark.impl.view;
 
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,18 +8,15 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Remark;
-import de.fhbielefeld.pmt.moduleChooser.impl.view.VaadinModuleChooserView;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.remark.IRemarkView;
 import de.fhbielefeld.pmt.remark.impl.event.SendRemarkToDBEvent;
 import de.fhbielefeld.pmt.remark.impl.event.TransportAllRemarksEvent;
-import oracle.sql.DATE;
 import de.fhbielefeld.pmt.remark.impl.event.BackToProjectsEvent;
 import de.fhbielefeld.pmt.remark.impl.event.ReadCurrentProjectEvent;
 
@@ -88,8 +83,8 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 	 */
 	private void bindToFields() {
 
-//		this.binder.forField(this.view.getRemarkForm().getTfRemarkID()).withConverter(new StringToLongConverter(""))
-//				.bind(Remark::getRemarkID, null);
+		this.binder.forField(this.view.getRemarkForm().getTfRemarkID()).withConverter(new StringToLongConverter(""))
+				.bind(Remark::getRemarkID, null);
 		this.binder.forField(this.view.getRemarkForm().getCbProject()).bind(Remark::getProject, Remark::setProject);
 		this.binder.forField(this.view.getRemarkForm().getTaRemark()).asRequired().bind(Remark::getRemarkText,
 				Remark::setRemarkText);
@@ -111,7 +106,7 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 		if (this.selectedRemark != null) {
 			try {
 				if (this.project != null) {
-//					this.view.getRemarkForm().getCbProjects().setItems(this.projects);
+	//				this.view.getRemarkForm().getCbProjects().setItems(this.projects);
 					this.binder.readBean(this.selectedRemark);
 
 				}
