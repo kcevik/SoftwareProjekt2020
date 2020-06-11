@@ -3,6 +3,11 @@ import java.util.List;
 
 import de.fhbielefeld.pmt.JPAEntities.*;
 
+/**
+ * Interface für das ProjectdetailsModel
+ * @author Kerem
+ *
+ */
 public interface IProjectdetailsModel {
 
 	List<Costs> getCostListFromDatabase(Project project);

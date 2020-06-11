@@ -42,7 +42,7 @@ import de.fhbielefeld.pmt.project.impl.event.SendStreamResourceInvoiceEvent;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 import de.fhbielefeld.pmt.projectdetails.impl.event.GenerateTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.ReadAllCostsEvent;
-import de.fhbielefeld.pmt.projectdetails.impl.event.ReadCostsForprojectEvent;
+import de.fhbielefeld.pmt.projectdetails.impl.event.ReadCostsForProjectEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendCostToDBEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendStreamResourceTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.TransportAllCostsEvent;
@@ -131,7 +131,7 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	public void initReadFromDB(Project project) {
 		this.project = project;
-		this.eventBus.post(new ReadCostsForprojectEvent(this, project));
+		this.eventBus.post(new ReadCostsForProjectEvent(this, project));
 		this.updateGrid();
 	}
 
