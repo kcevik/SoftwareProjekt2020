@@ -37,14 +37,6 @@ public class TeamModel implements ITeamModel {
 	}
 
 	/**
-	 * Persistiert ein Team-Objekt über den DB-Service in die DB.
-	 */
-	@Override
-	public void persistTeam(Team team) {
-		this.dbService.persistTeam(team);
-	}
-	
-	/**
 	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
 	 * Hier bezogen auf das Team!
 	 */
@@ -57,6 +49,14 @@ public class TeamModel implements ITeamModel {
 		}
 	}
 	
+	/**
+	 * Persistiert ein Team-Objekt über den DB-Service in die DB.
+	 */
+	@Override
+	public void persistTeam(Team team) {
+		this.dbService.persistTeam(team);
+	}
+		
 	/**
 	 * Ließt über DB-Service alle Projekte aus
 	 */
@@ -95,6 +95,47 @@ public class TeamModel implements ITeamModel {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Ließt über DB-Service alle AKTIVEN Mitarbeiter aus
+	 */
+	@Override
+	public List<Employee> getActiveEmployeeListFromDatabase() {
+		return dbService.readActiveEmployees();
 	}	
+	
+	/**
+	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
+	 */
+	@Override
+	public boolean isReadActiveEmployeeSuccessfull() {
+		if (this.getActiveEmployeeListFromDatabase() != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Ließt über DB-Service alle AKTIVEN Projekte aus
+	 */
+	@Override
+	public List<Project> getActiveProjectListFromDatabase() {
+		return dbService.readActiveProjects();
+	}
+	
+	/**
+	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
+	 */
+	@Override
+	public boolean isReadActiveProjectSuccessfull() {
+		if (this.getActiveProjectListFromDatabase() != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 }
 

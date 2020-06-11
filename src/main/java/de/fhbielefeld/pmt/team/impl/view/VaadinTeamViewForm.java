@@ -55,11 +55,11 @@ public class VaadinTeamViewForm extends FormLayout {
 		this.cbIsActive.setReadOnly(true);
 		
 	}
+	
 	/**
 	 * Methode, die dafür sorgt, dass die Buttons entsprechend der Auswahl angepasst werden
 	 * @return
 	 */
-	
 	public Component configureTeamFormButtons() {
 		btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 		btnSave.setVisible(false);
@@ -72,7 +72,7 @@ public class VaadinTeamViewForm extends FormLayout {
 	}
 
 	/**
-	 * TODO: Methode, die die Bearbeitungsmöglichkeit der Felder in der TeamForm steuert
+	 * Methode, die die Bearbeitungsmöglichkeit der Felder in der TeamForm steuert
 	 */
 	public void prepareTeamFormFields() {
 		this.tfTeamID.setReadOnly(true);

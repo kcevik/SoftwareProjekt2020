@@ -52,7 +52,7 @@ public class DatabaseService {
 		//return databaseService;
 		return new DatabaseService();
 	}
-
+ 
 	/**
 	 * Schreibt übergebenen Client in die Datenbank
 	 * 

@@ -1,8 +1,10 @@
 package de.fhbielefeld.pmt.projectActivity.impl.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
+import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 import de.fhbielefeld.pmt.projectActivity.IProjectActivityModel;
@@ -56,6 +58,8 @@ public class ProjectActivityModel implements IProjectActivityModel {
 	public List<ProjectActivity> getProjectActivitiesListFromDatabase() {
 		return dbService.readProjectActivity();
 	}
+	
+	
 
 	/**
 	 * Bestätigt ob ausgelesene Daten null sind oder Werte enthalten.
@@ -77,8 +81,6 @@ public class ProjectActivityModel implements IProjectActivityModel {
 	public void persistProjectActivity(ProjectActivity projectActivity) {
 		this.dbService.persistProjectActivity(projectActivity);
 	}
-
-	// TODO: Das ist nicht so ganz richtig
 	
 	/**
 	 * Methode, die das aktuelle Projekt zu dem die Projektaktivität gespeichert werden soll holt
@@ -86,6 +88,25 @@ public class ProjectActivityModel implements IProjectActivityModel {
 	@Override
 	public Project getProject() {
 		return this.project;
+	}
+	
+	/**
+	 * Neue Methode um ein bestimmtes Projekt auszuwählen
+	 */
+	@Override
+	public List<ProjectActivity> getProjectActivityFromDatabase(Project project) {
+		System.out.println("im model " +project.getProjectID());
+		List<ProjectActivity> list = new ArrayList<>();
+		
+		for(ProjectActivity pa : dbService.readProjectActivity()) {
+			if (pa != null && pa.getProject() != null) {
+				if (pa.getProject().getProjectID() == project.getProjectID()) {
+					list.add(pa);
+				}
+			}
+		}
+		System.out.println(list.toString());
+		return list;
 	}
 	
 	/**

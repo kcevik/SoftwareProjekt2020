@@ -29,7 +29,7 @@ import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
 /**
  * Klasse, die das Routing steuert / Wo wird der User hingeleitet, wenn er auf "Teams verwalten" klickt?
  * @author David Bistron
- *
+ * 
  */
 @Route("teammanagement")
 @CssImport("./styles/shared-styles.css")
@@ -91,12 +91,12 @@ public class TeamRootView extends VerticalLayout {
 	
 	/**
 	 * Methode, die die Rolle überprüft. Die Person, die ein Team erfassen möchte, muss mindestens die Rolle
-	 * Mitarbeiter haben. Sofern weitere Rollen hinzugefügt werden sollten, wie bspw. Praktikant, könnten diese Rolle
+	 * Manager haben. Sofern weitere Rollen hinzugefügt werden sollten, wie bspw. Praktikant, könnten diese Rolle
 	 * kein Team erfassen. 
 	 * @return
 	 */
 	private boolean rootViewAuthorizationCheck() {
-		if (AuthorizationChecker.checkIsMinAuthorizedEmployee(session, session.getAttribute("LOGIN_USER_ROLE"))) {
+		if (AuthorizationChecker.checkIsAuthorizedManager(session, session.getAttribute("LOGIN_USER_ROLE"))) {
 			System.out.println("User hat Berechtigung");
 			return true;
 		} else {

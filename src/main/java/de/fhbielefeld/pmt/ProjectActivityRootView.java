@@ -27,6 +27,7 @@ import de.fhbielefeld.pmt.navigatorBox.impl.view.VaadinNavigatorBoxLogic;
 import de.fhbielefeld.pmt.navigatorBox.impl.view.VaadinNavigatorBoxView;
 import de.fhbielefeld.pmt.projectActivity.IProjectActivityComponent;
 import de.fhbielefeld.pmt.projectActivity.impl.ProjectActivityComponent;
+import de.fhbielefeld.pmt.projectActivity.impl.event.BackToProjectsEvent;
 import de.fhbielefeld.pmt.projectActivity.impl.model.ProjectActivityModel;
 import de.fhbielefeld.pmt.projectActivity.impl.view.VaadinProjectActivityView;
 import de.fhbielefeld.pmt.projectActivity.impl.view.VaadinProjectActivityViewLogic;
@@ -219,5 +220,12 @@ public class ProjectActivityRootView extends VerticalLayout {
 	public void onOpenRemarksEvent(OpenRemarksEvent event) {
 		this.getUI().ifPresent(ui -> ui.navigate("remarkmanagement"));
 	}
+	
+	// @Author: David Bistron, Fabian Oermann
+	// Hinzugefügt, damit in der Top-Component die ProjektID erscheint
+	@Subscribe
+    public void onBackToProjectsEvent(BackToProjectsEvent event) {
+        this.getUI().ifPresent(ui -> ui.navigate("projectmanagement"));
+    }
 
 }

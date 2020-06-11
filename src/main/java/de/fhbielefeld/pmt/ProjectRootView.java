@@ -52,6 +52,10 @@ public class ProjectRootView extends VerticalLayout {
 		
 		if (rootViewLoginCheck()) {
 		
+			// @Author: David Bistron, Fabian Oermann
+			// Hinzugefügt, damit in der Top-Component die ProjektID erscheint
+			VaadinSession.getCurrent().setAttribute("PROJECT", null);
+			
 			ITopBarComponent topBarComponent = this.createTopBarComponent();
 			IProjectComponent projectComponent = this.createProjectComponent();
 			

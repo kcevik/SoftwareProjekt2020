@@ -5,10 +5,14 @@ import com.google.common.eventbus.Subscribe;
 
 import de.fhbielefeld.pmt.AbstractPresenter;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
+import de.fhbielefeld.pmt.JPAEntities.Employee;
+import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.team.ITeamComponent;
 import de.fhbielefeld.pmt.team.ITeamModel;
 import de.fhbielefeld.pmt.team.ITeamView;
+import de.fhbielefeld.pmt.team.impl.event.ReadActiveEmployeesEvent;
+import de.fhbielefeld.pmt.team.impl.event.ReadActiveProjectsEvent;
 import de.fhbielefeld.pmt.team.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.team.impl.event.ReadAllProjectsEvent;
 import de.fhbielefeld.pmt.team.impl.event.ReadAllTeamsEvent;
@@ -71,11 +75,44 @@ public class TeamComponent extends AbstractPresenter<ITeamModel, ITeamView> impl
 	 * initReadFromDB() ausgelöst wird
 	 * @param event
 	 */
+	
 	@Subscribe
 	public void onReadAllEmployeesEvent(ReadAllEmployeesEvent event) {
 		if (event.getSource() == this.view) {
 			if (this.model.isEmployeeReadSuccessfull()) {
 				this.view.setEmployees(this.model.getEmployeeListFromDatabase());	
+			}
+		}
+	}
+	
+	/**
+	 * Methode, die nur die AKTIVEN Mitarbeiter ausliest, damit auch nur diese in der 
+	 * MultiSelectComboBox dargestellt werden
+	 * @param event
+	 */
+	@Subscribe
+	public void onReadActiveEmployeesEvent(ReadActiveEmployeesEvent event) {
+		if (event.getSource() == this.view) {
+			if (this.model.isReadActiveEmployeeSuccessfull()) {
+				for (Employee e : this.model.getActiveEmployeeListFromDatabase()) {
+					this.view.addEmployee(e);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Methode, die nur die AKTIVEN Projekte ausliest, damit auch nur diese in der 
+	 * MultiSelectComboBox dargestellt werden
+	 * @param event
+	 */
+	@Subscribe
+	public void onReadActiveProjectsEvent(ReadActiveProjectsEvent event) {
+		if (event.getSource() == this.view) {
+			if (this.model.isReadActiveProjectSuccessfull()) {
+				for (Project p : this.model.getActiveProjectListFromDatabase()) {
+					this.view.addProject(p);
+				}
 			}
 		}
 	}

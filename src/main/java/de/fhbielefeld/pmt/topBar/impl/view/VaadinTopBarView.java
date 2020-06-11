@@ -7,6 +7,9 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.server.VaadinSession;
+
+import de.fhbielefeld.pmt.JPAEntities.Project;
 
 /**
  * 
@@ -21,6 +24,7 @@ public class VaadinTopBarView extends HorizontalLayout {
 	private final Label lblSlogan = new Label();
 	private final Button btnLogout = new Button(new Icon(VaadinIcon.BACKWARDS));
 	private final Icon iconLogo = new Icon(VaadinIcon.CHART_GRID);	
+	private final Label lblProject = new Label();
 
 	public VaadinTopBarView() {
 		this.initUI();
@@ -45,7 +49,19 @@ public class VaadinTopBarView extends HorizontalLayout {
 		VerticalLayout right = new VerticalLayout(btnLogout);
 		right.setAlignSelf(Alignment.END);
 		this.add(left, middle, right);
-	}
+		
+		// @Author: David Bistron, Fabian Oermann
+		// Hinzugefügt, damit in der Top-Component die ProjektID erscheint
+		Project project = (Project) VaadinSession.getCurrent().getAttribute("PROJECT");
+        if (project != null) {
+            lblProject.setText(project.getProjectName() + ", Nr." + project.getProjectID());
+            right.add("Ihr ausgewähltes Projekt: " + lblProject.getText().toString());
+        }
+
+        this.add(left, middle, right);
+
+    }
+	
 
 	/**
 	 * Legt Eigenschaften der Komponenten fest

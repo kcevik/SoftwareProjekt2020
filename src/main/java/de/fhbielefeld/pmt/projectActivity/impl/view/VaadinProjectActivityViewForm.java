@@ -42,8 +42,13 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 		add(lblCreateEdit);		
 		lblCreateEdit.addClassName("lbl-heading-form");
 		add(tfProjectID, tfprojectActivityID, cbActivityCategory, tfDescription, tfHoursAvailable, tfHourlyRates, cbIsActive, configureProjectActivityFormButtons());
+	
 	}
 	
+	/**
+	 * Methode, die dafür sorgt, dass die ProjectAktivityForm grundsätzlich nicht erscheint
+	 * ProjectAktivityForm erscheint nur bei der Bearbeitung einer vorhandenen Projekttätigkeit oder bei der Erstellung einer neuen Projekttätigkeit
+	 */
 	public void configureProjectActivityFormTextFields() {
 		this.lblCreateEdit.setEnabled(false);
 		this.tfProjectID.setReadOnly(true);
@@ -54,8 +59,12 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 		this.tfHourlyRates.setReadOnly(false);
 		this.cbIsActive.setReadOnly(false);
 		
+	}
 	
-}
+	/**
+	 * Methode, die dafür sorgt, dass die Buttons entsprechend der Auswahl angepasst werden
+	 * @return
+	 */
 	public Component configureProjectActivityFormButtons() {
 		btnSave.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 		btnSave.setVisible(false);
@@ -67,6 +76,9 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 
 	}
 	
+	/**
+	 * Methode, die die Bearbeitungsmöglichkeit der Felder in der ProjectActitvityForm steuert
+	 */
 	public void prepareProjectActivityFormFields() {
 		this.lblCreateEdit.setEnabled(true);
 		this.tfProjectID.setReadOnly(true);
@@ -78,8 +90,12 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 		this.cbIsActive.setReadOnly(false);
 		this.btnSave.setVisible(true);
 		this.btnEdit.setVisible(false);
+		
 	}
 	
+	/**
+	 * Methode, die die ProjectActitvityForm ausblended
+	 */
 	public void closeProjectActivityFormFields() {
 		this.cbActivityCategory.setReadOnly(true);
 		this.tfProjectID.setReadOnly(true);
@@ -90,8 +106,12 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 		this.cbIsActive.setReadOnly(true);
 		this.btnSave.setVisible(false);
 		this.btnEdit.setVisible(true);
+		
 	}
 	
+	/**
+	 * Methode, die das Formular zurücksetzt
+	 */
 	public void resetProjectActivityForm() {
 		this.setVisible(false);
 		this.tfProjectID.clear();
@@ -101,6 +121,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 		this.tfHourlyRates.clear();
 		this.cbIsActive.clear();
 		this.closeProjectActivityFormFields();
+		
 	}
 	
 	/**
