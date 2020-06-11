@@ -35,7 +35,7 @@ public class TestCorrectClientPage {
 		driver.get("http://127.0.0.1:8080/");
 		WebElement tfUser = driver.findElement(By.cssSelector("#vaadinLoginUsername > input[type=text]"));
 		WebElement tfPassword = driver.findElement(By.cssSelector("#vaadinLoginPassword > input[type=password]"));
-		tfUser.sendKeys("21");
+		tfUser.sendKeys("1");
 		tfPassword.sendKeys("password");
 		tfPassword.sendKeys(Keys.RETURN);
 		WebElement btnClientmanagement = driver.findElement(By.cssSelector("body > vaadin-vertical-layout > vaadin-vertical-layout > vaadin-vertical-layout > vaadin-button.btnClientmanagement"));
