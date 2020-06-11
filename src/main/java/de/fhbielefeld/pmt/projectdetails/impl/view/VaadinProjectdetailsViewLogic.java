@@ -137,6 +137,7 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	public void updateGrid() {
 		this.view.getCostGrid().setItems(this.costs);
+		// this.view.getTrafficLight().updateCostStatus(costs, this.project.getBudget());
 
 	}
 
@@ -145,6 +146,7 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 		for (Costs t : list)
 			currentCost += t.getIncurredCosts();
 		this.view.createCostInfo(currentCost, project.getBudget());
+		this.view.getTrafficLight().updateCostStatus(currentCost, this.project.getBudget());
 
 	}
 

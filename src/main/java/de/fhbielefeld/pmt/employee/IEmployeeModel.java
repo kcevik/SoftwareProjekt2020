@@ -7,8 +7,8 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.modelViewComponent.IModel;
 
-/** Interfacedefinition für das ClientModel
- * @author Sebastian Siegmann
+/** Interfacedefinition für das EmployeeModel
+ * @author Fabian Oermann
  */
 public interface IEmployeeModel extends IModel{
 	

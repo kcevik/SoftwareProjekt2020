@@ -148,7 +148,7 @@ public class ProjectComponent extends AbstractPresenter<IProjectModel, IProjectV
 	 * Nimmt ein GenerateInvoiceEvent entgegen, initiiert das erstellen einer 
 	 * Rechnung im PDF-Format und postet ein neues Event, das eine SteamResource enthält.
 	 * @param event Event auf das reagiert werden soll.
-	 */
+	 */ 
 	@Subscribe
 	public void onGenerateInvoicePDF(GenerateInvoiceEvent event) {
 		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());

@@ -1,11 +1,13 @@
 package de.fhbielefeld.pmt.remark.impl.event;
 
 import java.util.EventObject;
+
 import de.fhbielefeld.pmt.remark.IRemarkView;
 /**
  * 
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  *
+ *Event, dass die Abfrage alle Remarks aus der Datenbank anstößt
  */
 public class ReadAllRemarksEvent extends EventObject {
 	

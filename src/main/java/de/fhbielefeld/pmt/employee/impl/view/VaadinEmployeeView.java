@@ -11,9 +11,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.server.VaadinSession;
+
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
+import de.fhbielefeld.pmt.error.AuthorizationChecker;
 
 /**
  * VaadinView Klasse die den Inhalt des RootViews darstellt
@@ -24,15 +27,21 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 @CssImport("./styles/shared-styles.css")
 public class VaadinEmployeeView extends VerticalLayout {
 
+	/**
+	 * Instanzvariablen
+	 */
 	private static final long serialVersionUID = 1L;
-
 	private final Grid<Employee> employeeGrid = new Grid<>(Employee.class);
 	private final List<Employee> employeeList = new ArrayList<Employee>();
 	private final TextField tfFilter = new TextField();
 	private final Button btnBackToMainMenu = new Button();
 	private final Button btnCreateEmployee = new Button();
+	private final Button btnCreateCEO = new Button();
 	private final VaadinEmployeeViewForm employeeViewForm = new VaadinEmployeeViewForm();
 
+	/**
+	 * Constructor
+	 */
 	public VaadinEmployeeView() {
 
 		this.initUI();
@@ -47,7 +56,12 @@ public class VaadinEmployeeView extends VerticalLayout {
 		Div content = new Div(employeeGrid, employeeViewForm);
 		content.addClassName("content");
 		content.setSizeFull();
-		this.add(new HorizontalLayout(tfFilter, btnCreateEmployee), content, btnBackToMainMenu);
+		if (AuthorizationChecker.checkIsAuthorizedCEO(VaadinSession.getCurrent(),
+				VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE"))) {
+			this.add(new HorizontalLayout(tfFilter, btnCreateEmployee, btnCreateCEO), content, btnBackToMainMenu);
+		} else {
+			this.add(tfFilter, content, btnBackToMainMenu);
+		}
 	}
 
 	/**
@@ -58,6 +72,8 @@ public class VaadinEmployeeView extends VerticalLayout {
 		addClassName("list-view");
 		setSizeFull();
 		this.btnCreateEmployee.setText("Neuen Mitarbeiter anlegen");
+		this.btnCreateCEO.setText("Neuen Geschäftsführer anlegen");
+
 		this.employeeViewForm.setVisible(false);
 		this.btnBackToMainMenu.setText("Zurück zur Aufgabenauswahl");
 		configureGrid();
@@ -80,7 +96,8 @@ public class VaadinEmployeeView extends VerticalLayout {
 		this.tfFilter.setPlaceholder("Filter nach Namen");
 		this.tfFilter.setClearButtonVisible(true);
 		this.tfFilter.setValueChangeMode(ValueChangeMode.LAZY);
-	//	this.filterText.addValueChangeListener(e -> filterList(filterText.getValue()));
+		// this.filterText.addValueChangeListener(e ->
+		// filterList(filterText.getValue()));
 	}
 
 	/**
@@ -99,13 +116,6 @@ public class VaadinEmployeeView extends VerticalLayout {
 				filtered.add(e);
 			} else if (e.getOccupation().contains(filter)) {
 				filtered.add(e);
-//			} else if (String.valueOf(e.getHouseNumber()).contains(filter)) {
-//				filtered.add(e);
-//			} else if (String.valueOf(e.getTelephoneNumber()).contains(filter)) {
-//				filtered.add(e);
-//				//Statt getLastName stand hier getProjectIDsAsString()
-//			} else if (e.getLastName().contains(filter)) { 
-//				filtered.add(e);															
 			}
 		}
 		this.employeeGrid.setItems(filtered);
@@ -125,18 +135,18 @@ public class VaadinEmployeeView extends VerticalLayout {
 		this.employeeGrid.addColumn(employee -> {
 			String projectString = "";
 			for (Project p : employee.getProjectList()) {
-					projectString += p.getProjectID() + ", ";
+				projectString += p.getProjectID() + ", ";
 			}
 			if (projectString.length() > 2) {
 				projectString = projectString.substring(0, projectString.length() - 2);
 			}
 			return projectString;
 		}).setHeader("Projekte");
-		
+
 		this.employeeGrid.addColumn(employee -> {
 			String teamString = "";
 			for (Team t : employee.getTeamList()) {
-					teamString += t.getTeamID() + ", ";
+				teamString += t.getTeamID() + ", ";
 			}
 			if (teamString.length() > 2) {
 				teamString = teamString.substring(0, teamString.length() - 2);
@@ -149,11 +159,15 @@ public class VaadinEmployeeView extends VerticalLayout {
 		this.employeeGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 	}
 
+	/**
+	 * Getter/Setter
+	 */
+
 	public Grid<Employee> getEmployeeGrid() {
 		return employeeGrid;
 	}
 
-	public VaadinEmployeeViewForm getEMPLOYEEFORM() {
+	public VaadinEmployeeViewForm getEmployeeForm() {
 		return employeeViewForm;
 	}
 
@@ -161,21 +175,8 @@ public class VaadinEmployeeView extends VerticalLayout {
 		return btnBackToMainMenu;
 	}
 
-	public void addEmployee(Employee e) {
-		if (!this.employeeList.contains(e)) {
-			this.employeeList.add(e);
-		}
-	}
-
 	public Button getBtnCreateEmployee() {
 		return btnCreateEmployee;
-	}
-
-	/**
-	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
-	 */
-	public void updateGrid() {
-		this.employeeGrid.setItems(this.employeeList);
 	}
 
 	public List<Employee> getEmployeeList() {
@@ -185,6 +186,26 @@ public class VaadinEmployeeView extends VerticalLayout {
 	public TextField getFilterText() {
 		return tfFilter;
 	}
-	
-	
+
+	public Button getBtnCreateCEO() {
+		return btnCreateCEO;
+	}
+
+	/**
+	 * fügt der EmployeeList einen Mitarbeiter hinzu
+	 * @param e
+	 */
+	public void addEmployee(Employee e) {
+		if (!this.employeeList.contains(e)) {
+			this.employeeList.add(e);
+		}
+	}
+
+	/**
+	 * Aktualisiert das Grid indem die darzustellende Liste neu übergeben wird
+	 */
+	public void updateGrid() {
+		this.employeeGrid.setItems(this.employeeList);
+	}
+
 }

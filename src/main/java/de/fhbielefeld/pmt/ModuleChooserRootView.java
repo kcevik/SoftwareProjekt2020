@@ -48,6 +48,9 @@ public class ModuleChooserRootView extends VerticalLayout {
 		this.eventBus.register(this);
 
 		if (rootViewLoginCheck()) {
+			
+			VaadinSession.getCurrent().setAttribute("PROJECT", null);
+			
 			IModuleChooserComponent moduleChooserComponent = this.createModuleChooserComponent();
 			Component moduleChooserView = moduleChooserComponent.getViewAs(Component.class);
 			this.add(moduleChooserView);

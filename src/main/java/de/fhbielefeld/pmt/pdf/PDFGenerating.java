@@ -38,6 +38,12 @@ public class PDFGenerating {
 		// default Kontruktor
 	}
 
+	/**
+	 * Methode, die die Generierung der PDF steuert, indem ein neues Dokument erzeugt wird
+	 * @param project
+	 * @param costsList
+	 * @return
+	 */
 	public File generateTotalCostsPdf(Project project, List<Costs> costsList) {
 
 		Document document = new Document();

@@ -4,7 +4,7 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.employee.IEmployeeView;
 
 /**
- * Event, dass die Abfrage alle aktiven Projekte aus der Datenbank anstößt
+ * Event, dass die Abfrage aller aktiven Projekte aus der Datenbank anstößt
  * @author Fabian Oermann
  *
  */

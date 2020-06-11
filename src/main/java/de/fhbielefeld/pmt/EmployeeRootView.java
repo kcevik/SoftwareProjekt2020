@@ -19,17 +19,10 @@ import de.fhbielefeld.pmt.error.LoginChecker;
 import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
-import de.fhbielefeld.pmt.projectdetails.IProjectdetailsComponent;
-import de.fhbielefeld.pmt.projectdetails.impl.ProjectdetailsComponent;
-import de.fhbielefeld.pmt.projectdetails.impl.view.VaadinProjectdetailsView;
-import de.fhbielefeld.pmt.projectdetails.impl.view.VaadinProjectdetailsViewLogic;
-import de.fhbielefeld.pmt.projectdetails.model.ProjectdetailsModel;
-import de.fhbielefeld.pmt.projectdetailsNavBar.IProjectdetailsNavComponent;
 import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
-import de.fhbielefeld.pmt.trafficLight.ITrafficLightComponent;
 
 /**
  * Grundaufbau der Vaadin Seite. Startpunkt für das Erstellen einer neuen
@@ -45,18 +38,23 @@ import de.fhbielefeld.pmt.trafficLight.ITrafficLightComponent;
 public class EmployeeRootView extends VerticalLayout {
 
 	/**
-	 * 
+	 * Instanzvariablen
 	 */
 	private static final long serialVersionUID = 1L;
 	private final EventBus eventBus = new EventBus();
 	VaadinSession session = VaadinSession.getCurrent();
 
+	/**
+	 * Constructor
+	 */
+	
 	public EmployeeRootView() {
 
 		
-// TODO: LoginCheck wieder einbinden
 		this.eventBus.register(this);
-//		if (rootViewLoginCheck()) {
+		if (rootViewLoginCheck()) {
+			VaadinSession.getCurrent().setAttribute("PROJECT", null);
+
 			IEmployeeComponent employeeComponent = this.createEmployeeComponent();
 			ITopBarComponent topBarComponent = this.createTopBarComponent();
 
@@ -68,7 +66,7 @@ public class EmployeeRootView extends VerticalLayout {
 			
 			this.add(employeeView);
 			this.add(topBarView);
-//		}
+		}
 
 		this.setHeightFull();
 		this.setAlignItems(Alignment.CENTER);
@@ -101,11 +99,6 @@ public class EmployeeRootView extends VerticalLayout {
 				session.getAttribute("LOGIN_USER_FIRSTNAME"), session.getAttribute("LOGIN_USER_LASTNAME"),
 				session.getAttribute("LOGIN_USER_ROLE"))) {
 			return true;
-//			if (rootViewAuthorizationCheck()) {
-//				return true;
-//			} else {
-//				return false;
-//			}
 		} else {
 			this.removeAll();
 			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));
@@ -113,12 +106,26 @@ public class EmployeeRootView extends VerticalLayout {
 		}
 	}
 
+	/**
+	 * Eventhandler, der das Event vom Zurück-button abfängt
+	 * und zurück zu modulchooser navigiert
+	 * @param event
+	 */
+	
 	@Subscribe
 	public void onModuleChooserChosenEvent(ModuleChooserChosenEvent event) {
 		System.out.println("Der bus is da");
 		this.getUI().ifPresent(ui -> ui.navigate("modulechooser"));
 	}
 
+
+	/**
+	 * Erstellt die Klasse TopBarComponent mit allen Unterklassen und dem Model des
+	 * Views zu dem die TopBar gehört Setzt den Text entsprechend dieser RootView
+	 * Klasse
+	 * 
+	 * @return
+	 */
 	private ITopBarComponent createTopBarComponent() {
 		VaadinTopBarView vaadinTopBarView;
 		vaadinTopBarView = new VaadinTopBarView();
@@ -128,7 +135,12 @@ public class EmployeeRootView extends VerticalLayout {
 				new VaadinTopBarViewLogic(vaadinTopBarView, this.eventBus), this.eventBus);
 		return topBarComponent;
 	}
-
+	/**
+	 * Eventhandler, der das Event vom Logout-button abfängt, 
+	 * alle Sessionvariablen auf null setzt
+	 * und zurück zum Login navigiert
+	 * @param event
+	 */
 	@Subscribe
 	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
 		session.setAttribute("LOGIN_USER_ID", null);

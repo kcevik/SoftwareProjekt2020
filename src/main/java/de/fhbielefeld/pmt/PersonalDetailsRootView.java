@@ -46,10 +46,13 @@ public class PersonalDetailsRootView extends VerticalLayout {
 	VaadinSession session = VaadinSession.getCurrent();
 
 	public PersonalDetailsRootView() {
-
+		
 		this.eventBus.register(this);
 
 		if (rootViewLoginCheck()) {
+			
+			VaadinSession.getCurrent().setAttribute("PROJECT", null);
+			
 			ITopBarComponent topBarComponent = this.createTopBarComponent();
 			IPersonalDetailsComponent personalDetailsComponent = this.createPersonalDetailsComponent();
 

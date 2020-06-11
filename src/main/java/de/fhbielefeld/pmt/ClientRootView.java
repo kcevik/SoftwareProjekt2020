@@ -49,6 +49,9 @@ public class ClientRootView extends VerticalLayout {
 		this.eventBus.register(this);
 
 		if (rootViewLoginCheck()) {
+			
+			VaadinSession.getCurrent().setAttribute("PROJECT", null);
+			
 			ITopBarComponent topBarComponent = this.createTopBarComponent();
 			IClientComponent clientComponent = this.createClientComponent();
 

@@ -27,6 +27,8 @@ import de.fhbielefeld.pmt.topBar.ITopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
+import de.fhbielefeld.pmt.trafficLight.VaadinTrafficLightView;
+import de.fhbielefeld.pmt.trafficLight.VaadinTrafficLightViewLogic;
 
 @CssImport("./styles/shared-styles.css")
 
@@ -37,6 +39,8 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private final VaadinTrafficLightViewLogic trafficLight = new VaadinTrafficLightViewLogic(new VaadinTrafficLightView());
+	
 	private final Grid<Costs> costGrid;
 	private final ArrayList<Costs> list;
 	private final VaadinProjectcostFormView costForm;
@@ -59,7 +63,7 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 		allCostInfo = new Label();
 
 		btnCreateCostPosition = new Button("Neuen Kosteneintrag erfassen");
-		btnCreateCostPDF = new Button("gesamtkostenübersicht PDF");
+		btnCreateCostPDF = new Button("Gesamtkostenübersicht PDF");
 		btnBackToProjectview = new Button("zurück zur Projektübersicht");
 		
 		this.initUI();
@@ -72,7 +76,7 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 		Div content = new Div(costGrid, costForm);
 		content.addClassName("content"); 	
 		content.setSizeFull();
-		this.add(new HorizontalLayout(filterText, btnCreateCostPosition, btnCreateCostPDF), content , allCostInfo , btnBackToProjectview);
+		this.add(new HorizontalLayout(filterText, btnCreateCostPosition, btnCreateCostPDF), content , new HorizontalLayout(allCostInfo, this.trafficLight.getView().getStatusLabel()), btnBackToProjectview);
 		
 	}
 
@@ -170,7 +174,9 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 		return allCostInfo;
 	}
 
-	
+	public VaadinTrafficLightViewLogic getTrafficLight() {
+        return trafficLight;
+    }
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;

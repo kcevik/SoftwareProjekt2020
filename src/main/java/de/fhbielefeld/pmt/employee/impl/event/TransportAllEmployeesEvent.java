@@ -5,8 +5,8 @@ import java.util.List;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.employee.IEmployeeView;
 /**
- * 
- * @author Sebastian Siegmann
+ * Event, dass das Persistieren aller Employees an die Datenbank anstößt
+ * @author Fabian Oermann
  *
  */
 public class TransportAllEmployeesEvent extends EventObject {

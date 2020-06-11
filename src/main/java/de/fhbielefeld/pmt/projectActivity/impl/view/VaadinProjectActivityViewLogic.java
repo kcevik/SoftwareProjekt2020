@@ -169,6 +169,7 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	 */ 
 	private void createNewProjectActivity() {
 		this.selectedProjectActivity = new ProjectActivity();
+		this.selectedProjectActivity.setProject(this.project);
 		displayProjectActivity();
 		this.view.getProjectActivityForm().prepareProjectActivityFormFields();
 		

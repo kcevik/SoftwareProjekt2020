@@ -1,40 +1,55 @@
 package de.fhbielefeld.pmt.remark.impl.view;
 
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToLongConverter;
-import com.vaadin.flow.data.validator.RegexpValidator;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Remark;
+import de.fhbielefeld.pmt.moduleChooser.impl.view.VaadinModuleChooserView;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.remark.IRemarkView;
-import de.fhbielefeld.pmt.remark.impl.event.ReadAllRemarksEvent;
-import de.fhbielefeld.pmt.remark.impl.event.ReadActiveProjectsEvent;
 import de.fhbielefeld.pmt.remark.impl.event.SendRemarkToDBEvent;
-import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
-import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
+import de.fhbielefeld.pmt.remark.impl.event.TransportAllRemarksEvent;
+import oracle.sql.DATE;
+import de.fhbielefeld.pmt.remark.impl.event.BackToProjectsEvent;
+import de.fhbielefeld.pmt.remark.impl.event.ReadCurrentProjectEvent;
 
 /**
  * Vaadin Logik Klasse. Steuert den zugehörigen VaadinView und alle
  * Unterkomponenten. In diesem Fall Steuerung der RemarkView Klasse inklusive
  * Formular.
  * 
- * @author Sebastian Siegmann
+ * @author Fabian Oermann
  *
  */
 public class VaadinRemarkViewLogic implements IRemarkView {
-
-	BeanValidationBinder<Remark> binder = new BeanValidationBinder<>(Remark.class);
+	/**
+	 * Instanzvariablen
+	 */
+	Binder<Remark> binder = new Binder<>(Remark.class);
 	private final VaadinRemarkView view;
 	private final EventBus eventBus;
 	private Remark selectedRemark;
-	private List<Project> projects;
 	private List<Remark> remarks;
+	private Project project;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param view
+	 * @param eventBus
+	 */
 	public VaadinRemarkViewLogic(VaadinRemarkView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View");
@@ -46,7 +61,6 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 		this.eventBus = eventBus;
 		this.eventBus.register(this);
 		this.remarks = new ArrayList<Remark>();
-		this.projects = new ArrayList<Project>();
 		this.registerViewListeners();
 		this.bindToFields();
 	}
@@ -60,22 +74,26 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 			this.selectedRemark = event.getValue();
 			this.displayRemark();
 		});
-		this.view.getBtnBackToMainMenu().addClickListener(event -> eventBus.post(new ModuleChooserChosenEvent(this)));
+		this.view.getBtnBackProject().addClickListener(event -> this.eventBus.post(new BackToProjectsEvent(this)));
 		this.view.getBtnCreateRemark().addClickListener(event -> newRemark());
-		this.view.getREMARKFORM().getBtnSave().addClickListener(event -> this.saveRemark());
-		this.view.getREMARKFORM().getBtnEdit().addClickListener(event -> this.view.getREMARKFORM().prepareEdit());
-		this.view.getREMARKFORM().getBtnClose().addClickListener(event -> cancelForm());
+		this.view.getRemarkForm().getBtnSave().addClickListener(event -> this.saveRemark());
+		this.view.getRemarkForm().getBtnEdit().addClickListener(event -> this.view.getRemarkForm().prepareEdit());
+		this.view.getRemarkForm().getBtnClose().addClickListener(event -> cancelForm());
 		this.view.getFilterText().addValueChangeListener(event -> filterList(this.view.getFilterText().getValue()));
 	}
 
+	/**
+	 * Bindet die Felder aus dem Grid an die Felder aus dem ViewForm. Hierdurch
+	 * werden die Daten aus dem Grid in die Felder gebracht
+	 */
 	private void bindToFields() {
 
-		this.binder.forField(this.view.getREMARKFORM().getTfRemarkID())
-				.withConverter(new StringToLongConverter("")).bind(Remark::getRemarkID, null);
-		this.binder.forField(this.view.getREMARKFORM().getCbProject()).bind(Remark::getProject, Remark::setProject);
-		this.binder.forField(this.view.getREMARKFORM().getTaRemark()).asRequired().bind(Remark::getRemarkText,
+//		this.binder.forField(this.view.getRemarkForm().getTfRemarkID()).withConverter(new StringToLongConverter(""))
+//				.bind(Remark::getRemarkID, null);
+		this.binder.forField(this.view.getRemarkForm().getCbProject()).bind(Remark::getProject, Remark::setProject);
+		this.binder.forField(this.view.getRemarkForm().getTaRemark()).asRequired().bind(Remark::getRemarkText,
 				Remark::setRemarkText);
-		//this.binder.bind(this.view.getREMARKFORM().getCkIsActive(), "active");
+
 	}
 
 	/**
@@ -86,38 +104,46 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 		this.view.clearGridAndForm();
 	}
 
+	/**
+	 * Fügt die Daten des selektierten Remarks dem ViewForm hinzu
+	 */
 	private void displayRemark() {
 		if (this.selectedRemark != null) {
 			try {
-				if (this.projects != null) {
-					this.view.getREMARKFORM().getCbProjects().setItems(this.projects);
+				if (this.project != null) {
+//					this.view.getRemarkForm().getCbProjects().setItems(this.projects);
+					this.binder.readBean(this.selectedRemark);
+
 				}
-				this.binder.setBean(this.selectedRemark);
-				this.view.getREMARKFORM().closeEdit();
-				this.view.getREMARKFORM().setVisible(true);
+				this.view.getRemarkForm().closeEdit();
+				this.view.getRemarkForm().setVisible(true);
 			} catch (NumberFormatException e) {
 				Notification.show("NumberFormatException");
 			}
 		} else {
-			this.view.getREMARKFORM().setVisible(false);
+			this.view.getRemarkForm().setVisible(false);
 		}
 	}
 
 	/**
-	 * Aktualisiert die Remark Instanzvariable mit den aktuellen werten aus den
-	 * Formularfeldern und verschickt den das Remark Objekt mit einem Bus
+	 * ruft Methode zum Timestamp erstellen auf Aktualisiert die Remark
+	 * Instanzvariable mit den aktuellen werten aus den Formularfeldern und
+	 * verschickt den das Remark Objekt mit einem Bus
 	 */
 	private void saveRemark() {
 
 		if (this.binder.validate().isOk()) {
 			try {
+				createAndSetTimeStamp();
+
+				this.binder.writeBean(this.selectedRemark);
 				this.eventBus.post(new SendRemarkToDBEvent(this, this.selectedRemark));
-				this.view.getREMARKFORM().setVisible(false);
+				this.view.getRemarkForm().setVisible(false);
 				this.addRemark(selectedRemark);
 				this.updateGrid();
 				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-			} catch (NumberFormatException e) {
+			} catch (NumberFormatException | ValidationException e) {
 				Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
 						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
@@ -127,19 +153,41 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 	}
 
 	/**
+	 * Erstellt einen Zeitstempel, und fügt diesen als String dem ausgewählten
+	 * Remark hinzu
+	 */
+	private void createAndSetTimeStamp() {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+		LocalDateTime now = LocalDateTime.now();
+		String timestamp = dtf.format(now);
+		System.out.println(timestamp);
+		this.selectedRemark.setDate(timestamp);
+	}
+
+	/**
 	 * Setzt den zwischengespeicherten Remarken auf null
 	 */
 	private void resetSelectedRemark() {
 		this.selectedRemark = null;
 	}
 
-	private void newRemark() {
-		this.selectedRemark = new Remark();
-		displayRemark();
-		this.view.getREMARKFORM().prepareEdit();
-		this.view.getREMARKFORM().getCbProjects().setItems(this.projects);
-	}
+	/**
+	 * wird bei Auslösen des CreateRemark-Button aufgerufen Legt Spezifikationen zum
+	 * Anlegen eines Remarks fest
+	 */
 
+	private void newRemark() {
+
+		resetSelectedRemark();
+		this.selectedRemark = new Remark();
+		this.selectedRemark.setProject(this.project);
+		this.view.getRemarkForm().getCbProjects().setItems(this.project);
+		this.view.getRemarkForm().getCbProjects().setValue(this.project);
+		displayRemark();
+
+		this.view.getRemarkForm().prepareEdit();
+	}
+	
 	/**
 	 * Filterfunktion für das Textfeld. Fügt einen Datensatz der Liste hinzu, falls
 	 * der String parameter enthalten ist.
@@ -157,17 +205,22 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 				filtered.add(r);
 			} else if (String.valueOf(r.getProject().getProjectID()).contains(filter)) {
 				filtered.add(r);
+//			} else if (String.valueOf(r.getDate()).contains(filter)) {
+//				filtered.add(r);
 			}
 			this.view.getRemarkGrid().setItems(filtered);
 		}
 	}
 
 	/**
-	 * Erstellt ein neues Event, welches die DB Abfrage anstößt
+	 * Erstellt ein neues Event, welches die DB Abfrage zum Lesen anstößt
 	 */
-	public void initReadFromDB() {
-		this.eventBus.post(new ReadAllRemarksEvent(this));
-		this.eventBus.post(new ReadActiveProjectsEvent(this));
+	public void initReadFromDB(Project project) {
+		this.project = project;
+		System.out.println("INIT");
+
+		this.eventBus.post(new ReadCurrentProjectEvent(this, project));
+
 		this.updateGrid();
 	}
 
@@ -178,11 +231,34 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 		this.view.getRemarkGrid().setItems(this.remarks);
 	}
 
-	public void addRemark(Remark c) {
-		if (!this.remarks.contains(c)) {
-			this.remarks.add(c);
+	/**
+	 * fügt Remark hinzu
+	 */
+	public void addRemark(Remark r) {
+		if (!this.remarks.contains(r)) {
+			this.remarks.add(r);
 		}
 	}
+
+
+	@Override
+	public void setSelectedProject(Project project) {
+		this.project = project;
+	}
+
+	/**
+	 * Eventhandler, der TransportAllRemarksEvent entgegennimmt, die Remarklist
+	 * an die neuen Remarks anpasst und das Grid updated
+	 * @param event
+	 */
+	@Subscribe
+	public void onTransportAllRemarksEvent(TransportAllRemarksEvent event) {
+		System.out.println("kommt bei onTransportAllRemarksEvent an");
+		this.remarks = event.getRemarkList();
+		this.updateGrid();
+
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -193,20 +269,5 @@ public class VaadinRemarkViewLogic implements IRemarkView {
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
 
-	@Override
-	public void setRemarks(List<Remark> remarks) {
-		this.remarks = remarks;
-	}
-
-	@Override
-	public void setProjects(List<Project> projectListFromDatabase) {
-		this.projects = projectListFromDatabase;
-	}
-
-	@Override
-	public void addProjects(Project project) {
-		if (!this.projects.contains(project)) {
-			this.projects.add(project);
-		}
-	}
+	
 }

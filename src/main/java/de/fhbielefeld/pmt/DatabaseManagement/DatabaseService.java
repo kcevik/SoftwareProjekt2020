@@ -49,8 +49,8 @@ public class DatabaseService {
 			databaseService = new DatabaseService();
 		}
 		//TODO: ToFix: Braucht new DatabaseService falls SQL Aktualisierungen durchkommen sollen!
-		//return databaseService;
-		return new DatabaseService();
+		return databaseService;
+		//return new DatabaseService();
 	}
  
 	/**
@@ -470,18 +470,39 @@ public class DatabaseService {
 	 * @param Remark
 	 * @return none
 	 */
-	public synchronized void persistRemark(Remark Remark) {
+	public synchronized void persistRemark(Remark remark) {
 
-		if (Remark == null) {
-			throw new IllegalArgumentException();
-		} else {
-			em.getTransaction().begin();
-			em.persist(Remark);
-			em.flush();
-			em.getTransaction().commit();
-			
-		}
-	}
+        if (remark == null) {
+            throw new IllegalArgumentException();
+        } else {
+
+            em.getTransaction().begin();
+            System.out.println(remark.getRemarkText() + " versuche zu persistieren");
+//            System.out.println(remark.toString());
+//            System.out.println(remark.getProject().toString());
+            System.out.println("date: " + remark.getDate().toString());
+            System.out.println("remark ID: " + remark.getRemarkID());
+            System.out.println("remark text: " + remark.getRemarkText());
+            System.out.println("projekt budget: " + remark.getProject().getBudget());
+            System.out.println("projekt id: " + remark.getProject().getProjectID());
+            System.out.println("projekt: " + remark.getProject().toString());
+
+//            remark.setProject(null);
+            try {
+                em.persist(remark);
+                System.out.println(remark.getRemarkText() + " ist persistiert");
+            } catch (javax.validation.ConstraintViolationException e) {
+                e.getCause();
+            }
+
+            em.flush();
+            System.out.println("Kommen wir hier hin " + remark.getRemarkText());
+
+            em.getTransaction().commit();
+            System.out.println("Kommen wir hier hin " + remark.getRemarkText());
+
+        }
+    }
 
 	/**
 	 * Gibt Liste aller Remarks aus DB zurück
@@ -509,6 +530,21 @@ public class DatabaseService {
 		Remark result = query.getSingleResult();
 		return result;
 	}
+	
+	/**
+     * Gibt Liste aller Remarks zu einem Project aus DB zurück
+     * 
+     * @param none
+     * @return List<Remark>
+     */
+    public List<Remark> readRemarksOfProject(Project project) {
+
+        TypedQuery<Remark> query = em.createQuery("SELECT r FROM Remark r WHERE r.project = :project", Remark.class);
+        query.setParameter("project", project);
+        List<Remark> resultListRemarksForProject = query.getResultList();
+        System.out.println("Test remarks " + resultListRemarksForProject);
+        return resultListRemarksForProject;
+    }
 
 	/**
 	 * Schreibt übergebene Role in die Datenbank

@@ -2,16 +2,14 @@ package de.fhbielefeld.pmt.employee.impl.view;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.converter.StringToLongConverter;
 import com.vaadin.flow.data.validator.RegexpValidator;
-import com.vaadin.flow.server.VaadinSession;
-
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
@@ -25,9 +23,7 @@ import de.fhbielefeld.pmt.employee.IEmployeeView;
 import de.fhbielefeld.pmt.employee.impl.event.ReadAllEmployeesEvent;
 import de.fhbielefeld.pmt.employee.impl.event.SendEmployeeToDBEvent;
 import de.fhbielefeld.pmt.employee.impl.event.TransportAllEmployeesEvent;
-import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
-import de.fhbielefeld.pmt.JPAEntities.Role;
 
 /**
  * Vaadin Logik Klasse. Steuert den zugehörigen VaadinView und alle
@@ -38,6 +34,9 @@ import de.fhbielefeld.pmt.JPAEntities.Role;
  */
 public class VaadinEmployeeViewLogic implements IEmployeeView {
 
+	/**
+	 * Instanzvariablen
+	 */
 	BeanValidationBinder<Employee> binder = new BeanValidationBinder<>(Employee.class);
 	private final VaadinEmployeeView view;
 	private final EventBus eventBus;
@@ -45,86 +44,16 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 	private List<Employee> employees;
 	private List<Project> projects;
 	private List<Team> teams;
-	private List<String> occupations;
+	private List<String> occupationsEmployee;
+	private List<String> occupationsCEO;
+	private List<String> occupationsProjectManager;
 
-	public void configureCbOccupation() {
-
-		fillOccupationsList();
-		this.view.getEMPLOYEEFORM().getCbOccupation().setItems(occupations);
-		this.view.getEMPLOYEEFORM().getCbOccupation().isReadOnly();
-
-	}
-
-	private void fillOccupationsList() {
-		occupations.clear();
-
-		Role selectedEmployeeRole = selectedEmployee.getRole();
-
-//		if (selectedEmployeeDesignation.equals("CEO")) {
-//		if(selectedEmployee.getClass().equals(RoleCEO.class)) {
-		
-//		if(AuthorizationChecker.checkIsAuthorizedEmployee(VaadinSession.getCurrent(), selectedEmployee.getRole())) {
-//			this.occupations.add("Keine vergeben");
-//			this.occupations.add("SW-Entwickler");
-//			this.occupations.add("Personalmanager");
-//			this.occupations.add("Reinigungskraft");
-//		}
-		
-		if (checkRoleEmployeeFowler(selectedEmployeeRole) == true) {
-			this.occupations.add("Keine vergeben");
-			this.occupations.add("SW-Entwickler");
-			this.occupations.add("Personalmanager");
-			this.occupations.add("Reinigungskraft");
-
-//		} else if (selectedEmployee.getClass().equals(RoleEmployee.class)) {
-		} else if (checkRoleManagerFowler(selectedEmployeeRole) == true) {
-			this.occupations.add("Keine vergeben");
-			this.occupations.add("Wow löppt");
-			this.occupations.add("Personalmanager");
-			this.occupations.add("Reinigungskraft");
-//		} else if (selectedEmployee.getClass().equals(RoleProjectManager.class)) {
-		} else if (checkRoleCeoFowler(selectedEmployeeRole) == true) {
-			this.occupations.add("Keine vergeben");
-			this.occupations.add("Wow löppt Ceo");
-			this.occupations.add("Personalmanager");
-			this.occupations.add("Reinigungskraft");
-
-		} else {
-			this.occupations.add("Sind im elseTeil");
-		}
-	}
-
-	public static boolean checkRoleEmployeeFowler(Object userRole) {
-		RoleEmployee employee = new RoleEmployee();
-		RoleProjectManager manager = new RoleProjectManager();
-		RoleCEO ceo = new RoleCEO();
-		if ((userRole != null) && manager.hasType(String.valueOf(userRole))
-				|| employee.hasType(String.valueOf(userRole)) || ceo.hasType(String.valueOf(userRole))) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public static boolean checkRoleManagerFowler(Object userRole) {
-		RoleProjectManager manager = new RoleProjectManager();
-		RoleCEO ceo = new RoleCEO();
-		if ((userRole != null) && manager.hasType(String.valueOf(userRole)) || ceo.hasType(String.valueOf(userRole))) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public static boolean checkRoleCeoFowler(Object userRole) {
-		RoleCEO ceo = new RoleCEO();
-		if ((userRole != null) && ceo.hasType(String.valueOf(userRole))) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
+	/**
+	 * Constructor
+	 * 
+	 * @param view
+	 * @param eventBus
+	 */
 	public VaadinEmployeeViewLogic(VaadinEmployeeView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View");
@@ -138,14 +67,17 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 		this.employees = new ArrayList<Employee>();
 		this.projects = new ArrayList<Project>();
 		this.teams = new ArrayList<Team>();
-		this.occupations = new ArrayList<String>();
+		this.occupationsCEO = new ArrayList<String>();
+		this.occupationsProjectManager = new ArrayList<String>();
+		this.occupationsEmployee = new ArrayList<String>();
 		this.registerViewListeners();
 		this.bindToFields();
+		this.fillOccupations();
 	}
 
 	/**
-	 * Fügt den Komponenten der View die entsprechenden Listener hinzu. Noch unklar
-	 * welche Listener gebraucht werden
+	 * Fügt den Komponenten der View die entsprechenden Listener hinzu.
+	 * 
 	 */
 	private void registerViewListeners() {
 		this.view.getEmployeeGrid().asSingleSelect().addValueChangeListener(event -> {
@@ -154,12 +86,30 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 		});
 		this.view.getBtnBackToMainMenu().addClickListener(event -> eventBus.post(new ModuleChooserChosenEvent(this)));
 		this.view.getBtnCreateEmployee().addClickListener(event -> newEmployee());
-		this.view.getEMPLOYEEFORM().getBtnSave().addClickListener(event -> this.saveEmployee());
-		this.view.getEMPLOYEEFORM().getBtnEdit().addClickListener(event -> this.view.getEMPLOYEEFORM().prepareEdit());
-		this.view.getEMPLOYEEFORM().getBtnClose().addClickListener(event -> cancelForm());
+		this.view.getBtnCreateCEO().addClickListener(event -> newCEO());
+		this.view.getEmployeeForm().getBtnSave().addClickListener(event -> this.saveEmployee());
+		this.view.getEmployeeForm().getBtnEdit().addClickListener(event -> checkPrepareEdit());
+		this.view.getEmployeeForm().getBtnClose().addClickListener(event -> cancelForm());
 		this.view.getFilterText().addValueChangeListener(event -> filterList(this.view.getFilterText().getValue()));
 	}
 
+	/**
+	 * prüft die Rolle des ausgewählten Mitarbeiters "CEO" und passt die ViewForm
+	 * dementsprechend an.
+	 * 
+	 */
+	public void checkPrepareEdit() {
+
+		if (this.selectedEmployee.getRole().getClass().equals(RoleCEO.class)) {
+			this.view.getEmployeeForm().prepareCEOEdit();
+		} else {
+			this.view.getEmployeeForm().prepareEdit();
+		}
+	}
+
+	/**
+	 * setzt die ViewForm zurück
+	 */
 	private void cancelForm() {
 		resetSelectedEmployee();
 		System.out.println("Employee is null weil form zurückgesetzt");
@@ -167,114 +117,100 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 	}
 
 	/**
-	 * Stellt die EMPLOYEEFORM leer dar
-	 */
-	private void displayEmptyForm() {
-		resetSelectedEmployee();
-		System.out.println("Employee is null");
-		this.view.getEmployeeGrid().deselectAll();
-		this.view.getEMPLOYEEFORM().clearEmployeeForm();
-		this.view.getEMPLOYEEFORM().prepareEdit();
-		this.view.getEMPLOYEEFORM().setVisible(true);
-	}
-
-	/**
-	 * Aktualisiert die Employee Instanzvariable mit den aktuellen werten aus den
-	 * Formularfeldern und verschickt den das Employee Objekt mit einem Bus
+	 * Prüft, ob ein Mitarbeiter, Projektmanager oder Geschäftsführer angelegt
+	 * werden soll Prüft, ob der Mitarbeiter neu angelegt wurde und vergibt
+	 * dementsprechend ein Initialpasswort
+	 * 
+	 * Setzt Aktualisiert die Employee Instanzvariable mit den aktuellen werten aus
+	 * den Formularfeldern und verschickt den das Employee Objekt mit einem Bus.
+	 * 
 	 */
 	private void saveEmployee() {
 		if (this.binder.validate().isOk()) {
-//			this.selectedEmployee = new Employee();
-//			System.out.println("new Employee erzeugt in saveEmployee");
+
 		}
 		try {
+			if (this.selectedEmployee.getRole().getClass().equals(RoleEmployee.class)
+					|| this.selectedEmployee.getRole().getClass().equals(RoleProjectManager.class)) {
+				if (this.view.getEmployeeForm().getCkIsSuitabilityProjectManager().getValue() == true) {
+					System.out.println("Role PManager");
+					this.selectedEmployee.setRole(new RoleProjectManager());
+				} else {
+					this.selectedEmployee.setRole(new RoleEmployee());
+					System.out.println("Role Employee "
+							+ this.view.getEmployeeForm().getCkIsSuitabilityProjectManager().getValue());
+				}
+			}
+
+			/**
+			 * Rausgenommen, da der LogInCheck gefixt wurde
+			 */
+//			if (this.view.getEmployeeForm().getCkIsActive().getValue() == false) {
+//				int zufallszahl = (int) (Math.random() * 100000000) + 900000000;
+//				String generatedPassword = String.valueOf(zufallszahl);
+//				this.selectedEmployee.setPassword(generatedPassword);
+//
+//			} else {
+
+			if (this.selectedEmployee.getEmployeeID() == 0) {
+				this.selectedEmployee.setPassword("password");
+			}
+			// }
+
+			System.out.println(this.selectedEmployee.getEmployeeID());
+			System.out.println(this.selectedEmployee.getPassword());
+
+			this.binder.writeBean(this.selectedEmployee);
+
 			this.eventBus.post(new SendEmployeeToDBEvent(this.selectedEmployee));
-			this.view.getEMPLOYEEFORM().setVisible(false);
+			this.view.getEmployeeForm().setVisible(false);
 			this.addEmployee(selectedEmployee);
 			this.updateGrid();
 			Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 					.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-		} catch (NumberFormatException e) {
-			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
-					Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+		} catch (NumberFormatException | ValidationException e) {
+			Notification.show("Bitte geben Sie alle Werte an", 5000, Notification.Position.TOP_CENTER)
+					.addThemeVariants(NotificationVariant.LUMO_ERROR);
 
-//			// Statt setLastname stand hier setName
-//			this.selectedEmployee.setFirstName(this.view.getEMPLOYEEFORM().getLblFirstName().getValue());
-//			this.selectedEmployee.setLastName(this.view.getEMPLOYEEFORM().getLblLastName().getValue());
-//			this.selectedEmployee.setOccupation(this.view.getEMPLOYEEFORM().getCbOccupation().getValue());
-//			this.selectedEmployee.setSuitabilityProjectManager(
-//					Boolean.valueOf(this.view.getEMPLOYEEFORM().getIsSuitabilityProjectManager().getValue()));
-//			this.selectedEmployee.setActive(Boolean.valueOf(this.view.getEMPLOYEEFORM().getckIsActive().getValue()));
-//			this.eventBus.post(new SendEmployeeToDBEvent(this.selectedEmployee));
-//			this.view.getEMPLOYEEFORM().setVisible(false);
-//			this.view.addEmployee(selectedEmployee);
-//			this.view.updateGrid();
-//			Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
-//					.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-//		} catch (NumberFormatException e) {
-//			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
-//					Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
-//			this.view.getEMPLOYEEFORM().setVisible(true);
-//			this.view.getEMPLOYEEFORM().clearEmployeeForm();
-//			this.view.getEmployeeGrid().deselectAll();
-//		} catch (NullPointerException e2) {
-//			Notification.show("NumberFormatException: Bitte geben Sie plausible Werte an", 5000,
-//					Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
-//			this.view.getEMPLOYEEFORM().setVisible(true);
-//			this.view.getEMPLOYEEFORM().clearEmployeeForm();
-//			this.view.getEmployeeGrid().deselectAll();
-		} finally {
-//			resetSelectedEmployee();
-//			System.out.println("Employee wegen exception auf null gesetzt");
 		}
 	}
 
+	/**
+	 * Setzt SelectedEmployee zurück
+	 */
 	private void resetSelectedEmployee() {
 		this.selectedEmployee = null;
 	}
 
+	/**
+	 * aktualisiert das Grid
+	 */
 	public void updateGrid() {
 		this.view.getEmployeeGrid().setItems(this.employees);
 	}
 
+	/**
+	 * wird bei Auslösen des CreateEmployee-Button aufgerufen
+	 * Legt Spezifikationen zum Anlegen eines Mitarbeiters fest
+	 */
 	private void newEmployee() {
 		this.selectedEmployee = new Employee();
+		this.selectedEmployee.setRole(new RoleEmployee());
 		displayEmployee();
-		this.view.getEMPLOYEEFORM().prepareEdit();
-		this.view.getEMPLOYEEFORM().getMscbProjects().setItems(this.projects);
-		this.view.getEMPLOYEEFORM().getMscbTeams().setItems(this.teams);
-
+		this.view.getEmployeeForm().getCkIsActive().setValue(true);
+		this.view.getEmployeeForm().prepareEdit();
 	}
 
 	/**
-	 * Setzt den ausgewählen Employee aus dem Grid in eine Instanzvariable ein und
-	 * setzt die Attribute des Employees in die Formularfelder
-	 * 
-	 * @param employee
+	 * wird bei Auslösen des CEO anlegen Button aufgerufen
+	 * Legt Spezifikationen zum Anlegen eines CEOs fest
 	 */
-	private void displayEmployee(Employee employee) {
-		this.selectedEmployee = employee;
-		if (employee != null) {
-			try {
-				System.out.println("Jetzt is der employee der der ausgeählt ist in dem grid");
-				this.view.getEMPLOYEEFORM().getTfEmployeeID()
-						.setValue(String.valueOf(this.selectedEmployee.getEmployeeID()));
-				this.view.getEMPLOYEEFORM().getLblLastName().setValue(this.selectedEmployee.getLastName());
-				this.view.getEMPLOYEEFORM().getLblFirstName()
-						.setValue(String.valueOf(this.selectedEmployee.getFirstName()));
-				this.view.getEMPLOYEEFORM().getCkIsSuitabilityProjectManager()
-						.setValue(this.selectedEmployee.isActive());
-				this.view.getEMPLOYEEFORM().getckIsActive().setValue(this.selectedEmployee.isActive());
-				// TODO: Auswahl von Projekten oder nur Anzeigen?
-				this.view.getEMPLOYEEFORM().closeEdit();
-				this.view.getEMPLOYEEFORM().setVisible(true);
-			} catch (NumberFormatException e) {
-				this.view.getEMPLOYEEFORM().clearEmployeeForm();
-				Notification.show("NumberFormatException");
-			}
-		} else {
-			this.view.getEMPLOYEEFORM().setVisible(false);
-		}
+	private void newCEO() {
+		this.selectedEmployee = new Employee();
+		this.selectedEmployee.setRole(new RoleCEO());
+		displayEmployee();
+		this.view.getEmployeeForm().getCkIsActive().setValue(true);
+		this.view.getEmployeeForm().prepareCEOEdit();
 	}
 
 	/**
@@ -307,49 +243,143 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
 
+	/**
+	 * Bindet die Felder aus dem Grid mit den Feldern in dem ViewForm
+	 */
 	private void bindToFields() {
-		this.binder.forField(this.view.getEMPLOYEEFORM().getTfEmployeeID()).asRequired()
+		this.binder.forField(this.view.getEmployeeForm().getTfEmployeeID()).asRequired()
 				.withConverter(new StringToLongConverter("")).bind(Employee::getEmployeeID, null);
-		this.binder.forField(this.view.getEMPLOYEEFORM().getLblFirstName()).asRequired()
+		this.binder.forField(this.view.getEmployeeForm().getTfFirstName()).asRequired()
 				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
 				.bind(Employee::getFirstName, Employee::setFirstName);
-		this.binder.forField(this.view.getEMPLOYEEFORM().getLblLastName()).asRequired()
+		this.binder.forField(this.view.getEmployeeForm().getTfLastName()).asRequired()
 				.withValidator(new RegexpValidator("Bitte zwischen 1 und 50 Zeichen", ".{1,50}"))
 				.bind(Employee::getLastName, Employee::setLastName);
-		this.binder.forField(this.view.getEMPLOYEEFORM().getCbOccupation()).asRequired().bind(Employee::getOccupation,
+		this.binder.forField(this.view.getEmployeeForm().getCbOccupation()).asRequired().bind(Employee::getOccupation,
 				Employee::setOccupation);
-		this.binder.bind(this.view.getEMPLOYEEFORM().getckIsActive(), "active");
-		this.binder.bind(this.view.getEMPLOYEEFORM().getCkIsSuitabilityProjectManager(), "suitabilityProjectManager");
-		this.binder.forField(this.view.getEMPLOYEEFORM().getMscbTeams()).bind(Employee::getTeamList,
+		this.binder.bind(this.view.getEmployeeForm().getckIsActive(), "active");
+
+		this.binder.bind(this.view.getEmployeeForm().getCkIsSuitabilityProjectManager(), "suitabilityProjectManager");
+
+		this.binder.forField(this.view.getEmployeeForm().getMscbTeams()).bind(Employee::getTeamList,
 				Employee::setTeamList);
-		this.binder.forField(this.view.getEMPLOYEEFORM().getMscbProjects()).bind(Employee::getProjectList,
+		this.binder.forField(this.view.getEmployeeForm().getMscbProjects()).bind(Employee::getProjectList,
 				Employee::setProjectList);
 
 	}
 
+	/**
+	 * zeigt den ausgewählten Mitarbeiter in dem ViewForm an
+	 */
+
 	private void displayEmployee() {
 		if (this.selectedEmployee != null) {
 			try {
+				cofigureLblRolleString();
+				configureOccupationsList();
+
 				if (this.projects != null) {
-					this.view.getEMPLOYEEFORM().getMscbProjects().setItems(this.projects);
+					this.view.getEmployeeForm().getMscbProjects().setItems(this.projects);
 				}
 				if (this.teams != null) {
-					this.view.getEMPLOYEEFORM().getMscbTeams().setItems(this.teams);
+					this.view.getEmployeeForm().getMscbTeams().setItems(this.teams);
 				}
-				this.binder.setBean(this.selectedEmployee);
-				configureCbOccupation();
-				this.view.getEMPLOYEEFORM().closeEdit();
-				this.view.getEMPLOYEEFORM().setVisible(true);
+
+				if (selectedEmployee.getOccupation() != null) {
+					this.view.getEmployeeForm().getCbOccupation().setValue(this.selectedEmployee.getOccupation());
+				}
+				this.binder.readBean(this.selectedEmployee);
+
+				this.view.getEmployeeForm().closeEdit();
+				this.view.getEmployeeForm().setVisible(true);
+				if (this.selectedEmployee.getRole().getClass().equals(RoleCEO.class)) {
+					this.view.getEmployeeForm().getCkIsSuitabilityProjectManager().setVisible(false);
+				} else {
+					this.view.getEmployeeForm().getCkIsSuitabilityProjectManager().setVisible(true);
+				}
+
 			} catch (NumberFormatException e) {
-				Notification.show("NumberFormatException");
+				Notification.show("Fehlerhafter Datensatz");
+
+			} catch (NullPointerException e) {
+				Notification.show("Fehlerhafter Datensatz");
+
 			}
 		} else {
-			this.view.getEMPLOYEEFORM().setVisible(false);
+			this.view.getEmployeeForm().setVisible(false);
 		}
 	}
 
+	/**
+	 * Passt den String an die jeweilige Rolle des ausgewählten Mitarbeiter an
+	 */
+
+	private void cofigureLblRolleString() {
+		if (this.selectedEmployee.getRole().getClass().equals(RoleCEO.class)) {
+			this.view.getEmployeeForm().getLblRolle().setText("Geschäftsführer");
+		} else if (this.selectedEmployee.getRole().getClass().equals(RoleProjectManager.class)) {
+			this.view.getEmployeeForm().getLblRolle().setText("Projektleiter");
+		} else {
+			this.view.getEmployeeForm().getLblRolle().setText("Mitarbeiter");
+		}
+	}
+
+	/**
+	 * Passt die ComboBox Occupations an die jeweilige Rolle des ausgewählten
+	 * Mitarbeiter an
+	 */
+
+	private void configureOccupationsList() {
+		this.view.getEmployeeForm().getCbOccupation().clear();
+//		if (AuthorizationChecker.checkIsAuthorizedCEO(VaadinSession.getCurrent(), selectedEmployee.getRole())) {
+		try {
+			if (selectedEmployee.getRole().getClass().equals(RoleCEO.class)) {
+				this.view.getEmployeeForm().getCbOccupation().setItems(occupationsCEO);
+//		} else if (AuthorizationChecker.checkIsAuthorizedManager(VaadinSession.getCurrent(),selectedEmployee.getRole())) {
+			} else if (selectedEmployee.getRole().getClass().equals(RoleProjectManager.class)) {
+				this.view.getEmployeeForm().getCbOccupation().setItems(occupationsProjectManager);
+//		}else if (AuthorizationChecker.checkIsAuthorizedEmployee(VaadinSession.getCurrent(),selectedEmployee.getRole())) {
+			} else {
+				this.view.getEmployeeForm().getCbOccupation().setItems(occupationsEmployee);
+			}
+		} catch (NullPointerException e) {
+			System.out.println("die Rolle ist nicht vergeben.");
+		}
+	}
+
+	/**
+	 * füllt die Listen der Tätigkeiten/Jobs, Diese werden später
+	 */
+
+	private void fillOccupations() {
+		this.occupationsCEO.add("Keine vergeben");
+		this.occupationsCEO.add("Organisation");
+		this.occupationsCEO.add("Unternehmenspolitik");
+		this.occupationsCEO.add("gerichtliche Vertretung");
+		this.occupationsCEO.add("außergerichtliche Vertretung");
+
+		this.occupationsProjectManager.add("Keine vergeben");
+		this.occupationsProjectManager.add("Projektanalyse");
+		this.occupationsProjectManager.add("Projektorganisation");
+		this.occupationsProjectManager.add("Projektcontrolling");
+		this.occupationsProjectManager.add("Grobplanung");
+		this.occupationsProjectManager.add("Feinplanung");
+
+		this.occupationsEmployee.add("Keine vergeben");
+		this.occupationsEmployee.add("SW-Entwicklung");
+		this.occupationsEmployee.add("Buchhaltung");
+		this.occupationsEmployee.add("Administration");
+		this.occupationsEmployee.add("Kaltaquise");
+		this.occupationsEmployee.add("Vertrieb im Außendienst");
+	}
+
+	/**
+	 * Filterlogik filtert das Grid über das Texfield über das Grid
+	 * Fügt einen Datensatz der Liste hinzu, falls
+	 * der String parameter enthalten ist.
+	 * @param filter
+	 */
 	private void filterList(String filter) {
-		// TODO: Cast Exception
 		List<Employee> filtered = new ArrayList<Employee>();
 		for (Employee e : this.employees) {
 			if (e.getLastName() != null && e.getLastName().contains(filter)) {
@@ -360,22 +390,27 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 				filtered.add(e);
 			} else if (String.valueOf(e.getEmployeeID()).contains(filter)) {
 				filtered.add(e);
-			} else if (e.getProjectIDsAsString() != null && e.getProjectIDsAsString().contains(filter)) {
-				filtered.add(e);
-			} else if (e.getTeamIDsAsString() != null && e.getTeamIDsAsString().contains(filter)) {
-				filtered.add(e);
 			}
 		}
 		this.view.getEmployeeGrid().setItems(filtered);
 	}
 
+	/**
+	 * Stößt Events zum Lesen aus der Datenbank an
+	 */
 	public void initReadFromDB() {
 		this.eventBus.post(new ReadAllEmployeesEvent(this));
+		System.out.println("Kommen wir hin 1");
 		this.eventBus.post(new ReadActiveProjectsEvent(this));
 		this.eventBus.post(new ReadActiveTeamsEvent(this));
 		this.updateGrid();
+		System.out.println("Kommen wir hin ENDE INIT");
+
 	}
 
+	/**
+	 * Setter
+	 */
 	public void setProjects(List<Project> projectListFromDatabase) {
 		this.projects = projectListFromDatabase;
 	}
@@ -389,6 +424,9 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 		this.employees = employees;
 	}
 
+	/**
+	 * fügt einen Mitarbeiter hinzu
+	 */
 	@Override
 	public void addEmployee(Employee e) {
 		if (!this.employees.contains(e)) {
@@ -397,12 +435,20 @@ public class VaadinEmployeeViewLogic implements IEmployeeView {
 
 	}
 
+	/**
+	 * fügt ein Team hinzu
+	 */
+
 	@Override
 	public void addTeams(Team team) {
 		if (!this.teams.contains(team)) {
 			this.teams.add(team);
 		}
 	}
+
+	/**
+	 * fügt Projekt hinzu
+	 */
 
 	@Override
 	public void addProjects(Project project) {
