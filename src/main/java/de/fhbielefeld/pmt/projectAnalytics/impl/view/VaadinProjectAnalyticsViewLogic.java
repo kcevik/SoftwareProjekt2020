@@ -60,26 +60,17 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		JFreeChart costPieChart = ChartFactory.createPieChart("Kostendiagramm", datasetCostPie);
 		JFreeChart timePieChart = ChartFactory.createPieChart("Stundendiagramm", datasetCostPie);
 		JFreeChart fullfillmentPieChart = ChartFactory.createPieChart("Erfüllungsgraddiagramm", datasetFullfillmentPie);
-	
-		try {
-			File costFile = new File("src/main/webapp/img/Cost_pie_chart.png");
-			File timeFile = new File("src/main/webapp/img/Time_pie_chart.png");
-			File fullfillmentFile = new File("src/main/webapp/img/Fullfillment_pie_chart.png");
-			
-			costFile.createNewFile();
-			timeFile.createNewFile();
-
-			ChartUtils.saveChartAsPNG(costFile, costPieChart, 450, 400);
-			ChartUtils.saveChartAsPNG(timeFile, timePieChart, 450, 400);
-			ChartUtils.saveChartAsPNG(fullfillmentFile, fullfillmentPieChart, 450, 400);
-
-			this.view.getCostsImage().setSrc("img/Cost_pie_chart.png");
-			this.view.getTimeImage().setSrc("img/Time_pie_chart.png");
-			this.view.getFullfillmentImage().setSrc("img/Fullfillment_pie_chart.png");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		
+		this.view.getCostWrapper().setChart(costPieChart);
+		this.view.getTimeWrapper().setChart(timePieChart);
+		//this.view.getFullfillmentWrapper().setChart(fullfillmentPieChart);
+		//this.view.getCostWrapper().setSizeFull();
+		//this.view.getTimeWrapper().setSizeFull();
+		//this.view.getFullfillmentWrapper().setSizeFull();
+		
+		
+		
 	}
 
 	public void getData(Project project) {
@@ -100,15 +91,16 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 
 	public DefaultPieDataset createCostPieDataset() {
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		dataset.setValue(" Budget ", project.getBudget());
+		dataset.setValue(" restliches Budget ", (project.getBudget() - calcIncurredCosts()));
 		dataset.setValue("bisherige Kosten", calcIncurredCosts());
 		return dataset;
 	}
 	
 	public DefaultPieDataset createFullFillmentPieDataset() {
 		DefaultPieDataset dataset = new DefaultPieDataset();
+		System.out.println("fullfillment :" + calcFullfillment());
 		dataset.setValue(" Erfüllungsgrad ", calcFullfillment());
-		dataset.setValue("max. Fortschritt", 200);
+		dataset.setValue("max. Fortschritt", 200 - calcFullfillment());
 		return dataset;
 	}
 
@@ -116,7 +108,7 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 
 		DefaultPieDataset dataset = new DefaultPieDataset();
 
-		dataset.setValue("verfügbare Stunden", calcAvailableHours());
+		dataset.setValue("noch verfügbare Stunden", (calcAvailableHours() - calcExtendedHours()));
 		dataset.setValue("bisher aufgewendete Stunden", calcExtendedHours());
 		return dataset;
 	}
@@ -129,8 +121,8 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		double cost = calcIncurredCosts();
 		double budget = project.getBudget();
 
-		int fullfillmentTime = (int) (budget / 100 * cost);
-		int fullfillmentCost = (timeAvailable / 100) * spentTime;
+		int fullfillmentTime = (int) (cost /budget * 100);
+		int fullfillmentCost = (spentTime / timeAvailable * 100);
 
 		return fullfillmentTime + fullfillmentCost;
 
@@ -138,16 +130,10 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 
 	int calcAvailableHours() {
 		int tmp = 0;
-	//	System.out.println("PROJEKT: " + this.project);
-		//System.out.println("AKTIVTIÄTEN: " + activities.get(0).getProject());
+
 		if (activities != null) {
 			for (ProjectActivity pa : activities) {
-				if (pa != null && pa.getProject() != null) {
-					
-					/*System.out.println("TEST1 " +pa.getProjectActivityID() +"  " +pa.getDescription());
-					System.out.println("TEST2 " +pa.getProject());
-					System.out.println("TEST3 " +pa.getProject().getProjectID());*/
-					
+				if (pa != null && pa.getProject() != null) {				
 					if (pa.getProject().getProjectID() == this.project.getProjectID())
 						tmp += pa.getHoursAvailable();
 				}
@@ -184,9 +170,7 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 					tmp += c.getIncurredCosts();
 			}
 		}
-
 		return tmp;
-
 	}
 
 	@Override

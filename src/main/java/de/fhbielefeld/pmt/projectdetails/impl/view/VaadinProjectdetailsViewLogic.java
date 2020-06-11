@@ -42,7 +42,7 @@ import de.fhbielefeld.pmt.project.impl.event.SendStreamResourceInvoiceEvent;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 import de.fhbielefeld.pmt.projectdetails.impl.event.GenerateTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.ReadAllCostsEvent;
-import de.fhbielefeld.pmt.projectdetails.impl.event.ReadCurrentProjectEvent;
+import de.fhbielefeld.pmt.projectdetails.impl.event.ReadCostsForprojectEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendCostToDBEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendStreamResourceTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.TransportAllCostsEvent;
@@ -131,7 +131,7 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	public void initReadFromDB(Project project) {
 		this.project = project;
-		this.eventBus.post(new ReadCurrentProjectEvent(this, project));
+		this.eventBus.post(new ReadCostsForprojectEvent(this, project));
 		this.updateGrid();
 	}
 
@@ -198,6 +198,7 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 				this.view.getCostForm().setVisible(false);
 				this.addCost(selectedCost);
 				this.updateGrid();
+				this.calculateForAllCostInfo(this.costs);
 				Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 						.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 			} catch (NumberFormatException | ValidationException nfe) {

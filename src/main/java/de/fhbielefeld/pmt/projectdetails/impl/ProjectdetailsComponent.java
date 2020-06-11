@@ -29,7 +29,7 @@ import de.fhbielefeld.pmt.projectdetails.IProjectdetailsModel;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 import de.fhbielefeld.pmt.projectdetails.impl.event.GenerateTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.ReadAllCostsEvent;
-import de.fhbielefeld.pmt.projectdetails.impl.event.ReadCurrentProjectEvent;
+import de.fhbielefeld.pmt.projectdetails.impl.event.ReadCostsForprojectEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendCostToDBEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendStreamResourceTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.TransportAllCostsEvent;
@@ -59,12 +59,12 @@ public class ProjectdetailsComponent extends AbstractPresenter<IProjectdetailsMo
 	}
 	
 	/**
-	 * @author Sebastian Siegmann, Lucas Eickmann
+	 * @author Sebastian Siegmann, Lucas Eickmann, Kerem Cevik
 	 * @param event
 	 * TODO: Errors legen sich sobald das model richtig implementiert ist
 	 */
 	@Subscribe
-	public void onReadCurrentProjectEvent(ReadCurrentProjectEvent event) {
+	public void onReadCurrentProjectEvent(ReadCostsForprojectEvent event) {
 		//if (event.getSource() == this.view) {
 			
 				this.project = event.getProject();
