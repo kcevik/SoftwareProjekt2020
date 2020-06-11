@@ -17,8 +17,8 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.team.ITeamView;
-import de.fhbielefeld.pmt.team.impl.event.ReadAllEmployeesEvent;
-import de.fhbielefeld.pmt.team.impl.event.ReadAllProjectsEvent;
+import de.fhbielefeld.pmt.team.impl.event.ReadActiveEmployeesEvent;
+import de.fhbielefeld.pmt.team.impl.event.ReadActiveProjectsEvent;
 import de.fhbielefeld.pmt.team.impl.event.ReadAllTeamsEvent;
 import de.fhbielefeld.pmt.team.impl.event.SendTeamToDBEvent;
 
@@ -42,6 +42,11 @@ public class VaadinTeamViewLogic implements ITeamView{
 	private List<Project> projects= new ArrayList<Project>();;
 	private List<Team> teams = new ArrayList<Team>();
  
+	/**
+	 * Konstruktor
+	 * @param view
+	 * @param eventBus
+	 */
 	public VaadinTeamViewLogic(VaadinTeamView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View");
@@ -55,7 +60,7 @@ public class VaadinTeamViewLogic implements ITeamView{
 		this.registerViewListeners();
 		this.bindToFields();
 	}
-	
+	 
 	/**
 	 *  Fügt den Komponenten der View die entsprechenden Listener hinzu. 
 	 *  Erster Listener sorgt dafür, dass wenn in dem TeamGrid ein Wert angeklickt wird, die TeamForm "ausfährt" und die
@@ -107,6 +112,10 @@ public class VaadinTeamViewLogic implements ITeamView{
 		
 	}
 	 
+	/**
+	 * Methode, die die Filtereigenschaften steuert
+	 * @param filter
+	 */
 	private void filterList(String filter) {
 		List<Team> filtered = new ArrayList<>();
 		for (Team t : this.teams) {
@@ -123,7 +132,7 @@ public class VaadinTeamViewLogic implements ITeamView{
 		}
 		this.view.getTeamGrid().setItems(filtered);
 	}
-	
+			
 	/**
 	 * Methode die das aktuell ausgewählte Team auf null setzt -> wird beim Klick auf den btnBack aufgerufen
 	 * wird von der Methode cancelForm aufgerufen
@@ -211,12 +220,12 @@ public class VaadinTeamViewLogic implements ITeamView{
 		this.view.getTeamGrid().setItems(this.teams);
 	}
 	 
-	/**
+	/** 
 	 * Methode, die ein Event auslöst, das die DB nach allen Projekten, Mitarbeitern und Teams abfragt
 	 */
 	public void initReadFromDB() {
-		this.eventBus.post(new ReadAllProjectsEvent(this));
-		this.eventBus.post(new ReadAllEmployeesEvent(this));
+		this.eventBus.post(new ReadActiveProjectsEvent(this));
+		this.eventBus.post(new ReadActiveEmployeesEvent(this));
 		this.eventBus.post(new ReadAllTeamsEvent(this));
 		if (this.projects != null) {
 			this.view.getTeamForm().getMscbTeamProject().setItems(this.projects);
@@ -244,7 +253,7 @@ public class VaadinTeamViewLogic implements ITeamView{
 	public void setProjects(List<Project> projects) {
 		this.projects = projects;
 	}
-	 
+	
 	@Override
 	public void setEmployees(List<Employee> employees) {
 		this.employees = employees;

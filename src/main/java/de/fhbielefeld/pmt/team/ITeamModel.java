@@ -16,13 +16,19 @@ public interface ITeamModel extends IModel{
 
 	List<Team> getTeamListFromDatabase();
 	boolean isReadSuccessfull();
+	
 	public void persistTeam(Team team);
 	
 	List<Project> getProjectListFromDatabase();
 	boolean isReadProjectSuccessfull();
 	
+	List<Project> getActiveProjectListFromDatabase();
+	boolean isReadActiveProjectSuccessfull();
+	
 	List<Employee> getEmployeeListFromDatabase();
 	boolean isEmployeeReadSuccessfull();
 	
+	List<Employee> getActiveEmployeeListFromDatabase();
+	boolean isReadActiveEmployeeSuccessfull();
 	
 }

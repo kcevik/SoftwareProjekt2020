@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -14,16 +15,15 @@ import com.vaadin.flow.data.validator.RegexpValidator;
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
-import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity.ActivityCategories;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
 import de.fhbielefeld.pmt.converter.plainStringToIntegerConverter;
-import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.projectActivity.IProjectActivityView;
+import de.fhbielefeld.pmt.projectActivity.impl.event.BackToProjectsEvent;
 import de.fhbielefeld.pmt.projectActivity.impl.event.ReadAllProjectActivitiesEvent;
-import de.fhbielefeld.pmt.projectActivity.impl.event.ReadAllProjectsEvent;
-import de.fhbielefeld.pmt.projectActivity.impl.event.ReadCurrentProjectEvent;
+import de.fhbielefeld.pmt.projectActivity.impl.event.ReadProjectActivitiesEvent;
 import de.fhbielefeld.pmt.projectActivity.impl.event.SendProjectActivityToDBEvent;
+import de.fhbielefeld.pmt.projectActivity.impl.event.TransportAllActivitiesEvent;
 
 /**
  * Klasse, die die Logik für die View beinhaltet
@@ -44,6 +44,11 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	private ProjectActivity selectedProjectActivity;
 	private List<ProjectActivity> projectActivities = new ArrayList<ProjectActivity>();
 
+	/**
+	 * Konstruktor
+	 * @param view
+	 * @param eventBus
+	 */
 	public VaadinProjectActivityViewLogic(VaadinProjectActivityView view, EventBus eventBus) {
 		if (view == null) {
 			throw new NullPointerException("Undefinierte View");
@@ -66,8 +71,8 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		this.selectedProjectActivity = event.getValue();
 		this.displayProjectActivity();
 		});
-		this.view.getBackToMainMenu().addClickListener(event -> {
-			this.eventBus.post(new ModuleChooserChosenEvent(this));
+		this.view.getBtnBackToProject().addClickListener(event -> {
+			this.eventBus.post(new BackToProjectsEvent(this));
 			resetSelectedProjectActivity();
 		});
 		this.view.getCreateNewProjectActivity().addClickListener(event -> {
@@ -86,7 +91,7 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	 * und die entsprechenden Daten werden abgefragt
 	 */
 	public void bindToFields() {
-		
+				
 		this.binder.forField(this.view.getProjectActivityForm().getTfprojectActivityID())
 		.withConverter(new StringToLongConverter("")).bind(ProjectActivity::getProjectActivityID, null);
 				
@@ -124,7 +129,10 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		
 	}
 	
-	// TODO: Cast Exception
+	/**
+	 * Methode, die die Filtereigenschaften steuert
+	 * @param filter
+	 */
 	private void filterList(String filter) {
 		List<ProjectActivity> filtered = new ArrayList<>();
 		for (ProjectActivity p : this.projectActivities) {
@@ -149,7 +157,7 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	/**
 	 * Methode die den aktuell ausgewählte Projektakvitivät-Eintrag auf null setzt -> wird beim Klick auf den btnBack aufgerufen
 	 * wird von der Methode cancelForm aufgerufen
-	 * wird beim btnBackToMainMenu aufgerufen
+	 * wird beim btnBackToProjekt aufgerufen
 	 */
 	private void resetSelectedProjectActivity() {
 		this.selectedProjectActivity = null;
@@ -166,6 +174,10 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		
 	}
 	
+	/**
+	 * Methode, die das zuvor selektierte Team beim Verlassen der teamForm zurücksetzt
+	 * Wird beim btnClose ausgeführt
+	 */
 	private void cancelForm() {
 		resetSelectedProjectActivity();
 		this.view.clearGridAndForm();
@@ -173,7 +185,7 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	
 	/**
 	 * Methode, die die Darstellung der aktuell ausgewählten ProjectActivity in der projectActivityForm abbildet
-	 * @param team
+	 * @param ProjectActitvity
 	 */
 	private void displayProjectActivity() {
 		if (this.selectedProjectActivity != null) {
@@ -198,6 +210,7 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 			try {
 				this.binder.writeBean(this.selectedProjectActivity);
 				this.eventBus.post(new SendProjectActivityToDBEvent(this, this.selectedProjectActivity));
+				System.out.println("Projekt geht los" + this.selectedProjectActivity.toString());
 				this.view.getProjectActivityForm().setVisible(false);
 				this.addProjectActivity(selectedProjectActivity);
 				this.updateGrid();
@@ -210,7 +223,7 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 				resetSelectedProjectActivity();
 			}
 		}
-	}
+	} 
 	
 	/**
 	 * Methode, die das TeamGrid aktualisiert, indem die Liste mit den Teams neu übergeben wird
@@ -219,15 +232,24 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 	public void updateGrid() {
 		this.view.getProjectActivityGrid().setItems(this.projectActivities);
 	}
-	
+	 
 	/**
 	 * Methode, die das aktuell ausgewählte Projekt auslesen und im Grid wiedergeben soll!
 	 * @param project
 	 */
 	public void initReadCurrentProjectFromDB(Project project) {
 		this.project = project;
-		this.eventBus.post(new ReadCurrentProjectEvent (this, project));
+		// this.eventBus.post(new ReadAllProjectActivitiesEvent(this));
+		this.eventBus.post(new ReadProjectActivitiesEvent (this, project));
 		this.updateGrid();
+	}
+	
+	// TODO: NEU
+	@Subscribe
+	public void onTransportAllActivitiesEvent(TransportAllActivitiesEvent event) {
+		this.projectActivities = event.getProjectActivityList();
+		updateGrid();
+		
 	}
 	
 	public void initReadFromDB() {

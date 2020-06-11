@@ -23,4 +23,6 @@ public interface IProjectActivityModel extends IModel {
 	public void setProject(Project project);
 	public Project getProject();
 	
+	List<ProjectActivity> getProjectActivityFromDatabase(Project project);
+	
 }

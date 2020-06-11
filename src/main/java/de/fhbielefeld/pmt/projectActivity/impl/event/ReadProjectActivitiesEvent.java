@@ -11,16 +11,19 @@ import de.fhbielefeld.pmt.projectActivity.IProjectActivityView;
  * @author David Bistron
  *
  */
-public class ReadCurrentProjectEvent extends EventObject {
+public class ReadProjectActivitiesEvent extends EventObject {
 
 	private Project project;
 	
 	private static final long serialVersionUID = 1L;
-	public ReadCurrentProjectEvent(IProjectActivityView view, Project project) {
+	
+	public ReadProjectActivitiesEvent(IProjectActivityView view, Project project) {
 		super(view);
 		this.project = project;
 	}
+	
 	public Project getProject() {
 		return project;
 	}
+	
 }

@@ -33,7 +33,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	private List<ProjectActivity> projectActivityList = new ArrayList<ProjectActivity>();
 	private TextField tfFilterText = new TextField();
 	private Button btnCreateNewProjectActivity = new Button("Neue Projekttätigkeit erfassen");
-	private Button btnBackToMainMenu = new Button("Zurück zur Aufgabenauswahl");
+	private Button btnBackToProject = new Button("Zurück zur Projektübersicht");
 	private VaadinProjectActivityViewForm projectActivityForm = new VaadinProjectActivityViewForm();
 	
 	/**
@@ -47,7 +47,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	}
 
 	/**
-	 * Div content sorgt für eine Trennung des TeamGrid (links) und der TeamForm (rechts) innerhalb einer View
+	 * Div content sorgt für eine Trennung des ProjectActivityGrid (links) und der ProjectActivityForm (rechts) innerhalb einer View
 	 * addClassName greift auf den CSS-Style "content" zu
 	 */
 	private void builtUI() {
@@ -55,12 +55,13 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		Div content = new Div(projectActivityGrid, projectActivityForm);
 		content.addClassName("content");
 		content.setSizeFull();
-		this.add(new HorizontalLayout(tfFilterText, btnCreateNewProjectActivity), content, btnBackToMainMenu);
+		this.add(new HorizontalLayout(tfFilterText, btnCreateNewProjectActivity), content, btnBackToProject);
 		
 	}
 
 	/**
 	 * addClassName greift auf den CSS-Style "list-view" zu
+	 * die ProjectActivityForm ist zunächst nicht sichtbar, daher setVisible(false)
 	 */
 	private void initUI() {
 		
@@ -73,7 +74,7 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	}
 
 	/**
-	 * Methode, die für die Darstellung eines Filter-Feldes zuständig ist, damit nach Teams etc. gesucht werden kann
+	 * Methode, die für die Darstellung eines Filter-Feldes zuständig ist, damit nach ProjectActivity etc. gesucht werden kann
 	 * setValueChangeMode sorgt dafür, dass eine Eingabe in dem Filter-Feld das Ergebnis etwas zeitverzögert darstellt
 	 */
 	private void configureFilter() {
@@ -92,21 +93,12 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	
 	/**
 	 * Methode, um das Grid zu erstellen. Beinhaltet die Spaltenüberschriften, die identisch mit der Datenbank sind
-	 * vgl. Klasse Team im Package JPAEntities
+	 * vgl. Klasse ProjectActivity im Package JPAEntities
 	 */
 	private void configureGrid() {
 		this.projectActivityGrid.addClassName("projectActivity-grid");
 		this.projectActivityGrid.removeColumnByKey("project");
-		this.projectActivityGrid.setColumns("project", "projectActivityID", "category", "description", "hoursAvailable", "hourlyRate", "hoursExpended");
-		
-		//TODO: Die Projekt-ID vom gewählten Projekt muss da stehen! Funktioniert nicht! Rausschmeißen???
-		/*
-		this.projectActivityGrid.addColumn(ProjectActivity -> {
-			ProjectActivity.getProjectIDsAsString();
-			return ProjectActivity;
-		}).setHeader("Projekt ID");
-		*/
-		
+		this.projectActivityGrid.setColumns("project", "projectActivityID", "category", "description", "hoursAvailable", "hourlyRate", "hoursExpended");		
 		this.projectActivityGrid.getColumnByKey("project").setHeader("Projekt ID");
 		this.projectActivityGrid.getColumnByKey("projectActivityID").setHeader("Aktivitäts ID");
 		this.projectActivityGrid.getColumnByKey("category").setHeader("Tätigkeitskategorie");
@@ -114,14 +106,13 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		this.projectActivityGrid.getColumnByKey("hourlyRate").setHeader("Stundensatz");
 		this.projectActivityGrid.getColumnByKey("hoursAvailable").setHeader("max. verfügbare Stunden");
 		this.projectActivityGrid.getColumnByKey("hoursExpended").setHeader("bisher aufgewendete Stunden");
-			
 		this.projectActivityGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.projectActivityGrid.setHeightFull();
 		this.projectActivityGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
 	}
 
 	/**
-	 * Methode, um das TeamGrid zu erstellen: Entspricht der Tabellendarstellung
+	 * Methode, um das ProjectActivityGrid zu erstellen: Entspricht der Tabellendarstellung
 	 * @return teamGrid
 	 */
 	public Grid<ProjectActivity> getProjectActivityGrid() {
@@ -143,8 +134,8 @@ public class VaadinProjectActivityView extends VerticalLayout {
 	 * get-Methode für den Button, damit dieser in der ViewLogic für den Event-Listener aufgerufen werden kann!
 	 * @return backToMainMenu
 	 */
-	public Button getBackToMainMenu() {
-		return btnBackToMainMenu;
+	public Button getBtnBackToProject() {
+		return btnBackToProject;
 	}
 	
 	/**
@@ -163,9 +154,8 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		return tfFilterText;
 	}
 	
-	
 	/**
-	 * Aktualisierung des Grid. Wie? Die darzustellende Liste wird neu übergeben
+	 * Aktualisierung des Grid, indem die darzustellende Liste neu übergeben wird
 	 */
 	public void updateGrid() {
 		this.projectActivityGrid.setItems(this.projectActivityList);

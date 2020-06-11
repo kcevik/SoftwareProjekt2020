@@ -44,7 +44,7 @@ public class VaadinNavigatorBoxView extends HorizontalLayout {
 	 * Hier werden Buttons hinzugefügt und beschriftet
 	 */
 	private void initUI() {
-		this.btnActivities.setText("Projektaktivitäten");
+		this.btnActivities.setText("Projekttätigkeiten");
 		this.btnAnalytics.setText("Analyse-Tools");
 		this.btnRemarks.setText("Anmerkungen");
 		this.btnCosts.setText("Projektkosten");

@@ -11,8 +11,9 @@ import de.fhbielefeld.pmt.projectActivity.IProjectActivityComponent;
 import de.fhbielefeld.pmt.projectActivity.IProjectActivityModel;
 import de.fhbielefeld.pmt.projectActivity.IProjectActivityView;
 import de.fhbielefeld.pmt.projectActivity.impl.event.ReadAllProjectActivitiesEvent;
-import de.fhbielefeld.pmt.projectActivity.impl.event.ReadCurrentProjectEvent;
+import de.fhbielefeld.pmt.projectActivity.impl.event.ReadProjectActivitiesEvent;
 import de.fhbielefeld.pmt.projectActivity.impl.event.SendProjectActivityToDBEvent;
+import de.fhbielefeld.pmt.projectActivity.impl.event.TransportAllActivitiesEvent;
 
 /**
  * Klasse, die den gesamten Event-Transfer steuert (Kernstück!)
@@ -53,11 +54,18 @@ public class ProjectActivityComponent extends AbstractPresenter<IProjectActivity
 		}
 	}
 	
-	// TODO: Noch nicht ganz komplett?
-	public void onReadCurrentProjectEvent(ReadCurrentProjectEvent event) {
+	/**
+	 * Methode, die alle Projektaktivitäten aus der DB ausliest und in der View darstellt
+	 * ***** diese Methode wird tatsächlich angewendet! *****
+	 * In dem TeamGrid wird die Projekt-ID mit der Projektaktivität verknüpft und es werden nur die Projektaktivitäten angezeigt, die
+	 * tätsächlich zu dem ausgewählten Projekt gehören
+	 * @param event
+	 */
+	@Subscribe
+	public void onReadProjectActivitiesEvent(ReadProjectActivitiesEvent event) {
 		this.project = event.getProject();
 		this.model.setProject(event.getProject());
-		this.eventBus.post(new ReadCurrentProjectEvent(this.view, this.model.getProject()));
+		this.eventBus.post(new TransportAllActivitiesEvent(this.view, this.model.getProjectActivityFromDatabase(this.project)));
 	}
 
 	/**
