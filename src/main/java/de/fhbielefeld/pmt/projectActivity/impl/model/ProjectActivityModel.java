@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
-import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 import de.fhbielefeld.pmt.projectActivity.IProjectActivityModel;
