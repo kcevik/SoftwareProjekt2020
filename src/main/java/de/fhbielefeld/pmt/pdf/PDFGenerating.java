@@ -50,7 +50,8 @@ public class PDFGenerating {
 		FileOutputStream fos = null;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
 		LocalDateTime now = LocalDateTime.now();
-		String path = "PDFExport/Gesamtkosten " + dtf.format(now) + ".pdf";
+		//String path = "src/main/resources/Gesamtkosten " + dtf.format(now) + ".pdf";
+		String path = System.getProperty("java.io.tmpdir") + "Gesamtkostenübersicht " + project.getProjectID() + " " + dtf.format(now) + ".pdf";
 		Font baseFont = FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK);
 		Font basetableFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
 		Font h2font = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK);
@@ -192,7 +193,8 @@ public class PDFGenerating {
 		DateTimeFormatter dtfToSecond = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
 		DateTimeFormatter dtfToDay = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		LocalDateTime now = LocalDateTime.now();
-		String path = "PDFExport/Rechnung " + project.getProjectID() + " " + dtfToSecond.format(now) + ".pdf";
+		//String path = "src/main/resources/Rechnung " + project.getProjectID() + " " + dtfToSecond.format(now) + ".pdf";
+		String path = System.getProperty("java.io.tmpdir") + "Rechnung " + project.getProjectID() + " " + dtfToSecond.format(now) + ".pdf";
 		Font baseFont = FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK);
 		Font baseTableFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
 		Font h2Font = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK);

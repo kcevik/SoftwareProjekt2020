@@ -11,6 +11,10 @@ import de.fhbielefeld.pmt.projectdetailsNavBar.IProjectdetailsNavComponent;
 import de.fhbielefeld.pmt.projectdetailsNavBar.IProjectdetailsNavView;
 import de.fhbielefeld.pmt.topBar.ITopBarView;
 
+/** 
+ * @author Kerem Cevik
+ *
+ */
 public class ProjectdetailsNavBarComponent extends AbstractPresenter<IProjectdetailsModel, IProjectdetailsNavView> implements IProjectdetailsNavComponent{
 	
 	public ProjectdetailsNavBarComponent( IProjectdetailsModel model,IProjectdetailsNavView view, EventBus eventBus) {

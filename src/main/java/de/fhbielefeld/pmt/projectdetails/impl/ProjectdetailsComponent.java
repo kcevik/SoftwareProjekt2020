@@ -38,7 +38,7 @@ import de.fhbielefeld.pmt.team.impl.event.TransportAllTeamsEvent;
 /**
  * ProjectdetailsComponent
  * 
- * @author Kerem
+ * @author Kerem Cevik
  *
  *
  */
@@ -64,8 +64,11 @@ public class ProjectdetailsComponent extends AbstractPresenter<IProjectdetailsMo
 	/**
 	 * @author Kerem Cevik
 	 * @param event
+	 * Methode zum Lesen und Transportieren der Kosten
+	 * Transport zur ViewLogic
 	 * 
 	 */
+	@Override
 	@Subscribe
 	public void onReadCostsForprojectEvent(ReadCostsForProjectEvent event) {
 
@@ -96,10 +99,14 @@ public class ProjectdetailsComponent extends AbstractPresenter<IProjectdetailsMo
 		});
 		this.eventBus.post(new SendStreamResourceTotalCostsEvent(this.view, res, timeStamp));
 	}
-
+	
+	/**
+	 *Methode zum persistieren der Costs
+	 */
+	@Override
 	@Subscribe
 	public void onSendCostToDBEvent(SendCostToDBEvent event) {
-		System.out.println("im ttrying to  persist " + event.getCost().getProject().getProjectID());
+		System.out.println("im trying to  persist " + event.getCost().getProject().getProjectID());
 		this.model.persistCost(event.getCost());
 	}
 

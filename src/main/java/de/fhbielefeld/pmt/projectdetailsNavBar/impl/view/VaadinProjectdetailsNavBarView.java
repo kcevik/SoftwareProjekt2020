@@ -6,6 +6,10 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class VaadinProjectdetailsNavBarView extends VerticalLayout {
 	private static final long serialVersionUID = 1L;
 

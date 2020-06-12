@@ -11,12 +11,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 @CssImport("./styles/shared-styles.css")
 public class VaadinProjectAnalyticsView extends VerticalLayout {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private final Button btnBackToProjectmanagement = new Button("Zurück zur Projektübersicht");
 	private final Label lblAnalytics = new Label("Analytics");
@@ -24,7 +26,10 @@ public class VaadinProjectAnalyticsView extends VerticalLayout {
 	private JFreeChartWrapper costWrapper = new JFreeChartWrapper();
 	private JFreeChartWrapper timeWrapper = new JFreeChartWrapper();
 	private JFreeChartWrapper fullfillmentWrapper = new JFreeChartWrapper();
-
+	/*
+	 * Der fullfillmentWrapper schmeißt einen Error, diese Klasse ist eine Komponente
+	 * der VaadinCommunity => Fehler leider nicht von mir zu lösen..
+	 */
 	
 	public VaadinProjectAnalyticsView() {
 		this.initUI();
@@ -32,12 +37,11 @@ public class VaadinProjectAnalyticsView extends VerticalLayout {
 	}
 	
 	private void initUI() {
-		costWrapper.setWidth("750px");
-		costWrapper.setHeight("500px");
+		costWrapper.setWidth("500px");
+		costWrapper.setHeight("450px");
 		
-		timeWrapper.setWidth("750px");
-		timeWrapper.setHeight("500px");
-		//Div content = new Div(fullfillmentImage, timeImage, costsImage);
+		timeWrapper.setWidth("500px");
+		timeWrapper.setHeight("450px");
 		Div content = new Div(costWrapper,timeWrapper, fullfillmentWrapper);
 		content.addClassName("content");
 		content.addClassName("analyticsDiv");

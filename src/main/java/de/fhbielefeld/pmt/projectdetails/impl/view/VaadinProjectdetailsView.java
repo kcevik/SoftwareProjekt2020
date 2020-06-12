@@ -2,7 +2,7 @@ package de.fhbielefeld.pmt.projectdetails.impl.view;
 
 import java.util.ArrayList;
 
-import com.vaadin.flow.component.Component;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
@@ -15,28 +15,18 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
-import de.fhbielefeld.pmt.DatabaseManagement.DatabaseService;
 import de.fhbielefeld.pmt.JPAEntities.Costs;
-import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
-import de.fhbielefeld.pmt.projectdetailsNavBar.IProjectdetailsNavComponent;
-import de.fhbielefeld.pmt.projectdetailsNavBar.impl.ProjectdetailsNavBarComponent;
-import de.fhbielefeld.pmt.projectdetailsNavBar.impl.view.VaadinProjectdetailsNavBarView;
-import de.fhbielefeld.pmt.projectdetailsNavBar.impl.view.VaadinProjectdetailsNavBarViewLogic;
-import de.fhbielefeld.pmt.team.impl.model.TeamModel;
-import de.fhbielefeld.pmt.topBar.ITopBarComponent;
-import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
-import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
-import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
-import de.fhbielefeld.pmt.trafficLight.VaadinTrafficLightView;
-import de.fhbielefeld.pmt.trafficLight.VaadinTrafficLightViewLogic;
 
+
+/**
+ * @author Kerem Cevik
+ *
+ */
 @CssImport("./styles/shared-styles.css")
 
 public class VaadinProjectdetailsView extends VerticalLayout {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	private final VaadinTrafficLightViewLogic trafficLight = new VaadinTrafficLightViewLogic(new VaadinTrafficLightView());
@@ -54,7 +44,6 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 	public VaadinProjectdetailsView() {
 		costGrid = new Grid<>(Costs.class);
 
-		//nav = new VaadinProjectdetailsNavigatorView();
 		costForm = new VaadinProjectcostFormView();
 		
 		list = new ArrayList<>();
@@ -71,7 +60,6 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 	}
 	
 	public void builtUI() {
-		// TODO Auto-generated method stub
 		
 		Div content = new Div(costGrid, costForm);
 		content.addClassName("content"); 	
@@ -115,7 +103,7 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 	}
 
 	public void configureGrid() {
-		// TODO Auto-generated method stub
+		
 		this.costGrid.addClassName("client-grid");
 		this.costGrid.removeColumnByKey("costsID");
 		this.costGrid.removeColumnByKey("project");
@@ -124,7 +112,6 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 		this.costGrid.getColumnByKey("costType").setHeader("Kostenart");
 		this.costGrid.getColumnByKey("description").setHeader("Beschreibung");
 		this.costGrid.getColumnByKey("incurredCosts").setHeader("enstandene Kosten");
-		
 
 		this.costGrid.getColumns().forEach(col -> col.setAutoWidth(true));
 		this.costGrid.setHeightFull();
@@ -134,7 +121,6 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 	}
 	
 	
-	
 	public Grid<Costs> getCostGrid() {
 		return costGrid;
 	}
@@ -142,13 +128,6 @@ public class VaadinProjectdetailsView extends VerticalLayout {
 	public VaadinProjectcostFormView getCostForm() {
 		return costForm;
 	}
-
-
-
-	/*public VaadinProjectdetailsNavigatorView getNav() {
-		return nav;
-	}*/
-
 
 	public TextField getFilterText() {
 		return filterText;

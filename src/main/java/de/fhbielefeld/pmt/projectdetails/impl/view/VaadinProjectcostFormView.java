@@ -8,16 +8,18 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.server.VaadinService;
 
+
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class VaadinProjectcostFormView extends FormLayout {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private final Label lblDescr = new Label();
 	private final ComboBox<String> cbCostType = new ComboBox<>("Kostenart");
@@ -44,9 +46,9 @@ public class VaadinProjectcostFormView extends FormLayout {
 	public void configureCostFormFields() {
 		
 		lblDescr.setEnabled(false);
-		cbCostType.setReadOnly(true);
-		tfIncurredCosts.setEnabled(false);
-		taDescription.setEnabled(false);
+		cbCostType.setReadOnly(true);	
+		tfIncurredCosts.setReadOnly(true);
+		taDescription.setReadOnly(true);
 		btnSave.setVisible(false);
 		btnCancel.setVisible(false);
 		btnEdit.setEnabled(true);
@@ -65,7 +67,7 @@ public class VaadinProjectcostFormView extends FormLayout {
 	}
 	
 	/**
-	 * TODO: Methode, die die TeamForm 
+	 * Methode die die Form einblendet
 	 */
 	public void prepareCostFormFields() {
 		lblDescr.setEnabled(true);
@@ -82,12 +84,12 @@ public class VaadinProjectcostFormView extends FormLayout {
 	}
 	
 	/**
-	 * Methode, die die TeamForm ausblended
+	 * Methode, die die Form ausblended
 	 */
 	public void closeCostFormFields() {
 		this.cbCostType.setReadOnly(true);
-		this.tfIncurredCosts.setEnabled(false);
-		this.taDescription.setEnabled(false);
+		this.tfIncurredCosts.setReadOnly(true);
+		this.taDescription.setReadOnly(true);
 		this.btnSave.setEnabled(false);
 		this.btnSave.setVisible(false);
 		this.btnCancel.setVisible(true);

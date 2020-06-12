@@ -5,6 +5,10 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class SendCostToDBEvent extends EventObject {
 	
 	private static final long serialVersionUID = 1L;

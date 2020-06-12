@@ -1,12 +1,16 @@
 package de.fhbielefeld.pmt.projectdetails.impl.event;
 
-import java.util.ArrayList;
+
 import java.util.EventObject;
 import java.util.List;
 
 import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class TransportAllCostsEvent extends EventObject{
 	private static final long serialVersionUID = 1L;
 

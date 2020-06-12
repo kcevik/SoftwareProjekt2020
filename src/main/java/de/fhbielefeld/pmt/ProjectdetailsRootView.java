@@ -53,15 +53,17 @@ import de.fhbielefeld.pmt.topBar.impl.TopBarComponent;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarViewLogic;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 @Route("projectdetails")
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 
 public class ProjectdetailsRootView extends VerticalLayout {
 
-	/**
-	 * 
-	 */
+
 
 	private static final long serialVersionUID = 1L;
 	private final EventBus eventBus = new EventBus();

@@ -5,6 +5,10 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.projectAnalytics.IProjectAnalyticsView;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class GetAnalyticsData extends EventObject{
 
 	

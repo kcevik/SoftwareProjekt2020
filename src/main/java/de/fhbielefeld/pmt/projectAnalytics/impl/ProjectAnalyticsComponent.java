@@ -17,6 +17,10 @@ import de.fhbielefeld.pmt.projectAnalytics.IProjectAnalyticsView;
 import de.fhbielefeld.pmt.projectAnalytics.impl.event.GetAnalyticsData;
 import de.fhbielefeld.pmt.projectAnalytics.impl.event.TransportAnalyticsData;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class ProjectAnalyticsComponent extends AbstractPresenter <IProjectAnalyticsModel,IProjectAnalyticsView> implements IProjectAnalyticsComponent{
 		
 	Project project;
@@ -29,7 +33,7 @@ public class ProjectAnalyticsComponent extends AbstractPresenter <IProjectAnalyt
 		this.project = project;
 	}
 	
-	
+	@Override
 	@Subscribe 
 	public void onGetAnalyticsData(GetAnalyticsData event) {
 		

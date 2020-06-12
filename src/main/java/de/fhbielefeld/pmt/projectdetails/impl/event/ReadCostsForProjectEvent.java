@@ -5,6 +5,10 @@ import java.util.EventObject;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class ReadCostsForProjectEvent extends EventObject {
 
 	Project project;

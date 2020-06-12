@@ -1,19 +1,11 @@
 package de.fhbielefeld.pmt.projectdetails.impl.view;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.nio.file.Files;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.core.base.GeneratorBase;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.helger.commons.io.resource.FileSystemResource;
+
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.notification.Notification;
@@ -21,35 +13,28 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
-import com.vaadin.flow.data.converter.StringToDoubleConverter;
-import com.vaadin.flow.data.converter.StringToLongConverter;
+
 import com.vaadin.flow.data.validator.RegexpValidator;
-import com.vaadin.flow.server.StreamResource;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Costs;
 import de.fhbielefeld.pmt.JPAEntities.Project;
-import de.fhbielefeld.pmt.JPAEntities.Team;
+
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
-import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
-import de.fhbielefeld.pmt.pdf.PDFGenerating;
-import de.fhbielefeld.pmt.project.impl.event.GenerateInvoiceEvent;
-import de.fhbielefeld.pmt.project.impl.event.ProjectDetailsModuleChoosenEvent;
-import de.fhbielefeld.pmt.project.impl.event.ReadAllClientsEvent;
-import de.fhbielefeld.pmt.project.impl.event.ReadAllManagersEvent;
-import de.fhbielefeld.pmt.project.impl.event.ReadAllProjectsEvent;
-import de.fhbielefeld.pmt.project.impl.event.SendStreamResourceInvoiceEvent;
+
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 import de.fhbielefeld.pmt.projectdetails.impl.event.GenerateTotalCostsEvent;
-import de.fhbielefeld.pmt.projectdetails.impl.event.ReadAllCostsEvent;
+
 import de.fhbielefeld.pmt.projectdetails.impl.event.ReadCostsForProjectEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendCostToDBEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.SendStreamResourceTotalCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.TransportAllCostsEvent;
 import de.fhbielefeld.pmt.projectdetails.impl.event.TransportProjectEvent;
-import de.fhbielefeld.pmt.team.impl.event.ReadAllTeamsEvent;
-import de.fhbielefeld.pmt.team.impl.event.SendTeamToDBEvent;
-import de.fhbielefeld.pmt.team.impl.event.TransportAllTeamsEvent;
+
+/**
+ * @author Kerem Cevik
+ *
+ */
 
 public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 	BeanValidationBinder<Costs> binderT = new BeanValidationBinder<>(Costs.class);
@@ -75,7 +60,11 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 		registerViewListeners();
 	}
 
-	void registerViewListeners() {
+	/**
+	 * Methode um den Buttons funktionalitäten zu geben
+	 */
+	@Override
+	public void registerViewListeners() {
 
 		this.view.getBtnCreateCostPosition().addClickListener(event -> {
 			view.getCostForm().prepareCostFormFields();
@@ -103,9 +92,13 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 		this.view.getBtnCreateCostPDF()
 				.addClickListener(event -> eventBus.post(new GenerateTotalCostsEvent(this, this.project)));
 		this.view.getBtnCreateCostPosition().setId("id");
-		this.view.getFilterText().addValueChangeListener(event -> this.filterList(this.view.getFilterText().getValue()));
+		this.view.getFilterText()
+				.addValueChangeListener(event -> this.filterList(this.view.getFilterText().getValue()));
 	}
-	
+
+	/**
+	 * @param filter Methode zum filtern des Grids, durch das Suchfeld
+	 */
 	private void filterList(String filter) {
 		List<Costs> filtered = new ArrayList<>();
 		for (Costs c : this.costs) {
@@ -122,13 +115,20 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 		}
 		this.view.getCostGrid().setItems(filtered);
 	}
-	
+
+	@Override
 	public void resetForm() {
 		this.selectedCost = null;
 		this.view.getCostForm().resetCostForm();
 
 	}
 
+	/**
+	 * @param project Methode wird aufgerufen, wenn die View aufgerufen und die
+	 *                Logic aktiviert wird. project parameter kommt aus der Session
+	 *                der Rootview
+	 */
+	@Override
 	public void initReadFromDB(Project project) {
 		this.project = project;
 		this.eventBus.post(new ReadCostsForProjectEvent(this, project));
@@ -141,7 +141,11 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	}
 
-	void calculateForAllCostInfo(List<Costs> list) {
+	/**
+	 * @param list Gesamtkosteninfo wird hier beschrieben
+	 */
+	@Override
+	public void calculateForAllCostInfo(List<Costs> list) {
 		double currentCost = 0;
 		for (Costs t : list)
 			currentCost += t.getIncurredCosts();
@@ -150,6 +154,11 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	}
 
+	/**
+	 * MEthode gibt den Gridfeldern Daten, also bindet das Objekt an das Grid.
+	 * Außderm eine Validierungsfunktion, beim erzeugen oder ändern einer
+	 * Kostenposition
+	 */
 	void bindToFields() {
 
 		this.binderT.forField(this.view.getCostForm().getCbCostType()).asRequired()
@@ -166,10 +175,11 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 				.withValidator((string -> string != null && !string.isEmpty()),
 						"Bitte geben Sie eine Beschreibung ein!")
 				.bind(Costs::getDescription, Costs::setDescription);
-		
-		
+
 	}
-	void displayCost() {
+
+	@Override
+	public void displayCost() {
 		if (this.selectedCost != null) {
 			try {
 				if (this.project != null) {
@@ -192,7 +202,8 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 
 	}
 
-	private void saveCostPosition() {
+	@Override
+	public void saveCostPosition() {
 		if (this.binderT.validate().isOk()) {
 			try {
 				binderT.writeBean(this.selectedCost);
@@ -211,11 +222,13 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 			}
 		}
 	}
-
-	void resetSelectedCost() {
+	
+	@Override
+	public void resetSelectedCost() {
 		this.selectedCost = null;
 	}
 
+	@Override
 	public void addCost(Costs c) {
 		if (!this.costs.contains(c)) {
 			this.costs.add(c);
@@ -233,7 +246,8 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 		this.project = event.getProject();
 	}
 
-	private void createNewCostPosition() {
+	@Override
+	public void createNewCostPosition() {
 		try {
 			this.selectedCost = new Costs();
 			this.selectedCost.setProject(this.project);
@@ -243,50 +257,15 @@ public class VaadinProjectdetailsViewLogic implements IProjectdetailsView {
 					.setIncurredCosts(Double.parseDouble(this.view.getCostForm().getTfIncurredCosts().getValue()));
 			this.selectedCost.setProject(this.project);
 		} catch (NumberFormatException e) {
-			
+
 		}
-		
+
 	}
 
-//	/**
-//	 * @author LucasEickmann
-//	 */
-//	private void downloadPDF() {
-//		
-//		Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
-//		PDFGenerating gen = new PDFGenerating();
-//		File file = gen.generateTotalCostsPdf(null);
-//		StreamResource res = new StreamResource(file.getName(), () ->  {
-//			try {
-//				return new FileInputStream(file);
-//			} catch (FileNotFoundException e) {
-//				Notification.show("Fehler beim erstellen der Datei");
-//				return null;
-//			}
-//		});
-//		
-//		Anchor downloadLink = new Anchor(res, "Download");
-//		this.view.add(downloadLink);
-//		downloadLink.setId(timeStamp.toString());
-//		downloadLink.getElement().getStyle().set("display", "none");
-//		downloadLink.getElement().setAttribute( "download" , true );
-//		
-//	
-//		Page page = UI.getCurrent().getPage();
-//		page.executeJs("document.getElementById('" + timeStamp.toString() + "').click()");
-//		
-//	}
-
 	/**
-	 * <<<<<<< HEAD
-	 * 
-	 * @author LucasEickmann
-	 * 
-	 *         =======
-	 * @author Sebastian Siegmann, Lucas Eickmann
-	 * @param event >>>>>>> master
+	 * @author Sebastian Siegmann, Lukas Eickmann
+	 * @param event
 	 */
-
 	@Subscribe
 	public void onSendStreamResourceTotalCostsEvent(SendStreamResourceTotalCostsEvent event) {
 		Anchor downloadLink = new Anchor(event.getRes(), "Download");

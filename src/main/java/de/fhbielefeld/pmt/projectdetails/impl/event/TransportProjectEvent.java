@@ -2,11 +2,15 @@ package de.fhbielefeld.pmt.projectdetails.impl.event;
 
 import java.util.EventObject;
 
-import de.fhbielefeld.pmt.ProjectRootView;
+
 import de.fhbielefeld.pmt.JPAEntities.Project;
-import de.fhbielefeld.pmt.project.impl.event.ProjectDetailsModuleChoosenEvent;
+
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsView;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class TransportProjectEvent extends EventObject {
 
 	Project project;

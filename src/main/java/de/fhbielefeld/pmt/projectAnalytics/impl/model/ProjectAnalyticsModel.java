@@ -9,6 +9,10 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 import de.fhbielefeld.pmt.projectAnalytics.IProjectAnalyticsModel;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class ProjectAnalyticsModel implements IProjectAnalyticsModel {
 	private DatabaseService dbService;
 	private Project project;

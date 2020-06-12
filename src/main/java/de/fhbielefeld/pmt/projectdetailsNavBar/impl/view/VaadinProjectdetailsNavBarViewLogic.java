@@ -6,6 +6,10 @@ import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.projectdetailsNavBar.IProjectdetailsNavView;
 import de.fhbielefeld.pmt.topBar.impl.view.VaadinTopBarView;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class VaadinProjectdetailsNavBarViewLogic implements IProjectdetailsNavView{
 	
 	private VaadinProjectdetailsNavBarView view;

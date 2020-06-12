@@ -22,6 +22,10 @@ import de.fhbielefeld.pmt.projectAnalytics.impl.event.GetAnalyticsData;
 import de.fhbielefeld.pmt.projectAnalytics.impl.event.TransportAnalyticsData;
 import de.fhbielefeld.pmt.projectdetails.impl.view.VaadinProjectdetailsView;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 
 	VaadinProjectAnalyticsView view;
@@ -52,50 +56,64 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 				.addClickListener(event -> this.view.getUI().ifPresent(ui -> ui.navigate("projectmanagement")));
 	}
 
+	/**
+	 * Methode erzeugt Diagramme und packt sie in den jeweiligen Wrapper in der View
+	 */
+	
+	@Override
 	public void createCharts() {
-		System.out.println("trying to create chart");
+
 		datasetCostPie = createCostPieDataset();
 		datasetTimePie = createTimePieDataset();
-		datasetFullfillmentPie = createFullFillmentPieDataset();
+		//datasetFullfillmentPie = createFullFillmentPieDataset();
+
 		JFreeChart costPieChart = ChartFactory.createPieChart("Kostendiagramm", datasetCostPie);
 		JFreeChart timePieChart = ChartFactory.createPieChart("Stundendiagramm", datasetCostPie);
-		JFreeChart fullfillmentPieChart = ChartFactory.createPieChart("Erfüllungsgraddiagramm", datasetFullfillmentPie);
 		
-		
+		/**
+		 * hier folgt eigentlich das erstellen des projektfortschrittsdiagramm, aber im quellcode 
+		 * der genutzten VaadinCommunityComponent tritt ein Fehler auf. 
+		 * Leider kann ich diesen nicht Fixen, da der Autor der Komponente das machen muss...
+		 * Fehler wird aus JFreeChartWrapper erzeugt
+		 *
+		 */
+		// JFreeChart fullfillmentPieChart = ChartFactory.createPieChart("Erfüllungsgraddiagramm",
+		// datasetFullfillmentPie);
+
 		this.view.getCostWrapper().setChart(costPieChart);
 		this.view.getTimeWrapper().setChart(timePieChart);
-		//this.view.getFullfillmentWrapper().setChart(fullfillmentPieChart);
-		//this.view.getCostWrapper().setSizeFull();
-		//this.view.getTimeWrapper().setSizeFull();
-		//this.view.getFullfillmentWrapper().setSizeFull();
-		
-		
-		
+		// this.view.getFullfillmentWrapper().setChart(fullfillmentPieChart);
+	
+
 	}
 
+	@Override
 	public void getData(Project project) {
 		this.project = project;
 		this.eventBus.post(new GetAnalyticsData(this, this.project));
 	}
 
+	@Override
 	@Subscribe
 	public void onTransportAnalyticsData(TransportAnalyticsData event) {
-		// if (event.getSource() == this.view) {
+
 		System.out.println("projektid: " + event.getProject().getProjectID());
 		this.costs = event.getCosts();
 		this.activities = event.getActivities();
 		this.project = event.getProject();
-		// }
+
 		createCharts();
 	}
 
+	@Override
 	public DefaultPieDataset createCostPieDataset() {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		dataset.setValue(" restliches Budget ", (project.getBudget() - calcIncurredCosts()));
 		dataset.setValue("bisherige Kosten", calcIncurredCosts());
 		return dataset;
 	}
-	
+
+	@Override
 	public DefaultPieDataset createFullFillmentPieDataset() {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		System.out.println("fullfillment :" + calcFullfillment());
@@ -104,6 +122,7 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		return dataset;
 	}
 
+	@Override
 	public DefaultPieDataset createTimePieDataset() {
 
 		DefaultPieDataset dataset = new DefaultPieDataset();
@@ -113,7 +132,18 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		return dataset;
 	}
 
+	
+	/**
+	 *Fullfillment berechnet sich aus:
+	 * relation Kosten zu Budget (max. 100)
+	 * relation aufgewendete Zeit zu verfügbare Zeit (max. 100)
+	 * 
+	 * beide relöationen addieren.
+	 * maximaler erfüllungsgrad ist 200.
+	 */
+	@Override
 	public int calcFullfillment() {
+		int fullfillmentCost;
 
 		int spentTime = calcExtendedHours();
 		int timeAvailable = calcAvailableHours();
@@ -121,19 +151,24 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		double cost = calcIncurredCosts();
 		double budget = project.getBudget();
 
-		int fullfillmentTime = (int) (cost /budget * 100);
-		int fullfillmentCost = spentTime / timeAvailable * 100;
+		int fullfillmentTime = (int) (cost / budget * 100);
+		if (timeAvailable > 0) {
+			fullfillmentCost = spentTime / timeAvailable * 100;
+		} else {
+			fullfillmentCost = 0;
+		}
 
 		return fullfillmentTime + fullfillmentCost;
 
 	}
 
-	int calcAvailableHours() {
+	@Override
+	public int calcAvailableHours() {
 		int tmp = 0;
 
 		if (activities != null) {
 			for (ProjectActivity pa : activities) {
-				if (pa != null && pa.getProject() != null) {				
+				if (pa != null && pa.getProject() != null) {
 					if (pa.getProject().getProjectID() == this.project.getProjectID())
 						tmp += pa.getHoursAvailable();
 				}
@@ -145,7 +180,8 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		return tmp;
 	}
 
-	int calcExtendedHours() {
+	@Override
+	public int calcExtendedHours() {
 		int tmp = 0;
 		if (activities != null) {
 			for (ProjectActivity pa : activities) {
@@ -161,7 +197,8 @@ public class VaadinProjectAnalyticsViewLogic implements IProjectAnalyticsView {
 		return tmp;
 	}
 
-	double calcIncurredCosts() {
+	@Override
+	public double calcIncurredCosts() {
 		double tmp = 0;
 
 		for (Costs c : costs) {

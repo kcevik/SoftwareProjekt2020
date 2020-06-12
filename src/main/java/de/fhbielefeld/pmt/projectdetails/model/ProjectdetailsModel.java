@@ -12,6 +12,10 @@ import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsComponent;
 import de.fhbielefeld.pmt.projectdetails.IProjectdetailsModel;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class ProjectdetailsModel implements IProjectdetailsModel{
 	
 

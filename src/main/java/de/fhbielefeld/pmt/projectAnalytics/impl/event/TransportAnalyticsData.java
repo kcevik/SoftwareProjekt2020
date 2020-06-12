@@ -8,6 +8,10 @@ import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.ProjectActivity;
 import de.fhbielefeld.pmt.projectAnalytics.IProjectAnalyticsView;
 
+/**
+ * @author Kerem Cevik
+ *
+ */
 public class TransportAnalyticsData extends EventObject {
 
 	private Project project;

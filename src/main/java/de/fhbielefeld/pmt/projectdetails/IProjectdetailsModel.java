@@ -5,7 +5,7 @@ import de.fhbielefeld.pmt.JPAEntities.*;
 
 /**
  * Interface für das ProjectdetailsModel
- * @author Kerem
+ * @author Kerem Cevik
  *
  */
 public interface IProjectdetailsModel {
