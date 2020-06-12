@@ -123,6 +123,7 @@ public class ModuleChooserRootView extends VerticalLayout {
 	
 	/**
 	 * @author David Bistron, Sebastian Siegmann
+	 * Methode, die für das Routing für "Mein Konto" steuert
 	 */
 	@Subscribe
 	public void onPersonalDetailsChosen(PersonalDetailsChosenEvent event) {

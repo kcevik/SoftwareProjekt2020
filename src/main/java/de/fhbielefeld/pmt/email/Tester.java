@@ -1,7 +1,9 @@
 package de.fhbielefeld.pmt.email;
 
 /**
- * Klasse nur zum Testen des E-Mail-Versandes
+ * Klasse, die nur zum Testen des E-Mail-Versandes vorhanden ist
+ * In der korrekten implementierung würde der Versandt nicht über eine Main-Methode laufen, 
+ * sondern über Events gesteuert werden
  * @author David Bistron
  *
  */

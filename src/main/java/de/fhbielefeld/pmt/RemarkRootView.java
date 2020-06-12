@@ -21,7 +21,6 @@ import de.fhbielefeld.pmt.error.LoginChecker;
 import de.fhbielefeld.pmt.error.impl.view.NotAuthorizedError;
 import de.fhbielefeld.pmt.error.impl.view.NotLoggedInError;
 import de.fhbielefeld.pmt.logout.impl.event.LogoutAttemptEvent;
-import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.navigatorBox.INavigatorBoxComponent;
 import de.fhbielefeld.pmt.navigatorBox.impl.NavigatorBoxComponent;
 import de.fhbielefeld.pmt.navigatorBox.impl.event.OpenActivitiesEvent;

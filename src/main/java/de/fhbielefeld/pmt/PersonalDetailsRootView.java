@@ -45,6 +45,9 @@ public class PersonalDetailsRootView extends VerticalLayout {
 	private final EventBus eventBus = new EventBus();
 	VaadinSession session = VaadinSession.getCurrent();
 
+	/**
+	 * Konstruktor
+	 */
 	public PersonalDetailsRootView() {
 		
 		this.eventBus.register(this);

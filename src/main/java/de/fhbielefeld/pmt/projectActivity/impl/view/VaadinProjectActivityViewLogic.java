@@ -102,15 +102,11 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 			.withValidator(new RegexpValidator("Bitte geben Sie eine Beschreibung zwischen 1 und 50 Zeichen an", ".{1,50}"))
 			.bind(ProjectActivity::getDescription, ProjectActivity::setDescription);
 		
-		// TODO: Abfangen, dass nur positive Zahlen und nur zwischen 1 und X Stunden erfasst werden können --> NICHT 1Mio Stunden!
-		// TODO: Double Werte müssen eingegeben werden können!
 		this.binder.forField(this.view.getProjectActivityForm().getTfHoursAvailable()).asRequired()
 			.withValidator(new RegexpValidator("Bitte geben Sie eine Zahl zwischen 1 und 1000 an", ".{1,10}"))
 			.withConverter(new plainStringToIntegerConverter("Bitte geben Sie eine positive Zahl ein"))
 			.bind(ProjectActivity::getHoursAvailable, ProjectActivity::setHoursAvailable);
 				
-		// TODO: Abfangen, dass nur positive Zahlen und nur zwischen 1 und X Stunden erfasst werden können --> NICHT 1Mio Stunden!
-		// TODO: Double Werte müssen eingegeben werden können!
 		this.binder.forField(this.view.getProjectActivityForm().getTfHourlyRates()).asRequired()
 			.withValidator(new RegexpValidator("Bitte geben Sie eine Zahl zwischen 1 und 1000 an", ".{1,10}"))
 			.withConverter(new plainStringToDoubleConverter("Bitte geben Sie eine positive Zahl ein"))
@@ -245,7 +241,10 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		this.updateGrid();
 	}
 	
-	// TODO: NEU
+	/*
+	 * Methode, die benötigt wird, damit die Projektaktivität zu genau dem aktuell ausgewählten Projekt
+	 * hinterlegt wird
+	 */
 	@Subscribe
 	public void onTransportAllActivitiesEvent(TransportAllActivitiesEvent event) {
 		this.projectActivities = event.getProjectActivityList();
@@ -253,9 +252,10 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		
 	}
 	
+	/**
+	 * Methode, die alle Projktaktivitäten aus der DB liest
+	 */
 	public void initReadFromDB() {
-		// TODO: ReadAllProjectsEvent nicht notwendig, da nicht alle Projekte gelesen werden sollen!
-		// this.eventBus.post(new ReadAllProjectsEvent(this));
 		this.eventBus.post(new ReadAllProjectActivitiesEvent(this));	
 		if (this.projectActivities != null) {
 			this.view.getProjectActivityForm().getCbActivityCategory().setItems(ActivityCategories.values());
@@ -284,12 +284,5 @@ public class VaadinProjectActivityViewLogic implements IProjectActivityView {
 		}
 		throw new UnsupportedViewTypeException("Der Übergebene ViewTyp wird nicht unterstützt: " + type.getName());
 	}
-
-	//@Override
-	/*
-	public void setProjectActivityCategory(List<ActivityCategories> activityCategories) {
-		this.enumCat = activityCategories;
-	}
-	*/
 
 }

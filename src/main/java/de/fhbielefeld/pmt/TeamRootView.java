@@ -63,7 +63,6 @@ public class TeamRootView extends VerticalLayout {
 		}
 		
 		this.setHeightFull();
-		// TODO: this.addClassName("root-view"); ???
 		this.setAlignItems(Alignment.CENTER);
 		this.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 		

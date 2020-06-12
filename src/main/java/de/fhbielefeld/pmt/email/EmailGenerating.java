@@ -49,7 +49,7 @@ public class EmailGenerating {
 		String emailAccount = "david.bistron@fh-bielefeld.de";
 		String password = "";
 
-		// Wir starten eine Session, die die properties übernimmtund mit dem newAuthenticator 
+		// Wir starten eine Session, die die properties übernimmt und mit dem newAuthenticator 
 		// den User und das PW authentifiziert
 		Session session = Session.getInstance(properties, new Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
@@ -58,10 +58,10 @@ public class EmailGenerating {
 		});
 
 		// Hier wird die Nachricht vorbereitet, die übertragen werden soll +
-		// Emailadresse angeben, von welcher aus gesendet werden kann
+		// Emailadresse angeben, von welcher aus gesendet werden kann = emailAccount
 		Message message = prepareMessage(session, emailAccount, recepient);
 		
-		// Using a Transport Class
+		// Transport Class transportiert die Message
 		try {
 			Transport.send(message);
 			System.out.println("Email wurde versandt!");
@@ -99,7 +99,8 @@ public class EmailGenerating {
 			// Was soll in die Email als Message rein?		
 			message.setText("Achtung, das Projekt erreicht einen kritischen Zustand! Bitte überprüfen Sie die Projektdetails!");
 			
-			/* TODO:
+			/*
+			 * Müsste noch ausgearbeitet werden: 
 			message.setText("Sehr geehrter Herr/Frau " + project.getProjectManager() + ", " + "/n" + "Dies ist eine automatisch generierte Email von "
 				+ "Ihrem Projektmanagement-Tool. Bitte beachten Sie folgende Hinweise: " + "/n"
 				+ "Das Projekt " + project.getProjectName() + " mit der Projektnummer " + project.getProjectID() 
@@ -114,13 +115,11 @@ public class EmailGenerating {
 		} catch (MessagingException e) {
 			System.out.println("Was anderes ist kaputt");
 			e.printStackTrace();
-			// TODO: Im Tutorial hatte er das da noch drin... hat aber eher was mit Try Catch zu tun
-			// Logger.getLogger(JavaEmailGenerating.class.getName().log(Level.SEVERE, null, ex));
 		}
 		return null;
 	}
 	
-	/* TODO:
+	/* Müsste noch ausgearbeitet werden:
 	// Methode, die die Informationen aus einem Projekt holt und die Email damit befüllt
 	public void messageContent(Project project) {
 		informations = "Sehr geehrter Herr/Frau " + project.getProjectManager() + ", " + "/n" + "Dies ist eine automatisch generierte Email von "

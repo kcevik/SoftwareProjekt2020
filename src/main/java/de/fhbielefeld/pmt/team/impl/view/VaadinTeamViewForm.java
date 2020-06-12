@@ -34,6 +34,9 @@ public class VaadinTeamViewForm extends FormLayout {
 	private final Button btnEdit = new Button("Bearbeiten");
 	private final Button btnClose = new Button("Abbrechen");
 
+	/**
+	 * Konstruktor
+	 */
 	public VaadinTeamViewForm() {
 		addClassName("team-form");
 		configureTeamFormTextFields();

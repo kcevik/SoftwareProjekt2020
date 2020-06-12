@@ -120,7 +120,6 @@ public class ProjectActivityRootView extends VerticalLayout {
 	/**
 	 * Methode, die die Top-Bar erstellt (Logik für den Überschriftenbereich mit
 	 * Logo und Logout-Button)
-	 * 
 	 * @return
 	 */
 	private ITopBarComponent createTopBarComponent() {
@@ -136,17 +135,16 @@ public class ProjectActivityRootView extends VerticalLayout {
 
 	/**
 	 * Methode, die die komplette Teamkomponente erstellt (Logik für TeamGrid und TeamForm)
-	 * 
 	 * @return projectActivityComponent
 	 */
 	private IProjectActivityComponent createProjectActivityComponent() {
 
 		VaadinProjectActivityViewLogic vaadinProjectActivityViewLogic;
-		vaadinProjectActivityViewLogic = new VaadinProjectActivityViewLogic(new VaadinProjectActivityView(), this.eventBus);
+		vaadinProjectActivityViewLogic = new VaadinProjectActivityViewLogic(new VaadinProjectActivityView(),
+				this.eventBus);
 		IProjectActivityComponent projectActivityComponent = new ProjectActivityComponent(
-				new ProjectActivityModel(DatabaseService.DatabaseServiceGetInstance()),
-				vaadinProjectActivityViewLogic, this.eventBus, (Project) session.getAttribute("PROJECT"));
-		// TODO: So mit initReadCurrentProjectFromDB korrekt?
+				new ProjectActivityModel(DatabaseService.DatabaseServiceGetInstance()), vaadinProjectActivityViewLogic,
+				this.eventBus, (Project) session.getAttribute("PROJECT"));
 		vaadinProjectActivityViewLogic.initReadCurrentProjectFromDB((Project) session.getAttribute("PROJECT"));
 		return projectActivityComponent;
 
@@ -169,7 +167,6 @@ public class ProjectActivityRootView extends VerticalLayout {
 	/**
 	 * Methode, die die Rückkehr zum Aufgabenauswahl-Screen steuert, wenn der Button
 	 * "zurück zur Aufgabenauswahl" gedrückt wird
-	 * 
 	 * @param event
 	 */
 	@Subscribe
@@ -182,7 +179,6 @@ public class ProjectActivityRootView extends VerticalLayout {
 	/**
 	 * Methode, die die Rückkehr zum LogIn-Screen steuert, wenn der Button "Logout"
 	 * gedrückt wird
-	 * 
 	 * @param event
 	 */
 	@Subscribe

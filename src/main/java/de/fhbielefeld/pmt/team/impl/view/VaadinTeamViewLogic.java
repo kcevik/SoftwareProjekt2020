@@ -94,20 +94,14 @@ public class VaadinTeamViewLogic implements ITeamView{
 				
 		this.binderT.forField(this.view.getTeamForm().getTfTeamID())
 		.withConverter(new StringToLongConverter("")).bind(Team::getTeamID, null);
-		
-		// TODO: Hinweis erscheint nur, wenn > 50 Zeichen eingegeben werden, aber nicht bei < 1 Zeichen!
 		this.binderT.forField(this.view.getTeamForm().getTfTeamName()).asRequired().withValidator(new RegexpValidator
 				("Bitte wählen Sie einen Teamnamen zwischen 1 und 50 Zeichen", ".{1,50}")).bind(Team::getTeamName, Team::setTeamName);
-		
-		// TODO: Hinweis, dass mind. 1 Projekt und Mitarbeiter ausgewählt werden muss!
 		this.binderT.forField(this.view.getTeamForm().getMscbTeamProject()).asRequired().
 		withValidator((string -> string != null && !string.isEmpty()), ("Bitte wählen Sie mindestens ein Projekt aus!"))
 		.bind(Team::getProjectList, Team::setProjectList);
-		
 		this.binderT.forField(this.view.getTeamForm().getMscbTeamEmployee()).asRequired().
 		withValidator((string -> string != null && !string.isEmpty()), ("Bitte wählen Sie mindestens einen Mitarbeiter aus!"))
 		.bind(Team::getEmployeeList, Team::setEmployeeList);
-		
 		this.binderT.bind(this.view.getTeamForm().getIsActive(), "active");
 		
 	}

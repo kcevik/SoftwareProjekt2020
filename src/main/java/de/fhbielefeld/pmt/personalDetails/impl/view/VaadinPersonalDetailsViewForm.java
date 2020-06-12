@@ -49,6 +49,9 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 	private final Button btnEdit = new Button("Bearbeiten");
 	private final Button btnClose = new Button("Abbrechen");
 
+	/**
+	 * Konstruktor
+	 */
 	public VaadinPersonalDetailsViewForm() {
 		addClassName("personalDetails-form");
 		configureTextFields();
@@ -59,6 +62,10 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 				mscbEmployeeProject, mscbEmployeeTeam, configureButtons());
 	}
 
+	/**
+	 * Methode, die dafür sorgt, dass die PersonalDetailsForm grundsätzlich nicht erscheint
+	 * PersonalDetailsForm erscheint nur bei der Bearbeitung eines vorhandenen Teams oder bei der Erstellung eines neuen Teams
+	 */
 	private void configureTextFields() {
 		this.tfEmployeeID.setReadOnly(true);
 		this.pfPassword.setReadOnly(true);
@@ -117,6 +124,9 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 		this.closeEdit();
 	}
 
+	/**
+	 * Methode, die die Bearbeitungsmöglichkeit der Felder in der PersonalDetailsForm steuert
+	 */
 	public void prepareEdit() {
 		this.tfEmployeeID.setReadOnly(true);
 		this.pfPassword.setReadOnly(false);
@@ -138,6 +148,9 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 
 	}
 
+	/**
+	 * Methode, die das Formular ausblendet
+	 */
 	public void closeEdit() {
 		this.tfEmployeeID.setReadOnly(true);
 		this.pfPassword.setReadOnly(true);
@@ -158,6 +171,11 @@ public class VaadinPersonalDetailsViewForm extends FormLayout {
 		
 	}
 
+	/**
+	 * Get-Methoden, die benötigt werden, damit die Klasse VaadinTeamViewLogic die Daten der aktuell in dem teamGrid ausgewählten Teams
+	 * in der teamForm darstellen kann 
+	 * @return
+	 */
 	public Label getLblBeschreibung() {
 		return lblBeschreibung;
 	}
