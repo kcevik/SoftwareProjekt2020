@@ -35,6 +35,7 @@ public class Client implements Serializable {
 	 */
 	public Client() {
 		super();
+		this.projectList = new HashSet<Project>();
 	}
 
 	/**
