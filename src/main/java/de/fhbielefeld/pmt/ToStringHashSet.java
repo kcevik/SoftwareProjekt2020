@@ -2,8 +2,11 @@ package de.fhbielefeld.pmt;
 
 import java.util.HashSet;
 
-import org.checkerframework.checker.units.qual.Length;
-
+/**
+ * 
+ * @author Lucas Eickmann
+ * @param <E>
+ */
 public class ToStringHashSet<E> extends HashSet<E> {
 	@Override
 	public String toString() {
