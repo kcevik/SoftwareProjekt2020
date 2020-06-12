@@ -62,6 +62,8 @@ public class Project implements Serializable {
 	 */
 	public Project() {
 		super();
+		this.employeeList = new HashSet<Employee>();
+		this.teamList = new HashSet<Team>();
 	}
 
 	/**
@@ -75,7 +77,7 @@ public class Project implements Serializable {
 	 */
 	public Project(String projectName, Employee projectManager, Client client, String startDate, String dueDate,
 			double budget) {
-		super();
+		this();
 		this.projectName = projectName;
 		this.projectManager = projectManager;
 		this.client = client;
@@ -83,8 +85,6 @@ public class Project implements Serializable {
 		this.dueDate = dueDate;
 		this.budget = budget;
 		this.isActive = true;
-		this.employeeList = new HashSet<Employee>();
-		this.teamList = new HashSet<Team>();
 	}
 	// DegreesOfFullfilment ggf spaeter hinzufuegen wenn wir das Ampelsystem haben,
 	// oder mit Default Values initialisieren wie isActive
@@ -191,7 +191,7 @@ public class Project implements Serializable {
 	 * @param teamSet
 	 */
 	public void setTeamList(Set<Team> teamSet) {
-		
+
 		
 		for (Team t : teamSet) {
 			if (!this.teamList.contains(t)) {
@@ -229,6 +229,10 @@ public class Project implements Serializable {
 	 * @param teamSet
 	 */
 	public void setEmployeeList(Set<Employee> employeeSet) {
+		
+		for (Employee e : employeeSet) {
+			this.employeeList.add(e);
+		}
 		// Entfernt dieses Projekt aus allen Employee, die laut dem neuen übergebenen
 		// Setz nicht mehr zu diesem Projekt gehören.
 //		if (employeeList != null) {

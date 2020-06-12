@@ -60,6 +60,7 @@ public class VaadinProjectView extends VerticalLayout {
 		addClassName("list-view");
 		setSizeFull();
 		this.btnCreateProject.setText("Neues Projekt anlegen");
+		this.btnCreateProject.addClassName("btnCreateProject");
 		this.btnCreateInvoice.setText("Rechnung erstellen");
 		this.projectForm.setVisible(false);
 		this.btnCreateInvoice.setVisible(false);

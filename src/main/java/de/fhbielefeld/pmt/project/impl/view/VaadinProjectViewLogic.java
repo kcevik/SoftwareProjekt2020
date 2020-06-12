@@ -23,6 +23,7 @@ import de.fhbielefeld.pmt.JPAEntities.Employee;
 import de.fhbielefeld.pmt.JPAEntities.Project;
 import de.fhbielefeld.pmt.JPAEntities.Team;
 import de.fhbielefeld.pmt.converter.plainStringToDoubleConverter;
+import de.fhbielefeld.pmt.error.AuthorizationChecker;
 import de.fhbielefeld.pmt.moduleChooser.event.ModuleChooserChosenEvent;
 import de.fhbielefeld.pmt.project.IProjectView;
 import de.fhbielefeld.pmt.project.impl.event.GenerateInvoiceEvent;
@@ -78,6 +79,9 @@ public class VaadinProjectViewLogic implements IProjectView {
 		this.eventBus.register(this);
 		this.registerViewListeners();
 		this.bindToFields();
+		if (!AuthorizationChecker.checkIsAuthorizedCeoFowler(VaadinSession.getCurrent(), VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE"))) {
+			this.view.getBtnCreateProject().setVisible(false);
+		}
 	}
 	
 	/**
@@ -89,14 +93,15 @@ public class VaadinProjectViewLogic implements IProjectView {
 				.bind(Project::getProjectID, null);
 		this.binder.bind(this.view.getProjectForm().getTfProjectName(), "projectName");
 		this.binder.bind(this.view.getProjectForm().getCbProjectManager(), "projectManager");
-		this.binder.bind(this.view.getProjectForm().getCbEmployees(), "employeeList");
+		//this.binder.bind(this.view.getProjectForm().getCbEmployees(), "employeeList");
+		this.binder.forField(this.view.getProjectForm().getCbEmployees())
+		.bind(Project::getEmployeeList, Project::setEmployeeList);
 		//this.binder.bind(this.view.getProjectForm().getCbTeams(), "teamList");
 		this.binder.forField(this.view.getProjectForm().getCbTeams())
 			.bind(Project::getTeamList, Project::setTeamList);
 		this.binder.bind(this.view.getProjectForm().getCbClient(), "client");
 		this.binder.forField(this.view.getProjectForm().getdPStartDate());
 		this.binder.bind(this.view.getProjectForm().getdPStartDate(), "startDate");
-		// this.binder.bind(this.view.getProjectForm().getdPDueDate(), "dueDate");
 		this.binder.forField(this.view.getProjectForm().getdPDueDate())
 				.withValidator(new StartEndValidator("Darf nicht vor dem Startdatum liegen",
 						this.view.getProjectForm().getdPStartDate(), this.view.getProjectForm().getdPDueDate()))
@@ -118,7 +123,9 @@ public class VaadinProjectViewLogic implements IProjectView {
 			this.displayProject();
 		});
 		this.view.getBtnBackToMainMenu().addClickListener(event -> eventBus.post(new ModuleChooserChosenEvent(this)));
-		this.view.getBtnCreateProject().addClickListener(event -> newProject());
+		if (AuthorizationChecker.checkIsAuthorizedCeoFowler(VaadinSession.getCurrent(), VaadinSession.getCurrent().getAttribute("LOGIN_USER_ROLE"))) {
+			this.view.getBtnCreateProject().addClickListener(event -> this.newProject());
+		}
 		this.view.getProjectForm().getBtnSave().addClickListener(event -> this.saveProject());
 		this.view.getProjectForm().getBtnEdit().addClickListener(event -> this.view.getProjectForm().prepareEdit());
 		this.view.getProjectForm().getBtnClose().addClickListener(event -> cancelForm());
@@ -148,11 +155,6 @@ public class VaadinProjectViewLogic implements IProjectView {
 				
 				this.binder.readBean(this.selectedProject);
 				this.view.getProjectForm().setVisible(true);
-
-				if (this.selectedProject.getTeamList() == null) {
-					System.out.println(this.selectedProject.getTeamList());	
-				}
-			
 				this.view.getProjectForm().closeEdit();
 				this.view.getBtnCreateInvoice().setVisible(true);
 				if (this.editableProjects != null && this.editableProjects.contains(this.selectedProject)) {
@@ -178,7 +180,24 @@ public class VaadinProjectViewLogic implements IProjectView {
 
 		if (this.binder.validate().isOk()) {
 			try {
+				
+				
 				this.binder.writeBean(this.selectedProject);
+				
+				System.out.println(this.selectedProject.getProjectID());
+				System.out.println(this.selectedProject.getProjectName());
+				System.out.println(this.selectedProject.getProjectManager());
+				System.out.println(this.selectedProject.getEmployeeList().toString());
+				System.out.println(this.selectedProject.getTeamList().toString());
+				System.out.println(this.selectedProject.getClient());
+				System.out.println(this.selectedProject.getStartDate());
+				System.out.println(this.selectedProject.getDueDate());
+				System.out.println(this.selectedProject.getSupProject());
+				System.out.println(this.selectedProject.getBudget());
+				System.out.println(this.selectedProject.getDegreeOfFulfillmentCosts());
+				System.out.println(this.selectedProject.getDegreeOfFulfillmentTime());
+				System.out.println(this.selectedProject.isActive());
+				
 				this.eventBus.post(new SendProjectToDBEvent(this, this.selectedProject));
 				this.view.getProjectForm().setVisible(false);
 				this.addProject(selectedProject);
@@ -310,6 +329,7 @@ public class VaadinProjectViewLogic implements IProjectView {
 	public void addProject(Project p) {
 		if (!this.projects.contains(p)) {
 			this.projects.add(p);
+			this.editableProjects.add(p);
 		}
 	}
 

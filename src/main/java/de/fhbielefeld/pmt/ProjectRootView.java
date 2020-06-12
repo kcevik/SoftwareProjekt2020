@@ -86,6 +86,7 @@ public class ProjectRootView extends VerticalLayout {
 		return projectComponent;
 	}
 	
+	
 	/**
 	 * Erstellt die Klasse TopBarComponent mit allen Unterklassen und dem Model des
 	 * Views zu dem die TopBar gehört Setzt den Text entsprechend dieser RootView

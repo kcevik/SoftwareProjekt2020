@@ -59,6 +59,8 @@ public class VaadinProjectViewForm extends FormLayout{
 		this.tfProjectId.setReadOnly(true);
 		lblBeschreibung.add("Anlegen/Bearbeiten");
 		lblBeschreibung.addClassName("lbl-heading-form");
+		this.getTfProjectName().addClassName("tfProjectName");
+		this.getTfProjectName().setId("tfProjectName");
 		this.add(lblBeschreibung, tfProjectId, tfProjectName, cbProjectManager,cbEmployees, cbTeams, cbClient, dPStartDate, dPDueDate, cbSupProject, tfBudget, ckIsActive, configureButtons());
 	}
 	
