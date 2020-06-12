@@ -34,8 +34,10 @@ public class VaadinClientView extends VerticalLayout {
 
 	private final VaadinClientViewForm CLIENTFORM = new VaadinClientViewForm();
 
+	/**
+	 * Konstruktor der Vaadin-View Klasse
+	 */
 	public VaadinClientView() {
-
 		this.initUI();
 		this.buitUI();
 	}

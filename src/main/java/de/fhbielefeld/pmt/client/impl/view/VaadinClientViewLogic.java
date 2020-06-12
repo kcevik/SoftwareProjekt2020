@@ -134,38 +134,19 @@ public class VaadinClientViewLogic implements IClientView {
 	/**
 	 * Aktualisiert die Client Instanzvariable mit den aktuellen werten aus den
 	 * Formularfeldern und verschickt den das Client Objekt mit einem Bus
+	 * 
 	 */
 	private void saveClient() {
 		if (this.binder.validate().isOk()) {
-			// Validierung für das Ändern von Projekten -> Wird wahrscheinlich nicht mehr
-			// benötigt, aus Zeitgründen nicht mehr implementiert
 			try {
-				//Client old = this.selectedClient;
 				this.binder.writeBean(this.selectedClient);
-//				if (this.selectedClient.getProjectList().isEmpty() && old != null && !old.getProjectList().isEmpty()) {
-//					Notification.show("Projekt benötigt Kunden", 5000, Notification.Position.TOP_CENTER)
-//							.addThemeVariants(NotificationVariant.LUMO_ERROR);
-//					return;
-//				} else if (this.selectedClient.isActive() == false && !this.selectedClient.getProjectList().isEmpty()) {
-//					Notification.show("Inaktive Kunden können keine Projekte beinhalten", 5000,
-//							Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
-//					return;
-//				} else {
-//					for (Client c : this.clients) {
-//						for (Project p : this.selectedClient.getProjectList()) {
-//							if (c.getProjectList().contains(p) && c != this.selectedClient) {
-//								c.removeProject(p);
-//							}
-//						}
-//					}
-					this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
-					this.view.getCLIENTFORM().setVisible(false);
-					this.addClient(selectedClient);
-					this.updateGrid();
-//				}
+				this.eventBus.post(new SendClientToDBEvent(this, this.selectedClient));
+				this.view.getCLIENTFORM().setVisible(false);
+				this.addClient(selectedClient);
+				this.updateGrid();
 			} catch (NumberFormatException | ValidationException | ConstraintViolationException e) {
-				Notification.show("Ungültige Eingabe, Kunde nicht gespeichert", 5000,
-						Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_ERROR);
+				Notification.show("Ungültige Eingabe, Kunde nicht gespeichert", 5000, Notification.Position.TOP_CENTER)
+						.addThemeVariants(NotificationVariant.LUMO_ERROR);
 			} finally {
 				resetSelectedClient();
 			}

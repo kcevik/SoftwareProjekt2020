@@ -145,6 +145,11 @@ public class PersonalDetailsRootView extends VerticalLayout {
 		this.getUI().ifPresent(ui -> ui.navigate("modulechooser"));
 	}
 
+	/**
+	 * Verarbeitet ein LogoutAttemptEvent vom Bussystem.
+	 * Zurücksetzten der Vaadin-Session-Variablen und Weiterleitung zur Login-Seite
+	 * @param event
+	 */
 	@Subscribe
 	public void onLogoutAttemptEvent(LogoutAttemptEvent event) {
 		session.setAttribute("LOGIN_USER_ID", null);

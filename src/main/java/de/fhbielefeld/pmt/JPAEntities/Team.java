@@ -49,6 +49,7 @@ public class Team implements Serializable {
 		this.projectList  = new HashSet<Project>();
 	}
 
+	//Getter und Setter 
 	public boolean isActive() {
 		return isActive;
 	}

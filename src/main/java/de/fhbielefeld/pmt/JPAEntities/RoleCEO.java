@@ -27,6 +27,11 @@ public class RoleCEO extends Role implements Serializable {
 		super.setDesignation(DESIGNATION);
 	}
 
+	/**
+	 * Prüft ob der Übergabeparameter zur Rolle passt. Vergleich mit Designation
+	 * @param type String
+	 * @return boolean 
+	 */
 	public boolean hasType(String type) {
 		if (type.equalsIgnoreCase(this.DESIGNATION)) {
 			return true;
@@ -35,6 +40,9 @@ public class RoleCEO extends Role implements Serializable {
 		}
 	}
 
+	/**
+	 * ToString-Ausgabe "Rolle" gefolgt von DESIGNATION in deutsch
+	 */
 	@Override
 	public String toString() {
 		return "Rolle: Geschaeftsfuehrer";

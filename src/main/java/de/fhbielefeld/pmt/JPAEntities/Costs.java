@@ -47,6 +47,7 @@ public class Costs implements Serializable {
 		this.project = project;
 	}
 
+	//Getter und Setter Methoden
 	// Set-Methode nicht vorhanden, soll nicht veraendert werden
 	public long getCostsID() {
 		return costsID;

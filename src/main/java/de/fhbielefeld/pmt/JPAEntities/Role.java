@@ -26,10 +26,19 @@ public class Role implements Serializable {
 		super();
 	}
 
+	/**
+	 * Prüft ob der Übergabeparameter zur Rolle passt.
+	 * Hier immer false da Superklasse
+	 * @param type
+	 * @return false 
+	 */
 	public boolean hasType(String type) {
 		return false;
 	}
 
+	/**
+	 * ToString-Ausgabe der RollenID;
+	 */
 	@Override
 	public String toString() {
 		return RoleID + "";

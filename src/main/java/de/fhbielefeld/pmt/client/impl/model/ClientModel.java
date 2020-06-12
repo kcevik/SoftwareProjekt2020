@@ -42,18 +42,6 @@ public class ClientModel implements IClientModel {
 	 */
 	@Override
 	public void persistClient(Client client) {
-//		Versuch Projekte und Kunden passend zuzuordnen	
-//		if (client.getProjectList().isEmpty()) {
-//			for (Project p : this.dbService.readProjectsForClient(client)){
-//				p.setClient(null);
-//				this.dbService.persistProject(p);
-//			}
-//		} else {
-//			for (Project p : client.getProjectList()) {
-//				this.dbService.readSingleProject(p.getProjectID()).setClient(client);
-//				this.dbService.persistProject(p);
-//			}
-//		}
 		this.dbService.persistClient(client);
 		Notification.show("Gespeichert", 5000, Notification.Position.TOP_CENTER)
 		.addThemeVariants(NotificationVariant.LUMO_SUCCESS);

@@ -92,7 +92,6 @@ public class VaadinClientViewForm extends FormLayout {
 		this.btnEdit.addClassName("btnEdit");
 		this.btnClose.addClassName("btnClose");
 	
-
 		return new HorizontalLayout(btnSave, btnEdit, btnClose);
 	}
 
@@ -146,7 +145,7 @@ public class VaadinClientViewForm extends FormLayout {
 		this.btnEdit.setVisible(true);
 	}
 
-	// Getter und Setter
+	//Getter und Setter
 	public TextField getTfClientID() {
 		return tfClientID;
 	}

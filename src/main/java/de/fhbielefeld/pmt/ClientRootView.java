@@ -79,11 +79,6 @@ public class ClientRootView extends VerticalLayout {
 				session.getAttribute("LOGIN_USER_FIRSTNAME"), session.getAttribute("LOGIN_USER_LASTNAME"),
 				session.getAttribute("LOGIN_USER_ROLE"))) {
 			return true;
-//			if (rootViewAuthorizationCheck()) {
-//				return true;
-//			} else {
-//				return false;
-//			}
 		} else {
 			this.removeAll();
 			this.add(NotLoggedInError.getErrorSite(this.eventBus, this));

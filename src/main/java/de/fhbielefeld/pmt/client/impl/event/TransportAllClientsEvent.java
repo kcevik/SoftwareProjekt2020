@@ -14,12 +14,11 @@ import de.fhbielefeld.pmt.client.IClientView;
 public class TransportAllClientsEvent extends EventObject {
 
 	private static final long serialVersionUID = 1L;
+	private List<Client> clientList;
 
 	public TransportAllClientsEvent(IClientView view) {
 		super(view);
 	}
-
-	private List<Client> clientList;
 
 	public List<Client> getClientList() {
 		return clientList;
