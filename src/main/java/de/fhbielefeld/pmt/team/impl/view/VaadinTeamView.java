@@ -81,7 +81,7 @@ public class VaadinTeamView extends VerticalLayout {
 	 * ValueChangeMode.LAZY sorgt dafür, dass eine Eingabe in dem Filter-Feld das Ergebnis etwas zeitverzögert darstellt
 	 */
 	private void configureFilter() {
-		this.tfFilterText.setPlaceholder("Filter nach Team/TeamID");
+		this.tfFilterText.setPlaceholder("Filter nach Team");
 		this.tfFilterText.setClearButtonVisible(true);
 		this.tfFilterText.setValueChangeMode(ValueChangeMode.LAZY);
 	}
@@ -103,7 +103,7 @@ public class VaadinTeamView extends VerticalLayout {
 		this.teamGrid.removeColumnByKey("projectList");
 		this.teamGrid.removeColumnByKey("employeeList");
 		this.teamGrid.setColumns("teamID", "teamName");	
-		
+		this.teamGrid.getColumnByKey("teamID").setHeader("Teamnummer");
 		this.teamGrid.addColumn(team -> { 
 			String projectString = "";
 			for (Project p : team.getProjectList()) {

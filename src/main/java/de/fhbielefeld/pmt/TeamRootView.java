@@ -98,7 +98,7 @@ public class TeamRootView extends VerticalLayout {
 	 * @return
 	 */
 	private boolean rootViewAuthorizationCheck() {
-		if (AuthorizationChecker.checkIsAuthorizedManager(session, session.getAttribute("LOGIN_USER_ROLE"))) {
+		if (AuthorizationChecker.checkIsAuthorizedCEO(session, session.getAttribute("LOGIN_USER_ROLE"))) {
 			System.out.println("User hat Berechtigung");
 			return true;
 		} else {
@@ -108,7 +108,7 @@ public class TeamRootView extends VerticalLayout {
 			return false;
 		}
 	}
-	
+	 
 	/**
 	 * Methode, die die Top-Bar erstellt (Logik für den Überschriftenbereich mit Logo und Logout-Button)
 	 * @return

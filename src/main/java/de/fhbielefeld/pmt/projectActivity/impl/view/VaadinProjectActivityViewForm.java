@@ -25,7 +25,7 @@ public class VaadinProjectActivityViewForm extends FormLayout {
 	private final Label lblCreateEdit = new Label("Anlegen / Bearbeiten");
 	private final ComboBox<ActivityCategories> cbActivityCategory = new ComboBox<ActivityCategories>("Tätigkeitskategorie:");		
 		
-	private final TextField tfprojectActivityID = new TextField("Projektaktivitäts-ID: ");
+	private final TextField tfprojectActivityID = new TextField("Projektaktivitätsnummer: ");
 	private final TextField tfDescription = new TextField("Tätigkeitsbeschreibung: ");
 	private final TextField tfHoursAvailable = new TextField("max. verfügbare Stunden: ");
 	private final TextField tfHourlyRates = new TextField("Stundensatz: ");

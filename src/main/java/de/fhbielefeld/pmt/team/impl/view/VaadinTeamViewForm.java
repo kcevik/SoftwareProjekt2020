@@ -25,7 +25,7 @@ public class VaadinTeamViewForm extends FormLayout {
 
 	private static final long serialVersionUID = 1L;
 	private final Label lblCreateEdit = new Label("Anlegen / Bearbeiten");
-	private final TextField tfTeamID = new TextField("Team-ID:");
+	private final TextField tfTeamID = new TextField("Teamnummer:");
 	private final TextField tfTeamName = new TextField("Teamname:");	
 	private final MultiselectComboBox<Project> mscbTeamProject = new MultiselectComboBox<Project>("zugehörige Projekte: ");
 	private final MultiselectComboBox<Employee> mscbTeamEmployee = new MultiselectComboBox<Employee>("zugehörige Mitarbeiter: ");

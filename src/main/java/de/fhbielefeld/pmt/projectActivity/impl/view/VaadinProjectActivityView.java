@@ -99,8 +99,8 @@ public class VaadinProjectActivityView extends VerticalLayout {
 		this.projectActivityGrid.addClassName("projectActivity-grid");
 		this.projectActivityGrid.removeColumnByKey("project");
 		this.projectActivityGrid.setColumns("project", "projectActivityID", "category", "description", "hoursAvailable", "hourlyRate", "hoursExpended");		
-		this.projectActivityGrid.getColumnByKey("project").setHeader("Projekt ID");
-		this.projectActivityGrid.getColumnByKey("projectActivityID").setHeader("Aktivitäts ID");
+		this.projectActivityGrid.getColumnByKey("project").setHeader("Projektnummer");
+		this.projectActivityGrid.getColumnByKey("projectActivityID").setHeader("Aktivitätsnummer");
 		this.projectActivityGrid.getColumnByKey("category").setHeader("Tätigkeitskategorie");
 		this.projectActivityGrid.getColumnByKey("description").setHeader("Tätigkeitsbeschreibung");
 		this.projectActivityGrid.getColumnByKey("hourlyRate").setHeader("Stundensatz");

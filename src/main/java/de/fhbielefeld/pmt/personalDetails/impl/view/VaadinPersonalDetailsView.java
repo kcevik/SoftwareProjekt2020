@@ -71,7 +71,7 @@ public class VaadinPersonalDetailsView extends VerticalLayout {
 		this.personalDetailsGrid.addClassName("personalDetails-grid");
 		this.personalDetailsGrid.setColumns("employeeID", "firstName", "lastName", "occupation", "street",
 				"houseNumber", "zipCode", "town");
-		this.personalDetailsGrid.getColumnByKey("employeeID").setHeader("Mitarbeit-ID:");
+		this.personalDetailsGrid.getColumnByKey("employeeID").setHeader("Mitarbeiternummer:");
 		this.personalDetailsGrid.getColumnByKey("firstName").setHeader("Vorname:");
 		this.personalDetailsGrid.getColumnByKey("lastName").setHeader("Nachname:");
 		this.personalDetailsGrid.getColumnByKey("occupation").setHeader("Tätigkeit:");
