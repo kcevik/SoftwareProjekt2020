@@ -16,6 +16,8 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 
 import de.fhbielefeld.pmt.UnsupportedViewTypeException;
 import de.fhbielefeld.pmt.JPAEntities.Costs;
+import de.fhbielefeld.pmt.trafficLight.VaadinTrafficLightView;
+import de.fhbielefeld.pmt.trafficLight.VaadinTrafficLightViewLogic;
 
 
 /**
