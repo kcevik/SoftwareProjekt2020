@@ -49,7 +49,7 @@
 			<id>vaadin-addons</id>
 			<url>http://maven.vaadin.com/vaadin-addons</url>
 		</repository>
-		
+
 	</repositories>
 
 	<dependencyManagement>
@@ -159,7 +159,7 @@
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.10</version>
 		</dependency>
-		
+
 		<!-- added new dependency for charts @author Kerem Cevik -->
 		<dependency>
 			<groupId>org.jfree</groupId>
@@ -181,11 +181,11 @@
 		</dependency>
 		<!-- added new dependency for Email -->
 		<!-- @author David Bistron -->
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>javax.mail</artifactId>
-            <version>1.6.2</version>
-        </dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.2</version>
+		</dependency>
 
 	</dependencies>
 
